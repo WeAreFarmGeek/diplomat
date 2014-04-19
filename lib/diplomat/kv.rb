@@ -22,7 +22,10 @@ module Diplomat
     # @param value [String] the value
     # @return [String] The base64-decoded value associated with the key
     def put key, value
-      @raw   = @conn.put "/v1/kv/#{@key}", @value
+      @raw = @conn.put do |req|
+        req.url "/v1/kv/#{@key}"
+        req.body = @value
+      end
       @raw   = JSON.parse(@raw.body).first
       @key   = @raw["Key"]
       @value = Base64.decode64(@raw["Value"])
