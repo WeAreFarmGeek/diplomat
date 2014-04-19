@@ -7,10 +7,7 @@ module Diplomat
     attr_accessor :url
 
     # Internal: Requires internal Faraday libraries.
-    #
-    # *libs - One or more relative String names to Faraday classes.
-    #
-    # Returns nothing.
+    # @param *libs One or more relative String names to Faraday classes.
     def require_libs(*libs)
       libs.each do |lib|
         require "#{lib_path}/#{lib}"

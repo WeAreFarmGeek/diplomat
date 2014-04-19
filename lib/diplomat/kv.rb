@@ -6,6 +6,9 @@ module Diplomat
 
     attr_reader :key, :value, :raw
 
+    # Get a value by it's key
+    # @param key [String] the key
+    # @return [String] The base64-decoded value associated with the key
     def get key
       @key   = key
       @raw   = @conn.get "/v1/kv/#{@key}"
@@ -14,6 +17,10 @@ module Diplomat
       return @value
     end
 
+    # Get a value by it's key
+    # @param key [String] the key
+    # @param value [String] the value
+    # @return [String] The base64-decoded value associated with the key
     def put key, value
       @raw   = @conn.put "/v1/kv/#{@key}", @value
       @raw   = JSON.parse(@raw.body).first
@@ -22,6 +29,9 @@ module Diplomat
       return @value
     end
 
+    # Delete a value by it's key
+    # @param key [String] the key
+    # @return [nil]
     def delete key
       @raw = @conn.delete "/v1/kv/#{@key}"
       @key   = nil
