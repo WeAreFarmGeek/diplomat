@@ -38,4 +38,4 @@ production:
 
 ## Enjoy!
 
-![Photo Copyright "merlinmann" (https://www.flickr.com/photos/merlin/). All rights reserved.](http://i.imgur.com/3mBwzR9.jpg)
+![Photo Copyright "merlinmann". All rights reserved.](http://i.imgur.com/3mBwzR9.jpg Photo Copyright "merlinmann" https://www.flickr.com/photos/merlin/. All rights reserved.)
