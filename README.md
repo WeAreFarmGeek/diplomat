@@ -4,6 +4,9 @@
 
 ![Diplomacy Boad Game](http://i.imgur.com/Nkuy4b7.jpg)
 
+
+## FAQ
+
 #### What's Diplomat for?
 
 Diplomat allows any ruby application to interact with [Consul's](http://www.consul.io/) distributed key value store, and also receive information about services currently available in the Consol cluster.
@@ -35,6 +38,49 @@ production:
 #### How do I install Consul?
 
 [See here](http://www.consul.io/intro/). I managed to roll it out on my production machines with the help of [Ansible](http://www.ansible.com/) in one working day.
+
+## Usage
+
+### Key Values
+
+#### Getting
+
+Getting the value of a key in the key-value store is as simple as using one of the following:
+
+```ruby
+foo = Diplomat.get('foo')
+
+# => "bar"
+
+```
+
+#### Setting
+
+Setting the value of a key is just as easy:
+
+```ruby
+foo = Diplomat.put('foo', 'bar')
+# => "bar"
+```
+
+### Services
+
+#### Getting
+
+Looking up a service is easy as pie:
+
+```ruby
+foo_service = Diplomat::Service.get('foo')
+# => #<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_postgres", ServiceName="hotel_postgres", ServiceTags=["postgres"], ServicePort=5432> 
+```
+
+### Todo
+
+ - Deleting Keys
+ - Listing available Services, PUTting and DELETEing services
+ - Health
+ - Members
+ - Status
 
 ## Enjoy!
 
