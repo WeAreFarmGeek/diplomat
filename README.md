@@ -49,9 +49,7 @@ Getting the value of a key in the key-value store is as simple as using one of t
 
 ```ruby
 foo = Diplomat.get('foo')
-
 # => "bar"
-
 ```
 
 #### Setting
