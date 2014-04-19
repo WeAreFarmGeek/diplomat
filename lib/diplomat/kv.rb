@@ -38,14 +38,17 @@ module Diplomat
       @value = nil
     end
 
+    # @note This is sugar, see (#get)
     def self.get *args
       Diplomat::Kv.new.get *args
     end
 
+    # @note This is sugar, see (#put)
     def self.put *args
       Diplomat::Kv.new.put *args
     end
 
+    # @note This is sugar, see (#delete)
     def self.delete *args
       Diplomat::Kv.new.delete *args
     end
