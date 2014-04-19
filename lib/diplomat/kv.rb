@@ -11,7 +11,7 @@ module Diplomat
       @raw   = @conn.get "/v1/kv/#{@key}"
       @raw   = JSON.parse(@raw.body).first
       @value = Base64.decode64(@raw["Value"])
-      return OpenStruct.new @value
+      return @value
     end
 
     def put key, value
@@ -19,7 +19,7 @@ module Diplomat
       @raw   = JSON.parse(@raw.body).first
       @key   = @raw["Key"]
       @value = Base64.decode64(@raw["Value"])
-      return OpenStruct.new @value
+      return @value
     end
 
     def delete key
