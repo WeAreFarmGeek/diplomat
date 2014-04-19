@@ -19,6 +19,12 @@ module Diplomat
 
     alias require_lib require_libs
 
+    private
+
+    def method_missing(name, *args, &block)
+      Diplomat::Kv.new.send(name, *args, &block)
+    end
+
   end
 
   self.root_path = File.expand_path "..", __FILE__
