@@ -6,7 +6,7 @@ module Diplomat
 
     def get key
       ret = @conn.get "/v1/catalog/service/#{key}"
-      return JSON.parse(ret.body).first
+      return OpenStruct.new JSON.parse(ret.body).first
     end
 
     def self.get *args
