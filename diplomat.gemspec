@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["john@johnhamelink.com"]
   spec.description   = %q{Diplomat is a simple wrapper for Consul}
   spec.summary       = %q{Diplomat is a simple wrapper for Consul}
-  spec.homepage      = "http://farmer.io"
-  spec.license       = "Copyright 2013 FarmGeek Ltd. All rights reserved."
+  spec.homepage      = "https://github.com/johnhamelink/diplomat"
+  spec.license       = "BSD"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
