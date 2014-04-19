@@ -35,3 +35,7 @@ production:
 #### How do I install Consul?
 
 [See here](http://www.consul.io/intro/). I managed to roll it out on my production machines with the help of [Ansible](http://www.ansible.com/) in one working day.
+
+## Enjoy!
+
+![Photo Copyright "merlinmann" (https://www.flickr.com/photos/merlin/). All rights reserved.](http://i.imgur.com/3mBwzR9.jpg)
