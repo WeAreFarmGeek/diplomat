@@ -10,8 +10,8 @@ module Diplomat
     # @param key [String] the key
     # @return [String] The base64-decoded value associated with the key
     def get key
-      @key   = key
-      @raw   = @conn.get "/v1/kv/#{@key}"
+      @key = key
+      @raw = @conn.get "/v1/kv/#{@key}"
       parse_body
       return_value
     end
@@ -21,23 +21,23 @@ module Diplomat
     # @param value [String] the value
     # @return [String] The base64-decoded value associated with the key
     def put key, value
-      @key   = key
-      @value = value
-      @raw   = @conn.put do |req|
-        req.url "/v1/kv/#{@key}"
-        req.body = @value
+      @raw = @conn.put do |req|
+        req.url "/v1/kv/#{key}"
+        req.body = value
       end
-      parse_body
-      return_key
-      return_value
+      if @raw.body == "true"
+        @key   = key
+        @value = value
+      end
+      return @value
     end
 
     # Delete a value by it's key
     # @param key [String] the key
     # @return [nil]
     def delete key
-      @key   = key
-      @raw   = @conn.delete "/v1/kv/#{@key}"
+      @key = key
+      @raw = @conn.delete "/v1/kv/#{@key}"
       return_key
       return_value
     end
