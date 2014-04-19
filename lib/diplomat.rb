@@ -35,6 +35,6 @@ module Diplomat
 
 
 
-  require_libs "rest_client", "kv"
+  require_libs "rest_client", "kv", "service"
 
 end
