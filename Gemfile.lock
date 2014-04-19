@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    diplomat (0.1.6)
+    diplomat (0.1.7)
       faraday (~> 0.9)
 
 GEM
