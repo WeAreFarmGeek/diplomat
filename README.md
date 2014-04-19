@@ -1,6 +1,6 @@
 # Diplomat
 [![Gem Version](https://badge.fury.io/rb/diplomat.svg)](http://badge.fury.io/rb/diplomat) [![Build Status](https://travis-ci.org/johnhamelink/diplomat.svg?branch=master)](https://travis-ci.org/johnhamelink/diplomat)
-### A HTTP Ruby API for [Consul](http://www.consul.io/)
+### A HTTP Ruby API for [Consul](http://www.consul.io/) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.png)](https://codeclimate.com/github/johnhamelink/diplomat)
 
 ![Diplomacy Boad Game](http://i.imgur.com/Nkuy4b7.jpg)
 
