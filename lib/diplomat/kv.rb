@@ -12,9 +12,8 @@ module Diplomat
     def get key
       @key   = key
       @raw   = @conn.get "/v1/kv/#{@key}"
-      @raw   = JSON.parse(@raw.body).first
-      @value = Base64.decode64(@raw["Value"])
-      return @value
+      parse_body
+      return_value
     end
 
     # Get a value by it's key
@@ -22,15 +21,15 @@ module Diplomat
     # @param value [String] the value
     # @return [String] The base64-decoded value associated with the key
     def put key, value
-      @key = key
-      @raw = @conn.put do |req|
+      @key   = key
+      @value = value
+      @raw   = @conn.put do |req|
         req.url "/v1/kv/#{@key}"
         req.body = @value
       end
-      @raw   = JSON.parse(@raw.body).first
-      @key   = @raw["Key"]
-      @value = Base64.decode64(@raw["Value"])
-      return @value
+      parse_body
+      return_key
+      return_value
     end
 
     # Delete a value by it's key
@@ -39,8 +38,8 @@ module Diplomat
     def delete key
       @key   = key
       @raw   = @conn.delete "/v1/kv/#{@key}"
-      @key   = nil
-      @value = nil
+      return_key
+      return_value
     end
 
     # @note This is sugar, see (#get)
@@ -58,6 +57,23 @@ module Diplomat
       Diplomat::Kv.new.delete *args
     end
 
+    private
+
+    # Parse the body, apply it to the raw attribute
+    def parse_body
+      @raw = JSON.parse(@raw.body).first
+    end
+
+    # Get the key from the raw output
+    def return_key
+      @key = @raw["Key"]
+    end
+
+    # Get the value from the raw output
+    def return_value
+      @value = @raw["Value"]
+      @value = Base64.decode64(@value) unless @value.nil?
+    end
 
   end
 end
