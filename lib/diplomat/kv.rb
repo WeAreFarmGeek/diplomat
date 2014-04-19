@@ -9,14 +9,14 @@ module Diplomat
     def get key
       @key   = key
       @raw   = @conn.get "/v1/kv/#{@key}"
-      @raw   = JSON.parse @raw.body
+      @raw   = JSON.parse(@raw.body).first
       @value = Base64.decode64(@raw["Value"])
       return @value
     end
 
     def put key, value
       @raw   = @conn.put "/v1/kv/#{@key}", @value
-      @raw   = JSON.parse @raw.body
+      @raw   = JSON.parse(@raw.body).first
       @key   = @raw["Key"]
       @value = Base64.decode64(@raw["Value"])
       return @value
