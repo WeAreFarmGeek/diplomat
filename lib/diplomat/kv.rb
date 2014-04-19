@@ -28,5 +28,18 @@ module Diplomat
       @value = nil
     end
 
+    def self.get *args
+      Diplomat::Kv.new.get *args
+    end
+
+    def self.put *args
+      Diplomat::Kv.new.put *args
+    end
+
+    def self.delete *args
+      Diplomat::Kv.new.delete *args
+    end
+
+
   end
 end

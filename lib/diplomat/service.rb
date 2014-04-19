@@ -9,5 +9,9 @@ module Diplomat
       return JSON.parse ret
     end
 
+    def self.get *args
+      Diplomat::Service.new.get *args
+    end
+
   end
 end
