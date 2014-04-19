@@ -5,7 +5,7 @@ module Diplomat
   class Service < Diplomat::RestClient
 
     def get key
-      ret = @conn.get "/v1/service/#{key}"
+      ret = @conn.get "/v1/catalog/service/#{key}"
       return JSON.parse ret
     end
 
