@@ -1,5 +1,6 @@
 require 'base64'
 require 'faraday'
+require 'pry'
 
 module Diplomat
   class Kv < Diplomat::RestClient
@@ -25,7 +26,7 @@ module Diplomat
         req.url "/v1/kv/#{key}"
         req.body = value
       end
-      if @raw.body == "true"
+      if @raw.body == "true\n"
         @key   = key
         @value = value
       end

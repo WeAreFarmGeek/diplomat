@@ -34,7 +34,7 @@ describe Diplomat::Kv do
       }])
 
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-      faraday.stub(:put).and_return(OpenStruct.new({ body: "true"}))
+      faraday.stub(:put).and_return(OpenStruct.new({ body: "true\n"}))
       kv = Diplomat::Kv.new(faraday)
 
       expect(kv.put(key, key_params)).to eq(key_params)
@@ -48,7 +48,7 @@ describe Diplomat::Kv do
       }])
 
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-      faraday.stub(:put).and_return(OpenStruct.new({ body: "true"}))
+      faraday.stub(:put).and_return(OpenStruct.new({ body: "true\n"}))
       kv = Diplomat::Kv.new(faraday)
 
       expect(kv.put("toast/#{key}", key_params)).to eq(key_params)
