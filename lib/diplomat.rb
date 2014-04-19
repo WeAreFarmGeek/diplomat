@@ -31,7 +31,7 @@ module Diplomat
   self.lib_path = File.expand_path "../diplomat", __FILE__
 
   # TODO: Make this configurable and overridable
-  self.url = "http://localhost:3000"
+  self.url = "http://localhost:8500"
 
 
 
