@@ -1,6 +1,5 @@
 require 'base64'
 require 'faraday'
-require 'pp'
 
 module Diplomat
   class Members < Diplomat::RestClient
