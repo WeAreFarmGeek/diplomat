@@ -8,7 +8,7 @@ module Diplomat
     # @return [OpenStruct] all data associated with the service
     def checks
       ret = @conn.get "/v1/agent/checks"
-      return OpenStruct.new JSON.parse(ret.body)
+      return JSON.parse(ret.body)
     end
 
     # Register a check
