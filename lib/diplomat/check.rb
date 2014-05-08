@@ -19,14 +19,31 @@ module Diplomat
     # @param interval [String] frequency (with units) of the check execution
     # @param ttl [String] time (with units) to mark a check down
     # @return [Integer] Status code
-    def register check_id, name, notes, script, interval, ttl
+    def register_script check_id, name, notes, script, interval
       json = JSON.generate(
       {
         "ID" => check_id,
         "Name" => name,
         "Notes" => notes,
         "Script" => script,
-        "Interval" => interval,
+        "Interval" => interval
+      }
+      )
+
+      ret = @conn.put do |req|
+        req.url "/v1/agent/check/register"
+        req.body = json
+      end
+      
+      return true if ret.status == 200
+    end
+
+    def register_ttl check_id, name, notes, ttl
+      json = JSON.generate(
+      {
+        "ID" => check_id,
+        "Name" => name,
+        "Notes" => notes,
         "TTL" => ttl,
       }
       )
@@ -36,7 +53,7 @@ module Diplomat
         req.body = json
       end
       
-      return ret.status
+      return true if ret.status == 200
     end
 
     # Deregister a check
@@ -44,7 +61,7 @@ module Diplomat
     # @return [Integer] Status code
     def deregister check_id
       ret = @conn.get "/v1/agent/check/deregister/#{check_id}"
-      return ret.status
+      return true if ret.status == 200
     end
 
     # Pass a check
@@ -52,7 +69,7 @@ module Diplomat
     # @return [Integer] Status code
     def pass check_id
       ret = @conn.get "/v1/agent/check/pass/#{check_id}"
-      return ret.status
+      return true if ret.status == 200
     end
 
     # Warn a check
@@ -60,7 +77,7 @@ module Diplomat
     # @return [Integer] Status code
     def warn check_id
       ret = @conn.get "/v1/agent/check/warn/#{check_id}"
-      return ret.status
+      return true if ret.status == 200
     end
 
     # Warn a check
@@ -68,7 +85,7 @@ module Diplomat
     # @return [Integer] Status code
     def fail check_id
       ret = @conn.get "/v1/agent/check/fail/#{check_id}"
-      return ret.status
+      return true if ret.status == 200
     end
 
     # @note This is sugar, see (#get)
@@ -77,8 +94,13 @@ module Diplomat
     end
 
     # @note This is sugar, see (#get)
-    def self.register *args
-      Diplomat::Check.new.register *args
+    def self.register_script *args
+      Diplomat::Check.new.register_script *args
+    end
+
+    # @note This is sugar, see (#get)
+    def self.register_ttl *args
+      Diplomat::Check.new.register_ttl *args
     end
 
     # @note This is sugar, see (#get)
