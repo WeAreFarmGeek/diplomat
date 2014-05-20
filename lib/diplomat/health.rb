@@ -57,42 +57,42 @@ module Diplomat
     end
 
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#node)
     def self.node *args
       Diplomat::Health.new.node *args
     end
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#checks)
     def self.checks *args
       Diplomat::Health.new.checks *args
     end
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#service)
     def self.service *args
       Diplomat::Health.new.service *args
     end
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#state)
     def self.state *args
       Diplomat::Health.new.state *args
     end
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#unknown)
     def self.unknown
       Diplomat::Health.new.unknown
     end
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#passing)
     def self.passing
       Diplomat::Health.new.passing
     end
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#warning)
     def self.warning
       Diplomat::Health.new.warning
     end
 
-    # @note This is sugar, see (#get)
+    # @note This is sugar, see (#critical)
     def self.critical
       Diplomat::Health.new.critical
     end    
