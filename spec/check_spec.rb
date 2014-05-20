@@ -30,34 +30,40 @@ describe Diplomat::Check do
       expect(check.checks["service:redis"]["Node"]).to eq("foobar")
     end
 
-    it "register" do
+    it "register_script" do
       faraday.stub(:put).and_return(OpenStruct.new({ body: '', status: 200 }))
       check = Diplomat::Check.new(faraday)
-      expect(check.register("foobar-1", "Foobar", "Foobar test", "/script/test", "10s", "15s")).to eq(200)
+      expect(check.register_script("foobar-1", "Foobar", "Foobar test", "/script/test", "10s")).to eq(true)
+    end
+
+    it "register_ttl" do
+      faraday.stub(:put).and_return(OpenStruct.new({ body: '', status: 200 }))
+      check = Diplomat::Check.new(faraday)
+      expect(check.register_ttl("foobar-1", "Foobar", "Foobar test", "15s")).to eq(true)
     end
 
     it "deregister" do
       faraday.stub(:get).and_return(OpenStruct.new({ body: '', status: 200 }))
       check = Diplomat::Check.new(faraday)
-      expect(check.deregister("foobar-1")).to eq(200)
+      expect(check.deregister("foobar-1")).to eq(true)
     end
 
     it "pass" do
       faraday.stub(:get).and_return(OpenStruct.new({ body: '', status: 200 }))
       check = Diplomat::Check.new(faraday)
-      expect(check.pass("foobar-1")).to eq(200)
+      expect(check.pass("foobar-1")).to eq(true)
     end
 
     it "warn" do
       faraday.stub(:get).and_return(OpenStruct.new({ body: '', status: 200 }))
       check = Diplomat::Check.new(faraday)
-      expect(check.warn("foobar-1")).to eq(200)
+      expect(check.warn("foobar-1")).to eq(true)
     end
 
     it "fail" do
       faraday.stub(:get).and_return(OpenStruct.new({ body: '', status: 200 }))
       check = Diplomat::Check.new(faraday)
-      expect(check.fail("foobar-1")).to eq(200)
+      expect(check.fail("foobar-1")).to eq(true)
     end
 
   end
