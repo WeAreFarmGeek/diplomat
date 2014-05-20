@@ -41,7 +41,7 @@ production:
 
 ## Usage
 
-[The most up to date place to read about the API is here.](http://rubydoc.info/github/johnhamelink/diplomat)
+[The most up to date place to read about the API is here.](http://rubydoc.info/github/WeAreFarmGeek/diplomat)
 
 Here's a few examples of how diplomat works:
 
