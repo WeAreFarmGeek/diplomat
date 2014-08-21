@@ -9,7 +9,7 @@
 
 #### What's Diplomat for?
 
-Diplomat allows any ruby application to interact with [Consul's](http://www.consul.io/) distributed key value store, and also receive information about services currently available in the Consol cluster.
+Diplomat allows any ruby application to interact with [Consul's](http://www.consul.io/) distributed key value store, and also receive information about services currently available in the Consul cluster.
 
 #### Does it work in rails?
 
@@ -31,17 +31,10 @@ production:
 <% end %>
 ```
 
-#### Why would I use Consol over ZooKeeper, Doozerd, etcd, Nagios, Sensu, SmartStack, SkyDNS, Chef, Puppet, Ansible, etc?
+#### Why would I use Consul over ZooKeeper, Doozerd, etcd, Nagios, Sensu, SmartStack, SkyDNS, Chef, Puppet, Ansible, etc?
 
 [Read up what makes Consul different here](http://www.consul.io/intro/vs/index.html)
 
-#### How do I install Consul?
-
-[See here](http://www.consul.io/intro/). I managed to roll it out on my production machines with the help of [Ansible](http://www.ansible.com/) in one working day.
-
-## Usage
-
-[The most up to date place to read about the API is here.](http://rubydoc.info/github/WeAreFarmGeek/diplomat)
 
 Here's a few examples of how diplomat works:
 
