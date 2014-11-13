@@ -6,9 +6,14 @@ module Diplomat
 
     # Get a service by it's key
     # @param key [String] the key
+    # @param scope [Symbol] :first or :all results
     # @return [OpenStruct] all data associated with the service
-    def get key
+    def get key, scope=:first
       ret = @conn.get "/v1/catalog/service/#{key}"
+
+      if scope == :all
+        return JSON.parse(ret.body).map { |service| OpenStruct.new service }
+      end
       return OpenStruct.new JSON.parse(ret.body).first
     end
 
