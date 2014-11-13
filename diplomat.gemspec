@@ -16,6 +16,7 @@ Gem::Specification.new "diplomat", Diplomat::VERSION do |spec|
   spec.add_development_dependency "fakes-rspec", "~> 1.0"
   spec.add_development_dependency "codeclimate-test-reporter", "~> 0.3.0"
   spec.add_development_dependency "fivemat"
+  spec.add_development_dependency "gem-release", "~> 0.7"
 
   spec.add_runtime_dependency "json", "~> 1.8"
   spec.add_runtime_dependency "faraday", "~> 0.9"
