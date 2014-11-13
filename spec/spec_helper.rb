@@ -1,8 +1,10 @@
 require "bundler/setup"
 Bundler.setup
 
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+if ENV['CI'] == true
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+end
 
 require 'diplomat'
 require 'fakes-rspec'
