@@ -84,7 +84,7 @@ foo_service = Diplomat::Service.get('foo', :all)
 
 ### Todo
 
- - Deleting Keys
+ - ~~Deleting Keys~~ **Needs a test**
  - PUTting and DELETEing services
  - ~~Listing available Services~~ **Done**
  - ~~Health~~ **Done**
