@@ -79,7 +79,7 @@ Or if you have multiple nodes per service:
 
 ```ruby
 foo_service = Diplomat::Service.get('foo', :all)
-# => [#<OpenStruct Node="indigo", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["postgres"], ServicePort=5432>,#<OpenStruct Node="indigo", Address="1.2.3.5", ServiceID="indigo_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>]
+# => [#<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["postgres"], ServicePort=5432>,#<OpenStruct Node="indigo", Address="1.2.3.5", ServiceID="indigo_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>]
 ```
 
 ### Todo
