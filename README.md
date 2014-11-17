@@ -86,6 +86,7 @@ foo_service = Diplomat::Service.get('foo', :all)
 
  - Updating docs with latest changes
  - PUTting and DELETEing services
+ - Allowing the custom configuration of the consul url to connect to
  - - ~~Deleting Keys~~ **Needs a test**
  - ~~Listing available Services~~ **Done**
  - ~~Health~~ **Done**
