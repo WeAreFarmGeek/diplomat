@@ -90,11 +90,12 @@ You can create a custom configuration using the following syntax:
 Diplomat.configure do |config|
   # Set up a custom Consul URL
   config.url = "localhost:8888"
+  # Set up a custom Faraday Middleware
   config.middleware = MyCustomMiddleware
 end
 ```
 
-This is traditionally kept inside the `config/initializers` directory if you're using rails. The middleware You can specify
+This is traditionally kept inside the `config/initializers` directory if you're using rails. The middleware allows you to customise what happens when faraday sends and receives data. This can be useful if you want to instrument your use of diplomat, for example.
 
 ### Todo
 
