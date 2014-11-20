@@ -82,6 +82,20 @@ foo_service = Diplomat::Service.get('foo', :all)
 # => [#<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>,#<OpenStruct Node="indigo", Address="1.2.3.5", ServiceID="indigo_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>]
 ```
 
+### Custom configuration
+
+You can create a custom configuration using the following syntax:
+
+```ruby
+Diplomat.configure do |config|
+  # Set up a custom Consul URL
+  config.url = "localhost:8888"
+  config.middleware = MyCustomMiddleware
+end
+```
+
+This is traditionally kept inside the `config/initializers` directory if you're using rails. The middleware You can specify
+
 ### Todo
 
  - Updating docs with latest changes
