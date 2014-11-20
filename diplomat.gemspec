@@ -7,7 +7,7 @@ Gem::Specification.new "diplomat", Diplomat::VERSION do |spec|
   spec.homepage      = "https://github.com/johnhamelink/diplomat"
   spec.license       = "BSD"
 
-  spec.files         = `git ls-files lib README.md LICENSE`.split($/)
+  spec.files         = `git ls-files lib README.md LICENSE features`.split($/)
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake", "~> 10.3"
@@ -17,6 +17,7 @@ Gem::Specification.new "diplomat", Diplomat::VERSION do |spec|
   spec.add_development_dependency "codeclimate-test-reporter", "~> 0.3.0"
   spec.add_development_dependency "fivemat"
   spec.add_development_dependency "gem-release", "~> 0.7"
+  spec.add_development_dependency "cucumber", "~> 1.3"
 
   spec.add_runtime_dependency "json", "~> 1.8"
   spec.add_runtime_dependency "faraday", "~> 0.9"
