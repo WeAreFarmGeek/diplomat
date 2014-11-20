@@ -95,7 +95,7 @@ Diplomat.configure do |config|
 end
 ```
 
-This is traditionally kept inside the `config/initializers` directory if you're using rails. The middleware allows you to customise what happens when faraday sends and receives data. This can be useful if you want to instrument your use of diplomat, for example.
+This is traditionally kept inside the `config/initializers` directory if you're using rails. The middleware allows you to customise what happens when faraday sends and receives data. This can be useful if you want to instrument your use of diplomat, for example. You can read more about Faraday's custom middleware [here](http://stackoverflow.com/a/20973008).
 
 ### Todo
 
