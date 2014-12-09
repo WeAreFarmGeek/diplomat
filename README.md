@@ -82,6 +82,44 @@ foo_service = Diplomat::Service.get('foo', :all)
 # => [#<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>,#<OpenStruct Node="indigo", Address="1.2.3.5", ServiceID="indigo_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>]
 ```
 
+### Sessions
+
+#### Getting
+
+Creating a session:
+
+```ruby
+sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4.4.4"})
+# => "fc5ca01a-c317-39ea-05e8-221da00d3a12"
+```
+Or destroying a session:
+
+```ruby
+Diplomat::Session.destroy("fc5ca01a-c317-39ea-05e8-221da00d3a12")
+```
+
+### Locks
+
+#### Acquire
+
+```ruby
+sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4.4.4"})
+lock_acquired = Diplomat::Lock.acquire("/key/to/lock", sessionid)
+# => true
+```
+Or wait for a lock to be acquired:
+
+```ruby
+sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4.4.4"})
+lock_acquired = Diplomat::Lock.wait_to_acquire("/key/to/lock", sessionid)
+```
+
+#### Release
+
+```ruby
+Diplomat::Lock.release("/key/to/lock", sessionid )
+```
+
 ### Custom configuration
 
 You can create a custom configuration using the following syntax:
