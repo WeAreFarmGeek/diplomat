@@ -84,8 +84,6 @@ foo_service = Diplomat::Service.get('foo', :all)
 
 ### Sessions
 
-#### Getting
-
 Creating a session:
 
 ```ruby
@@ -100,7 +98,7 @@ Diplomat::Session.destroy("fc5ca01a-c317-39ea-05e8-221da00d3a12")
 
 ### Locks
 
-#### Acquire
+Acquire a lock:
 
 ```ruby
 sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4.4.4"})
@@ -114,7 +112,7 @@ sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4
 lock_acquired = Diplomat::Lock.wait_to_acquire("/key/to/lock", sessionid)
 ```
 
-#### Release
+Releaes a lock:
 
 ```ruby
 Diplomat::Lock.release("/key/to/lock", sessionid )
