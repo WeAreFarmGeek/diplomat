@@ -3,6 +3,11 @@ require 'spec_helper'
 describe Diplomat do
 
   describe "configuration" do
+    before(:each) do
+      expect(Diplomat.configuration).to_not be_nil
+      expect(Diplomat.configuration).to be_a Diplomat::Configuration
+      Diplomat.configuration = Diplomat::Configuration.new
+    end
 
     it "has configuration block"  do
       expect { |b| Diplomat.configure(&b) }.to yield_control
