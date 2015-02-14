@@ -19,12 +19,18 @@ module Diplomat
     # Get a value by it's key
     # @param key [String] the key
     # @param value [String] the value
+    # @param options [Hash] the query params
+    # @option options [Integer] :cas The modify index
     # @return [String] The base64-decoded value associated with the key
-    def put key, value
-      @raw = @conn.put do |req|
-        req.url "/v1/kv/#{key}"
-        req.body = value
+    def put key, value, options=nil
+      qs = ""
+
+      if options and options[:cas]
+        qs = "?cas=#{options[:cas]}"
       end
+
+      @raw = @conn.put("/v1/kv/#{key}#{qs}", value)
+
       if @raw.body == "true\n"
         @key   = key
         @value = value
