@@ -5,7 +5,7 @@ module Diplomat
 
     def initialize(url="http://localhost:8500", acl_token=nil)
       @middleware = []
-      @url = "http://localhost:8500"
+      @url = url
       @acl_token = acl_token
     end
 

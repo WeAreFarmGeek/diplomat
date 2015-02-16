@@ -115,10 +115,6 @@ describe Diplomat::Kv do
           expect(kv.put(key, key_params, options)).to eq(key_params)
         end
       end
-      context "ACLs NOT enabled" do
-
-        
-      end
     end
 
     it "namespaces" do

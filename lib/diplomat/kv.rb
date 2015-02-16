@@ -27,12 +27,6 @@ module Diplomat
     def put key, value, options=nil
       qs = ""
       @options = options
-      # if options and options[:cas]
-        #qs = "?cas=#{options[:cas]}" if options && options[:cas]
-        #qs = use_cas(options)  #unless use_cas(options).nil?
-      # end
-
-      # @raw = @conn.put("/v1/kv/#{key}#{qs}", value)
       @raw = @conn.put do |req|
         args = ["/v1/kv/#{key}"]
         args += check_acl_token unless check_acl_token.nil?
@@ -45,7 +39,6 @@ module Diplomat
         @key   = key
         @value = value
       else
-      # return @value
         @raw.body
       end
     end
