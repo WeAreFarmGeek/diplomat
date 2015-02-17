@@ -1,5 +1,5 @@
 # Diplomat
-[![Gem Version](https://badge.fury.io/rb/diplomat.svg)](http://badge.fury.io/rb/diplomat) [![Build Status](https://travis-ci.org/WeAreFarmGeek/diplomat.svg?branch=master)](https://travis-ci.org/WeAreFarmGeek/diplomat) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.png)](https://codeclimate.com/github/WeAreFarmGeek/diplomat)
+[![Gem Version](https://badge.fury.io/rb/diplomat.svg)](http://badge.fury.io/rb/diplomat) [![Build Status](https://travis-ci.org/WeAreFarmGeek/diplomat.svg?branch=master)](https://travis-ci.org/WeAreFarmGeek/diplomat) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.png)](https://codeclimate.com/github/WeAreFarmGeek/diplomat) [![Dependency Status](https://gemnasium.com/WeAreFarmGeek/diplomat.svg)](https://gemnasium.com/WeAreFarmGeek/diplomat)
 ### A HTTP Ruby API for [Consul](http://www.consul.io/)
 
 ![Diplomacy Boad Game](http://i.imgur.com/Nkuy4b7.jpg)
