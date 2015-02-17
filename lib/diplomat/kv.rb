@@ -31,7 +31,6 @@ module Diplomat
         args = ["/v1/kv/#{key}"]
         args += check_acl_token unless check_acl_token.nil?
         args += use_cas(@options) unless use_cas(@options).nil?
-        puts args.join
         req.url args.join
         req.body = value
       end
@@ -48,9 +47,11 @@ module Diplomat
     # @return [nil]
     def delete key
       @key = key
-      @raw = @conn.delete "/v1/kv/#{@key}"
-      return_key
-      return_value
+      args = ["/v1/kv/#{@key}"]
+      args += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.delete args.join
+      # return_key
+      # return_value
     end
 
     # @note This is sugar, see (#get)
