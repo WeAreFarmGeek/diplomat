@@ -99,14 +99,15 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 
 ### Todo
 
- - Updating docs with latest changes
- - PUTting and DELETEing services
- - ~~Allowing the custom configuration of the consul url to connect to~~ **Done**
- - - ~~Deleting Keys~~ **Done**
- - ~~Listing available Services~~ **Done**
- - ~~Health~~ **Done**
- - ~~Members~~ **Done**
- - ~~Status~~ **Done**
+-  [ ] Updating Docs with latest changes
+-  [ ] PUTing and DELETEing services
+-  [x] Allowing the custom configuration of the consul url to connect to
+-  [x] Deleting Keys
+-  [x] Listing available services
+-  [x] Health
+-  [x] Members
+-  [x] Status
+
 
 ## Enjoy!
 
