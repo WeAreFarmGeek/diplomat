@@ -11,7 +11,9 @@ module Diplomat
     # @return [String] The base64-decoded value associated with the key
     def get key
       @key = key
-      @raw = @conn.get "/v1/kv/#{@key}"
+      args = ["/v1/kv/#{@key}"]
+      args += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.get args.join
       parse_body
       return_value
     end
@@ -24,18 +26,20 @@ module Diplomat
     # @return [String] The base64-decoded value associated with the key
     def put key, value, options=nil
       qs = ""
-
-      if options and options[:cas]
-        qs = "?cas=#{options[:cas]}"
+      @options = options
+      @raw = @conn.put do |req|
+        args = ["/v1/kv/#{key}"]
+        args += check_acl_token unless check_acl_token.nil?
+        args += use_cas(@options) unless use_cas(@options).nil?
+        req.url args.join
+        req.body = value
       end
-
-      @raw = @conn.put("/v1/kv/#{key}#{qs}", value)
-
       if @raw.body == "true\n"
         @key   = key
         @value = value
+      else
+        @raw.body
       end
-      return @value
     end
 
     # Delete a value by it's key
@@ -43,9 +47,11 @@ module Diplomat
     # @return [nil]
     def delete key
       @key = key
-      @raw = @conn.delete "/v1/kv/#{@key}"
-      return_key
-      return_value
+      args = ["/v1/kv/#{@key}"]
+      args += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.delete args.join
+      # return_key
+      # return_value
     end
 
     # @note This is sugar, see (#get)
@@ -81,5 +87,12 @@ module Diplomat
       @value = Base64.decode64(@value) unless @value.nil?
     end
 
+    def check_acl_token
+      ["?token=#{Diplomat.configuration.acl_token}"] if Diplomat.configuration.acl_token
+    end
+
+    def use_cas(options)
+      ["&cas=#{options[:cas]}"] if options && options[:cas]
+    end
   end
 end
