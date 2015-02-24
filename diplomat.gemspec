@@ -14,7 +14,7 @@ Gem::Specification.new "diplomat", Diplomat::VERSION do |spec|
   spec.add_development_dependency "pry", "~> 0.9"
   spec.add_development_dependency "rspec", "~> 2.14.1"
   spec.add_development_dependency "fakes-rspec", "~> 2.0"
-  spec.add_development_dependency "codeclimate-test-reporter", "~> 0.3.0"
+  spec.add_development_dependency "codeclimate-test-reporter", "~> 0.4.0"
   spec.add_development_dependency "fivemat"
   spec.add_development_dependency "gem-release", "~> 0.7"
   spec.add_development_dependency "cucumber", "~> 1.3"
