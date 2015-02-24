@@ -101,8 +101,8 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 
  - Updating docs with latest changes
  - PUTting and DELETEing services
- - Allowing the custom configuration of the consul url to connect to
- - - ~~Deleting Keys~~ **Needs a test**
+ - ~~Allowing the custom configuration of the consul url to connect to~~ **Done**
+ - - ~~Deleting Keys~~ **Done**
  - ~~Listing available Services~~ **Done**
  - ~~Health~~ **Done**
  - ~~Members~~ **Done**
