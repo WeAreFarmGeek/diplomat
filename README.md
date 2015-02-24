@@ -112,7 +112,7 @@ sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4
 lock_acquired = Diplomat::Lock.wait_to_acquire("/key/to/lock", sessionid)
 ```
 
-Releaes a lock:
+Release a lock:
 
 ```ruby
 Diplomat::Lock.release("/key/to/lock", sessionid )
