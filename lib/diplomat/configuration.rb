@@ -1,11 +1,12 @@
 module Diplomat
   class Configuration
     attr_accessor :middleware
-    attr_accessor :url
+    attr_accessor :url, :acl_token
 
-    def initialize
+    def initialize(url="http://localhost:8500", acl_token=nil)
       @middleware = []
-      @url = "http://localhost:8500"
+      @url = url
+      @acl_token = acl_token
     end
 
     def middleware=(middleware)
