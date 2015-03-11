@@ -13,9 +13,7 @@ module Diplomat
         req.url "/v1/kv/#{key}?acquire=#{session}"
         req.body = value unless value.nil?
       end
-      return true if raw.body == 'true'
-      return false
-
+      raw.body == 'true'
     end
 
     # wait to aquire a lock
