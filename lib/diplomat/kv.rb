@@ -11,9 +11,9 @@ module Diplomat
     # @return [String] The base64-decoded value associated with the key
     def get key
       @key = key
-      args = ["/v1/kv/#{@key}"]
-      args += check_acl_token unless check_acl_token.nil?
-      @raw = @conn.get args.join
+      url = ["/v1/kv/#{@key}"]
+      url += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.get concat_url url
       parse_body
       return_value
     end
@@ -28,10 +28,10 @@ module Diplomat
       qs = ""
       @options = options
       @raw = @conn.put do |req|
-        args = ["/v1/kv/#{key}"]
-        args += check_acl_token unless check_acl_token.nil?
-        args += use_cas(@options) unless use_cas(@options).nil?
-        req.url args.join
+        url = ["/v1/kv/#{key}"]
+        url += check_acl_token unless check_acl_token.nil?
+        url += use_cas(@options) unless use_cas(@options).nil?
+        req.url concat_url url
         req.body = value
       end
       if @raw.body == "true\n"
@@ -47,9 +47,9 @@ module Diplomat
     # @return [nil]
     def delete key
       @key = key
-      args = ["/v1/kv/#{@key}"]
-      args += check_acl_token unless check_acl_token.nil?
-      @raw = @conn.delete args.join
+      url = ["/v1/kv/#{@key}"]
+      url += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.delete concat_url url
       # return_key
       # return_value
     end
@@ -88,11 +88,11 @@ module Diplomat
     end
 
     def check_acl_token
-      ["?token=#{Diplomat.configuration.acl_token}"] if Diplomat.configuration.acl_token
+      ["token=#{Diplomat.configuration.acl_token}"] if Diplomat.configuration.acl_token
     end
 
     def use_cas(options)
-      ["&cas=#{options[:cas]}"] if options && options[:cas]
+      ["cas=#{options[:cas]}"] if options && options[:cas]
     end
   end
 end
