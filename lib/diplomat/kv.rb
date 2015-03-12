@@ -34,12 +34,11 @@ module Diplomat
         req.url concat_url url
         req.body = value
       end
-      if @raw.body == "true\n"
+      if @raw.body == "true"
         @key   = key
         @value = value
-      else
-        @raw.body
       end
+      @raw.body == "true"
     end
 
     # Delete a value by it's key
@@ -50,8 +49,7 @@ module Diplomat
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token unless check_acl_token.nil?
       @raw = @conn.delete concat_url url
-      # return_key
-      # return_value
+      nil
     end
 
     # @note This is sugar, see (#get)
