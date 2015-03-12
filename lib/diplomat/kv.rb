@@ -6,7 +6,7 @@ module Diplomat
 
     attr_reader :key, :value, :raw
 
-    # Get a value by it's key
+    # Get a value by its key
     # @param key [String] the key
     # @return [String] The base64-decoded value associated with the key
     def get key
@@ -18,14 +18,13 @@ module Diplomat
       return_value
     end
 
-    # Get a value by it's key
+    # Associate a value with a key
     # @param key [String] the key
     # @param value [String] the value
     # @param options [Hash] the query params
     # @option options [Integer] :cas The modify index
     # @return [String] The base64-decoded value associated with the key
     def put key, value, options=nil
-      qs = ""
       @options = options
       @raw = @conn.put do |req|
         url = ["/v1/kv/#{key}"]
@@ -41,7 +40,7 @@ module Diplomat
       @raw.body == "true"
     end
 
-    # Delete a value by it's key
+    # Delete a value by its key
     # @param key [String] the key
     # @return [nil]
     def delete key
