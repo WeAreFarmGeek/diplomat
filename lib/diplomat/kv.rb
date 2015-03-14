@@ -23,7 +23,7 @@ module Diplomat
     # @param value [String] the value
     # @param options [Hash] the query params
     # @option options [Integer] :cas The modify index
-    # @return [String] The base64-decoded value associated with the key
+    # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
     def put key, value, options=nil
       @options = options
       @raw = @conn.put do |req|
