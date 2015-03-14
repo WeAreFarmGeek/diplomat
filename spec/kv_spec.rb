@@ -97,7 +97,7 @@ describe Diplomat::Kv do
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
           expect(kv.put(key, key_params, options)).to eq(true)
-          expect(kv.put).to eq(key_params)
+          expect(kv.value).to eq(key_params)
         end
       end
     end
