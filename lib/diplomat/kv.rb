@@ -42,13 +42,12 @@ module Diplomat
 
     # Delete a value by its key
     # @param key [String] the key
-    # @return [nil]
+    # @return [OpenStruct]
     def delete key
       @key = key
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token unless check_acl_token.nil?
       @raw = @conn.delete concat_url url
-      nil
     end
 
     # @note This is sugar, see (#get)
