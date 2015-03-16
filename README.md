@@ -87,7 +87,7 @@ foo_service = Diplomat::Service.get('foo', :all)
 Creating a session:
 
 ```ruby
-sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4.4.4"})
+sessionid = Diplomat::Session.create({:Node => "server1", :Name => "my-lock"})
 # => "fc5ca01a-c317-39ea-05e8-221da00d3a12"
 ```
 Or destroying a session:
@@ -101,7 +101,7 @@ Diplomat::Session.destroy("fc5ca01a-c317-39ea-05e8-221da00d3a12")
 Acquire a lock:
 
 ```ruby
-sessionid = Diplomat::Session.create({:hostname => "server1", :ipaddress => "4.4.4.4"})
+sessionid = Diplomat::Session.create({:Node => "server1", :Name => "my-lock"})
 lock_acquired = Diplomat::Lock.acquire("/key/to/lock", sessionid)
 # => true
 ```

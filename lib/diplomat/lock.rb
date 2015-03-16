@@ -6,25 +6,26 @@ module Diplomat
     # Acquire a lock
     # @param key [String] the key
     # @param session [String] the session, generated from Diplomat::Session.create
+    # @param value [String] the value for the key
     # @return [Boolean] If the lock was acquired
-    def acquire key, session
+    def acquire key, session, value=nil
       raw = @conn.put do |req|
         req.url "/v1/kv/#{key}?acquire=#{session}"
+        req.body = value unless value.nil?
       end
-      return true if raw.body == 'true'
-      return false
-
+      raw.body == 'true'
     end
 
     # wait to aquire a lock
     # @param key [String] the key
     # @param session [String] the session, generated from Diplomat::Session.create
+    # @param value [String] the value for the key
     # @param check_interval [Integer] number of seconds to wait between retries
     # @return [Boolean] If the lock was acquired
-    def wait_to_acquire key, session, check_interval=10
+    def wait_to_acquire key, session, value=nil, check_interval=10
       acquired = false
       while !acquired
-        acquired = self.acquire key, session
+        acquired = self.acquire key, session, value
         sleep(check_interval) if !acquired
         return true if acquired
       end
