@@ -6,52 +6,48 @@ module Diplomat
 
     attr_reader :key, :value, :raw
 
-    # Get a value by it's key
+    # Get a value by its key
     # @param key [String] the key
     # @return [String] The base64-decoded value associated with the key
     def get key
       @key = key
-      args = ["/v1/kv/#{@key}"]
-      args += check_acl_token unless check_acl_token.nil?
-      @raw = @conn.get args.join
+      url = ["/v1/kv/#{@key}"]
+      url += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.get concat_url url
       parse_body
       return_value
     end
 
-    # Get a value by it's key
+    # Associate a value with a key
     # @param key [String] the key
     # @param value [String] the value
     # @param options [Hash] the query params
     # @option options [Integer] :cas The modify index
-    # @return [String] The base64-decoded value associated with the key
+    # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
     def put key, value, options=nil
-      qs = ""
       @options = options
       @raw = @conn.put do |req|
-        args = ["/v1/kv/#{key}"]
-        args += check_acl_token unless check_acl_token.nil?
-        args += use_cas(@options) unless use_cas(@options).nil?
-        req.url args.join
+        url = ["/v1/kv/#{key}"]
+        url += check_acl_token unless check_acl_token.nil?
+        url += use_cas(@options) unless use_cas(@options).nil?
+        req.url concat_url url
         req.body = value
       end
-      if @raw.body == "true\n"
+      if @raw.body == "true"
         @key   = key
         @value = value
-      else
-        @raw.body
       end
+      @raw.body == "true"
     end
 
-    # Delete a value by it's key
+    # Delete a value by its key
     # @param key [String] the key
-    # @return [nil]
+    # @return [OpenStruct]
     def delete key
       @key = key
-      args = ["/v1/kv/#{@key}"]
-      args += check_acl_token unless check_acl_token.nil?
-      @raw = @conn.delete args.join
-      # return_key
-      # return_value
+      url = ["/v1/kv/#{@key}"]
+      url += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.delete concat_url url
     end
 
     # @note This is sugar, see (#get)
@@ -88,11 +84,11 @@ module Diplomat
     end
 
     def check_acl_token
-      ["?token=#{Diplomat.configuration.acl_token}"] if Diplomat.configuration.acl_token
+      ["token=#{Diplomat.configuration.acl_token}"] if Diplomat.configuration.acl_token
     end
 
     def use_cas(options)
-      ["&cas=#{options[:cas]}"] if options && options[:cas]
+      ["cas=#{options[:cas]}"] if options && options[:cas]
     end
   end
 end

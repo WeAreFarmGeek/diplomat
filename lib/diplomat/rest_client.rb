@@ -8,6 +8,14 @@ module Diplomat
       start_connection api_connection
     end
 
+    def concat_url parts
+        if parts.length > 1 then
+            parts.first << '?' << parts.drop(1).join('&')
+        else
+            parts.first
+        end
+    end
+
     private
 
     # Build the API Client
