@@ -8,11 +8,15 @@ module Diplomat
 
     # Get a value by its key
     # @param key [String] the key
+    # @param options [Hash] the query params
+    # @option options [String] :consistency The read consistency type
     # @return [String] The base64-decoded value associated with the key
-    def get key
+    def get key, options=nil
       @key = key
+      @options = options
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token unless check_acl_token.nil?
+      url += use_consistency(@options) unless use_consistency(@options).nil?
       @raw = @conn.get concat_url url
       parse_body
       return_value
@@ -89,6 +93,10 @@ module Diplomat
 
     def use_cas(options)
       ["cas=#{options[:cas]}"] if options && options[:cas]
+    end
+
+    def use_consistency(options)
+      ["#{options[:consistency]}"] if options && options[:consistency]
     end
   end
 end
