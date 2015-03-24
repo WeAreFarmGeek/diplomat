@@ -6,18 +6,69 @@ module Diplomat
 
     attr_reader :key, :value, :raw
 
-    # Get a value by its key
+    # Get a value by its key, potentially blocking for the first or next value
     # @param key [String] the key
     # @param options [Hash] the query params
     # @option options [String] :consistency The read consistency type
+    # @param not_found [Symbol] behaviour if the key doesn't exist;
+    #   :reject with exception, or :wait for it to appear
+    # @param found [Symbol] behaviour if the key does exist;
+    #   :reject with exception, :wait for its next value, or :return its current value
     # @return [String] The base64-decoded value associated with the key
-    def get key, options=nil
+    # @note
+    #   When trying to access a key, there are two possibilites:
+    #   - The key doesn't (yet) exist
+    #   - The key exists. This may be its first value, there is no way to tell
+    #   The combination of not_found and found behaviour gives maximum possible
+    #   flexibility. For X: reject, R: return, W: wait
+    #   - X X - meaningless; never return a value
+    #   - X R - "normal" non-blocking get operation. Default
+    #   - X W - get the next value only (must have a current value)
+    #   - W X - get the first value only (must not have a current value)
+    #   - W R - get the first or current value; always return something, but
+    #           block only when necessary
+    #   - W W - get the first or next value; wait until there is an update
+    def get key, options=nil, not_found=:reject, found=:return
       @key = key
       @options = options
+
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token unless check_acl_token.nil?
       url += use_consistency(@options) unless use_consistency(@options).nil?
-      @raw = @conn.get concat_url url
+
+      # 404s OK using this connection
+      raw = @conn_no_err.get concat_url url
+      if raw.status == 404
+        case not_found
+          when :reject
+            raise Diplomat::KeyNotFound, key
+          when :wait
+            index = raw.headers["x-consul-index"]
+        end
+      elsif raw.status == 200
+        case found
+          when :reject
+            raise Diplomat::KeyAlreadyExists, key
+          when :return
+            @raw = raw
+            parse_body
+            return return_value
+          when :wait
+            index = raw.headers["x-consul-index"]
+        end
+      else
+        raise Diplomat::UnknownStatus, "status #{raw.status}"
+      end
+
+      # Wait for first/next value
+      url = ["/v1/kv/#{@key}"]
+      url += check_acl_token unless check_acl_token.nil?
+      url += use_consistency(@options) unless use_consistency(@options).nil?
+      url += ["index=#{index}"]
+      @raw = @conn.get do |req|
+        req.url concat_url url
+        req.options.timeout = 86400
+      end
       parse_body
       return_value
     end

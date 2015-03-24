@@ -30,6 +30,15 @@ module Diplomat
           faraday.use middleware
         end
       end
+
+      @conn_no_err = api_connection || Faraday.new(:url => Diplomat.configuration.url) do |faraday|
+        faraday.adapter  Faraday.default_adapter
+        faraday.request  :url_encoded
+
+        Diplomat.configuration.middleware.each do |middleware|
+          faraday.use middleware
+        end
+      end
     end
 
   end
