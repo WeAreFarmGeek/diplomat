@@ -69,7 +69,7 @@ module Diplomat
 
     # Parse the body, apply it to the raw attribute
     def parse_body
-      @raw = JSON.parse(@raw.body).first
+      @raw = JSON.parse(@raw.body)
     end
 
     # Get the key from the raw output
@@ -79,8 +79,17 @@ module Diplomat
 
     # Get the value from the raw output
     def return_value
-      @value = @raw["Value"]
-      @value = Base64.decode64(@value) unless @value.nil?
+      if @raw.count == 1
+        @value = @raw.first["Value"]
+        @value = Base64.decode64(@value) unless @value.nil?
+      else
+        @value = @raw.map do |e|
+                   {
+                     key: e["Key"],
+                     value: e["Value"].nil? ? e["Value"] : Base64.decode64(e["Value"])
+                   }
+                 end
+      end
     end
 
     def check_acl_token
