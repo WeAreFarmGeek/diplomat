@@ -64,6 +64,7 @@ describe Diplomat::Kv do
           expect(kv.get("key")).to eq("Faraday::ResourceNotFound: the server responded with status 404")
         end
       end
+
       context "ACLs enabled, with valid_acl_token" do
         it "GET with ACLs enabled, valid_acl_token" do
           json = JSON.generate([{
@@ -133,14 +134,14 @@ describe Diplomat::Kv do
         it "DELETE" do
           faraday.stub(:delete).and_return(OpenStruct.new({ status: 200}))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.delete(key).status).to eq 200 
+          expect(kv.delete(key).status).to eq 200
         end
       end
       context "ACLs enabled, without valid_acl_token" do
         it "DELETE" do
           faraday.stub(:delete).and_return(OpenStruct.new({ status: 403}))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.delete(key).status).to eq 403 
+          expect(kv.delete(key).status).to eq 403
         end
       end
       context "ACLs enabled, with valid_acl_token" do
