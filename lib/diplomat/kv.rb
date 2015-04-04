@@ -13,8 +13,12 @@ module Diplomat
       @key = key
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token unless check_acl_token.nil?
-      @raw = @conn.get concat_url url
-      parse_body
+      begin
+        @raw = @conn.get concat_url url
+        parse_body
+      rescue Faraday::ResourceNotFound
+        @raw = { 'Value' => nil }
+      end
       return_value
     end
 

@@ -15,17 +15,43 @@ describe Diplomat::Kv do
 
     describe "#get" do
       context "ACLs NOT enabled" do
-        it "GET" do
-          json = JSON.generate([{
-            "Key"   => key,
-            "Value" => Base64.encode64(key_params),
-            "Flags" => 0
-          }])
-          faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-          kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key")).to eq("toast")
+
+      end
+      context "ACLs NOT enabled" do
+        context "key is present" do
+          let(:json) do
+            JSON.generate([{
+              "Key"   => key,
+              "Value" => Base64.encode64(key_params),
+              "Flags" => 0
+            }])
+          end
+          before do
+            allow(faraday).to receive(:get).
+                                and_return(OpenStruct.new({ body: json }))
+          end
+
+          it "GET" do
+            kv = Diplomat::Kv.new(faraday)
+            expect(kv.get("key")).to eq("toast")
+          end
+        end
+
+        context "missing key" do
+          before do
+            allow(faraday).to receive(:get).
+                                and_raise(Faraday::ResourceNotFound,
+                                          "the server responded with status 404"
+                                          )
+          end
+
+          it "GET" do
+            kv = Diplomat::Kv.new(faraday)
+            expect(kv.get("key")).to eq(nil)
+          end
         end
       end
+
       context "ACLs enabled, without valid_acl_token" do
         it "GET with ACLs enabled, no valid_acl_token" do
           json = JSON.generate([{
