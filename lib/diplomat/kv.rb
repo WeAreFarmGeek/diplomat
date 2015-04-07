@@ -17,7 +17,7 @@ module Diplomat
         @raw = @conn.get concat_url url
         parse_body
       rescue Faraday::ResourceNotFound
-        @raw = { 'Value' => nil }
+        @raw = [{ 'Value' => nil }]
       end
       return_value
     end
