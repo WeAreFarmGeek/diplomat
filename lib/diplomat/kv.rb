@@ -9,7 +9,7 @@ module Diplomat
     # Get a value by its key
     # @param key [String] the key
     # @return [String] The base64-decoded value associated with the key
-    def get key
+    def get key, default_value = nil
       @key = key
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token unless check_acl_token.nil?
@@ -17,7 +17,8 @@ module Diplomat
         @raw = @conn.get concat_url url
         parse_body
       rescue Faraday::ResourceNotFound
-        @raw = [{ 'Value' => nil }]
+        default_value = Base64.encode64(default_value) unless default_value.nil?
+        @raw = [{ 'Value' => default_value }]
       end
       return_value
     end

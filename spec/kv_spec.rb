@@ -49,6 +49,11 @@ describe Diplomat::Kv do
             kv = Diplomat::Kv.new(faraday)
             expect(kv.get("key")).to eq(nil)
           end
+
+          it "GET with a default" do
+            kv = Diplomat::Kv.new(faraday)
+            expect(kv.get('key', 'bob')).to eq('bob')
+          end
         end
       end
 
