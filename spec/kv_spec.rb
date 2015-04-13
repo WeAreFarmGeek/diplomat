@@ -14,6 +14,28 @@ describe Diplomat::Kv do
     let(:valid_acl_token) { "f45cbd0b-5022-47ab-8640-4eaa7c1f40f1" }
 
     describe "#get" do
+      context "ACLs NOT enabled, recurse option ON" do
+        it "GET" do
+          json = JSON.generate([
+            {
+              "Key"   => key + 'dewfr',
+              "Value" => Base64.encode64(key_params),
+              "Flags" => 0
+            },
+            {
+              "Key"   => key,
+              "Value" => Base64.encode64(key_params),
+              "Flags" => 0
+            }])
+          faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get("key?recurse")).to eql([
+                                             { key: 'keydewfr', value: "toast" },
+                                             { key: 'key', value: "toast" }
+                                           ])
+        end
+      end
+
       context "ACLs NOT enabled" do
         it "GET" do
           json = JSON.generate([{
