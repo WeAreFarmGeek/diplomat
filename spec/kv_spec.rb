@@ -27,12 +27,12 @@ describe Diplomat::Kv do
               "Value" => Base64.encode64(key_params),
               "Flags" => 0
             }])
-          faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
           expect(kv.get("key?recurse")).to eql([
-                                             { key: 'keydewfr', value: "toast" },
-                                             { key: 'key', value: "toast" }
-                                           ])
+            { key: 'keydewfr', value: "toast" },
+            { key: 'key', value: "toast" }
+          ])
         end
       end
 
