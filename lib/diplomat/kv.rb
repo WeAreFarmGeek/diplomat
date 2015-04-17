@@ -140,8 +140,8 @@ module Diplomat
       else
         @value = @raw.map do |e|
                    {
-                     key: e["Key"],
-                     value: e["Value"].nil? ? e["Value"] : Base64.decode64(e["Value"])
+                     :key => e["Key"],
+                     :value => e["Value"].nil? ? e["Value"] : Base64.decode64(e["Value"])
                    }
                  end
       end
