@@ -9,9 +9,10 @@ describe Diplomat::Service do
   context "services" do
     let(:key) { "toast" }
     let(:key_url) { "/v1/catalog/service/#{key}" }
-    let(:key_url_with_alloptions) { "/v1/catalog/service/#{key}?wait=5m&index=3" }
+    let(:key_url_with_alloptions) { "/v1/catalog/service/#{key}?wait=5m&index=3&dc=somedc" }
     let(:key_url_with_indexoption) { "/v1/catalog/service/#{key}?index=5" }
     let(:key_url_with_waitoption) { "/v1/catalog/service/#{key}?wait=6s" }
+    let(:key_url_with_datacenteroption) { "/v1/catalog/service/#{key}?dc=somedc" }
     let(:body) {
       [
         {
@@ -116,14 +117,26 @@ describe Diplomat::Service do
         expect(s.Node).to eq("foo")
       end
 
-      it "both options" do
+      it "datacenter option" do
+        json = JSON.generate(body)
+
+        faraday.stub(:get).with(key_url_with_datacenteroption).and_return(OpenStruct.new({ body: json, headers: headers }))
+
+        service = Diplomat::Service.new(faraday)
+
+        options = { :dc => "somedc" }
+        s = service.get("toast", :first, options)
+        expect(s.Node).to eq("foo")
+      end
+
+      it "all options" do
         json = JSON.generate(body)
 
         faraday.stub(:get).with(key_url_with_alloptions).and_return(OpenStruct.new({ body: json, headers: headers }))
 
         service = Diplomat::Service.new(faraday)
 
-        options = { :wait => "5m", :index => "3" }
+        options = { :wait => "5m", :index => "3", :dc => 'somedc' }
         s = service.get("toast", :first, options)
         expect(s.Node).to eq("foo")
       end

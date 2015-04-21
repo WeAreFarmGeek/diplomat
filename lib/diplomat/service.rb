@@ -1,5 +1,6 @@
 require 'base64'
 require 'faraday'
+require 'pry'
 
 module Diplomat
   class Service < Diplomat::RestClient
@@ -22,6 +23,11 @@ module Diplomat
         qs = "#{qs}#{sep}index=#{options[:index]}"
         sep = "&"
       end
+      if options and options[:dc]
+        qs = "#{qs}#{sep}dc=#{options[:dc]}"
+        sep = "&"
+      end
+
 
       ret = @conn.get "/v1/catalog/service/#{key}#{qs}"
 
@@ -39,7 +45,7 @@ module Diplomat
 
     # @note This is sugar, see (#get)
     def self.get *args
-      Diplomat::Service.new.get *args
+      new(*args).get
     end
 
   end
