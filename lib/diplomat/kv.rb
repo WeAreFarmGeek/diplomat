@@ -102,7 +102,10 @@ module Diplomat
 
       success = true
       key_values.each do |k,v|
-        next if v.nil?
+
+        # If value is nil act like key is directory
+        k = "#{k}/" if v.nil?
+
         begin
           self.put k,v
         rescue Exception => e
@@ -146,7 +149,6 @@ module Diplomat
       responses = JSON.parse(@raw.body)
       @results = {}
       responses.each do |item|
-        next if item['Value'].nil?
 
         @value = item['Value']
         @value = Base64.decode64(@value) unless @value.nil?
