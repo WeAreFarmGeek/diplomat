@@ -1,6 +1,5 @@
 require 'base64'
 require 'faraday'
-require 'pry'
 
 module Diplomat
   class Service < Diplomat::RestClient
