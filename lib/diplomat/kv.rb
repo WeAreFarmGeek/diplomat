@@ -150,6 +150,12 @@ module Diplomat
       @results = {}
       responses.each do |item|
 
+        # Remove the starting path from the key
+        # So for example if we recursively searched everything under domains/example.com/
+        # We will return just the things starting from domains/example.com/ but without the domains/example.com/ part
+        key.slice!(@key)
+        key.slice!('/')
+
         @value = item['Value']
         @value = Base64.decode64(@value) unless @value.nil?
 
