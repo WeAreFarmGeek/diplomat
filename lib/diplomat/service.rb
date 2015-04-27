@@ -22,6 +22,11 @@ module Diplomat
         qs = "#{qs}#{sep}index=#{options[:index]}"
         sep = "&"
       end
+      if options and options[:tags]
+        tags = options[:tags].gsub(',','&tag=')
+        qs = "#{qs}#{sep}tag=#{tags}"
+        sep = "&"
+      end
 
       ret = @conn.get "/v1/catalog/service/#{key}#{qs}"
 
