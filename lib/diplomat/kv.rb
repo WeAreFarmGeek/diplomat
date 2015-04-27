@@ -89,6 +89,16 @@ module Diplomat
       @results
     end
 
+    # Get everything matching the key value, this is fast!
+    # @param key [String] the key
+    # @return [Hash] The list of keys with matching value
+    def delete_recursive key
+      @key = key
+      url = ["/v1/kv/#{@key}?recurse"]
+      url += check_acl_token unless check_acl_token.nil?
+      @raw = @conn.delete concat_url url
+    end
+
     # Put a big hash (eg. yaml file) into consul with namespace key, this is slow...
     # @param namespace [String] the namespace for values (the key)
     # @param hash [String] nested hash with values
