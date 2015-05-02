@@ -45,5 +45,25 @@ module Diplomat
       end
     end
 
+    # Parse the body, apply it to the raw attribute
+    def parse_body
+      @raw = JSON.parse(@raw.body)
+    end
+
+    # Get the value from the raw output
+    def return_value
+      if @raw.count == 1
+        @value = @raw.first["Value"]
+        @value = Base64.decode64(@value) unless @value.nil?
+      else
+        @value = @raw.map do |e|
+          {
+            :key => e["Key"],
+            :value => (Base64.decode64(e["Value"]) unless e["Value"].nil?)
+          }
+        end
+      end
+    end
+
   end
 end
