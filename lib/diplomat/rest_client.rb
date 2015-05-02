@@ -8,6 +8,10 @@ module Diplomat
       start_connection api_connection
     end
 
+    def use_named_parameter(name, value)
+      if value then ["#{name}=#{value}"] else [] end
+    end
+
     def concat_url parts
         if parts.length > 1 then
             parts.first << '?' << parts.drop(1).join('&')

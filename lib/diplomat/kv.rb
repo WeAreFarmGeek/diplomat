@@ -33,8 +33,8 @@ module Diplomat
       @options = options
 
       url = ["/v1/kv/#{@key}"]
-      url += check_acl_token unless check_acl_token.nil?
-      url += use_consistency(@options) unless use_consistency(@options).nil?
+      url += check_acl_token
+      url += use_consistency(@options)
 
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
@@ -62,9 +62,9 @@ module Diplomat
 
       # Wait for first/next value
       url = ["/v1/kv/#{@key}"]
-      url += check_acl_token unless check_acl_token.nil?
-      url += use_consistency(@options) unless use_consistency(@options).nil?
-      url += ["index=#{index}"]
+      url += check_acl_token
+      url += use_consistency(@options)
+      url += use_named_parameter("index", index)
       @raw = @conn.get do |req|
         req.url concat_url url
         req.options.timeout = 86400
@@ -83,8 +83,8 @@ module Diplomat
       @options = options
       @raw = @conn.put do |req|
         url = ["/v1/kv/#{key}"]
-        url += check_acl_token unless check_acl_token.nil?
-        url += use_cas(@options) unless use_cas(@options).nil?
+        url += check_acl_token
+        url += use_cas(@options)
         req.url concat_url url
         req.body = value
       end
@@ -101,7 +101,7 @@ module Diplomat
     def delete key
       @key = key
       url = ["/v1/kv/#{@key}"]
-      url += check_acl_token unless check_acl_token.nil?
+      url += check_acl_token
       @raw = @conn.delete concat_url url
     end
 
@@ -148,15 +148,15 @@ module Diplomat
     end
 
     def check_acl_token
-      ["token=#{Diplomat.configuration.acl_token}"] if Diplomat.configuration.acl_token
+      use_named_parameter("token", Diplomat.configuration.acl_token)
     end
 
     def use_cas(options)
-      ["cas=#{options[:cas]}"] if options && options[:cas]
+      if options then use_named_parameter("cas", options[:cas]) else [] end
     end
 
     def use_consistency(options)
-      ["#{options[:consistency]}"] if options && options[:consistency]
+      if options && options[:consistency] then ["#{options[:consistency]}"] else [] end
     end
   end
 end
