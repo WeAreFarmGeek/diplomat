@@ -136,6 +136,7 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 ### Todo
 
 -  [ ] Updating Docs with latest changes
+-  [ ] Using custom objects for response objects (instead of openStruct)
 -  [ ] PUTing and DELETEing services
 -  [ ] Custom SSL Cert Middleware for faraday
 -  [x] Allowing the custom configuration of the consul url to connect to
