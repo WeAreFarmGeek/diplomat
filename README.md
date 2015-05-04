@@ -137,14 +137,13 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 
 -  [ ] Updating Docs with latest changes
 -  [ ] PUTing and DELETEing services
+-  [ ] Custom SSL Cert Middleware for faraday
 -  [x] Allowing the custom configuration of the consul url to connect to
 -  [x] Deleting Keys
 -  [x] Listing available services
 -  [x] Health
 -  [x] Members
 -  [x] Status
--  [x] Datacenter support for services
--  [x] Ruby 1.8 support
 
 
 ## Enjoy!
