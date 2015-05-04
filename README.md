@@ -143,6 +143,8 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 -  [x] Health
 -  [x] Members
 -  [x] Status
+-  [x] Datacenter support for services
+-  [x] Ruby 1.8 support
 
 
 ## Enjoy!
