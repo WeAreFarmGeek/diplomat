@@ -10,7 +10,7 @@ module Diplomat
     # @param node [String] the target node name
     # @param tag [String] the target tag name, must only be used with service
     # @return [nil]
-    def fire name, value, service=nil, node=nil, tag=nil
+    def fire name, value=nil, service=nil, node=nil, tag=nil
       raw = @conn.put do |req|
         url = [ "/v1/event/fire/#{name}" ]
         url += use_named_parameter("service", service)
