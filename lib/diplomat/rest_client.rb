@@ -65,5 +65,13 @@ module Diplomat
       end
     end
 
+    # Get the name and payload(s) from the raw output
+    def return_payload
+      @value = @raw.map do |e|
+        { :name => e["Name"],
+          :payload => (Base64.decode64(e["Payload"]) unless e["Payload"].nil?) }
+      end
+    end
+
   end
 end
