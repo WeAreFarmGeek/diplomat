@@ -97,7 +97,7 @@ module Diplomat
     #   :value is a further hash of the :name and :payload of the event,
     #   :token is the event's ordinate in the sequence and can be passed to future calls to get the subsequent event
     # @note
-    #   Whereas the consul API for events returns all past event that match
+    #   Whereas the consul API for events returns all past events that match
     #   name, this method allows retrieval of individual events from that
     #   sequence. However, because consul's API isn't conducive to this, we can
     #   offer first, last, next (last + 1) events, or arbitrary events in the
