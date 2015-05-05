@@ -61,9 +61,6 @@ module Diplomat
       end
 
       # Wait for first/next value
-      url = ["/v1/kv/#{@key}"]
-      url += check_acl_token
-      url += use_consistency(@options)
       url += use_named_parameter("index", index)
       @raw = @conn.get do |req|
         req.url concat_url url
