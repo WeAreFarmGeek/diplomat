@@ -50,7 +50,7 @@ module Diplomat
       @raw = JSON.parse(@raw.body)
     end
 
-    # Get the value from the raw output
+    # Get the key/value(s) from the raw output
     def return_value
       if @raw.count == 1
         @value = @raw.first["Value"]

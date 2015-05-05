@@ -13,7 +13,7 @@ module Diplomat
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
-    #   :reject with exception, :wait for its next value, or :return its current value
+    #   :reject with exception, :return its current value, or :wait for its next value
     # @return [String] The base64-decoded value associated with the key
     # @note
     #   When trying to access a key, there are two possibilites:
