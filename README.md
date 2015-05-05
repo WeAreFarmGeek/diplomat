@@ -118,6 +118,37 @@ Release a lock:
 Diplomat::Lock.release("/key/to/lock", sessionid )
 ```
 
+### Events
+
+Fire an event:
+
+```ruby
+Diplomat::Event.fire('do_something', 'payload')
+```
+
+List all events with a certain name received by the local agent:
+
+```ruby
+Diplomat::Event.get_all('do_something')
+```
+
+Get the latest event with a certain name received by the local agent:
+
+```ruby
+Dipomat::Event.get('do_something')
+```
+
+Iterate through the events with a certain name received by the local agent:
+
+```ruby
+ret = {token: :first}
+acc = []
+while ret = begin Diplomat::Event.get("test", ret[:token], :reject) rescue nil end
+  acc << ret[:value]
+end
+acc
+```
+
 ### Custom configuration
 
 You can create a custom configuration using the following syntax:
@@ -147,6 +178,7 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 -  [x] Status
 -  [x] Datacenter support for services
 -  [x] Ruby 1.8 support
+-  [x] Events
 
 
 ## Enjoy!
