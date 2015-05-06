@@ -141,12 +141,14 @@ Dipomat::Event.get('do_something')
 Iterate through the events with a certain name received by the local agent:
 
 ```ruby
-ret = {token: :first}
-acc = []
-while ret = begin Diplomat::Event.get("test", ret[:token], :reject) rescue nil end
-  acc << ret[:value]
+events = Enumerator.new do |y|
+  ret = {token: :first}
+  while ret = begin Diplomat::Event.get('do_something', ret[:token], :reject) rescue nil end
+    y.yield(ret[:value])
+  end
 end
-acc
+
+events.each{ |e| puts e }
 ```
 
 ### Custom configuration
