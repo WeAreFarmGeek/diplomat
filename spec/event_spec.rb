@@ -68,22 +68,22 @@ describe Diplomat::Event do
 
       it "default args act the same as (:reject, _)" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @empty_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @empty_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect{ev.get_all(@event_name)}.to raise_error(Diplomat::EventNotFound, @event_name)
       end
       it "throws when asked to :reject" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @empty_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @empty_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect{ev.get_all(@event_name, :reject)}.to raise_error(Diplomat::EventNotFound, @event_name)
       end
       it "retries and returns when asked to :wait" do
         expect(faraday).to receive(:get).twice.and_return(
-            OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @empty_json }),
-            OpenStruct.new({ status: 200, headers: {"x-consul-index": "69"}, body: @events_json })
+            OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @empty_json }),
+            OpenStruct.new({ status: 200, headers: {"x-consul-index" => "69"}, body: @events_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get_all(@event_name, :wait)).to eql(@events_expected)
@@ -95,29 +95,29 @@ describe Diplomat::Event do
 
       it "default args act the same as (_, :return)" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get_all(@event_name)).to eql(@events_expected)
       end
       it "throws when asked to :reject" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect{ev.get_all(@event_name, :reject, :reject)}.to raise_error(Diplomat::EventAlreadyExists, @event_name)
       end
       it "returns when asked to :return" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get_all(@event_name, :reject, :return)).to eql(@events_expected)
       end
       it "retries and returns when asked to :wait" do
         expect(faraday).to receive(:get).twice.and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json }),
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "69"}, body: @events_next_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json }),
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "69"}, body: @events_next_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get_all(@event_name, :reject, :wait)).to eql(@events_next_expected)
@@ -134,29 +134,29 @@ describe Diplomat::Event do
 
       it "gets first item" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get(@event_name, :first)).to eql(@event_first)
       end
       it "gets last item" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get(@event_name, :last)).to eql(@event_last)
       end
       it "gets mid-sequence item" do
         expect(faraday).to receive(:get).and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get(@event_name, @token_mid)).to eql(@event_mid)
       end
       it "retries and returns next item" do
         expect(faraday).to receive(:get).twice.and_return(
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "42"}, body: @events_json }),
-          OpenStruct.new({ status: 200, headers: {"x-consul-index": "69"}, body: @events_next_json })
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "42"}, body: @events_json }),
+          OpenStruct.new({ status: 200, headers: {"x-consul-index" => "69"}, body: @events_next_json })
         )
         ev = Diplomat::Event.new(faraday)
         expect(ev.get(@event_name, :next)).to eql(@event_next)
