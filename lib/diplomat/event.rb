@@ -52,15 +52,14 @@ module Diplomat
     def get_all name=nil, not_found=:reject, found=:return
       url = ["/v1/event/list"]
       url += use_named_parameter("name", name)
+      url = concat_url url
 
       # Event list never returns 404 or blocks, but may return an empty list
-      @raw = @conn.get concat_url url
+      @raw = @conn.get url
       if JSON.parse(@raw.body).count == 0
         case not_found
           when :reject
             raise Diplomat::EventNotFound, name
-          when :wait
-            index = @raw.headers["x-consul-index"]
         end
       else
         case found
@@ -69,17 +68,10 @@ module Diplomat
           when :return
             parse_body
             return return_payload
-          when :wait
-            index = @raw.headers["x-consul-index"]
         end
       end
 
-      # Wait for first/next event
-      url += use_named_parameter("index", index)
-      @raw = @conn.get do |req|
-        req.url concat_url url
-        req.options.timeout = 86400
-      end
+      @raw = wait_for_next_event(url)
       parse_body
       return_payload
     end
@@ -107,7 +99,8 @@ module Diplomat
     def get name=nil, token=:last, not_found=:wait, found=:return
       url = ["/v1/event/list"]
       url += use_named_parameter("name", name)
-      @raw = @conn.get concat_url url
+      url = concat_url url
+      @raw = @conn.get url
       body = JSON.parse(@raw.body)
       # TODO: deal with unknown symbols, invalid indices (find_index will return nil)
       idx = case token
@@ -121,15 +114,11 @@ module Diplomat
           when :reject
             raise Diplomat::EventNotFound, name
           when :wait
-            # Wait for next event
-            index = @raw.headers["x-consul-index"]
-            url += use_named_parameter("index", index)
-            @raw = @conn.get do |req|
-              req.url concat_url url
-              req.options.timeout = 86400
-            end
-            body = JSON.parse(@raw.body)
-            event = body.last # If it's possible for two events to arrive at once, this needs to #find again
+            @raw = wait_for_next_event(url)
+            parse_body
+            # If it's possible for two events to arrive at once,
+            # this needs to #find again:
+            event = @raw.last
         end
       else
         case found
@@ -140,8 +129,14 @@ module Diplomat
         end
       end
 
-      { :value => { :name => event["Name"], :payload => Base64.decode64(event["Payload"]) },
-        :token => event["ID"] }
+      {
+        :value => {
+          :name => event["Name"],
+          :payload => Base64.decode64(event["Payload"])
+        },
+        :token => event["ID"]
+      }
+
     end
 
 
@@ -159,5 +154,17 @@ module Diplomat
     def self.get *args
       Diplomat::Event.new.get *args
     end
+
+    private
+
+    def wait_for_next_event url
+      index = @raw.headers["x-consul-index"]
+      url = [url, use_named_parameter("index", index)].join("&")
+      return @conn.get do |req|
+        req.url concat_url url
+        req.options.timeout = 86400
+      end
+    end
+
   end
 end
