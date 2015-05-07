@@ -3,6 +3,7 @@ require 'faraday'
 
 module Diplomat
   class Service < Diplomat::RestClient
+    GET_URL        = "/v1/catalog/service"
     REGISTER_URL   = '/v1/agent/service/register'
     DEREGISTER_URL = '/v1/agent/service/deregister'
 
@@ -14,23 +15,12 @@ module Diplomat
     # @return [OpenStruct] all data associated with the service
     def get key, scope=:first, options=nil, meta=nil
 
-      qs = ""
-      sep = "?"
-      if options and options[:wait]
-        qs = "#{qs}#{sep}wait=#{options[:wait]}"
-        sep = "&"
-      end
-      if options and options[:index]
-        qs = "#{qs}#{sep}index=#{options[:index]}"
-        sep = "&"
-      end
-      if options and options[:dc]
-        qs = "#{qs}#{sep}dc=#{options[:dc]}"
-        sep = "&"
-      end
+      url = ["#{Service::GET_URL}/#{key}"]
+      url << use_named_parameter('wait', options[:wait]) if options and options[:wait]
+      url << use_named_parameter('index', options[:index]) if options and options[:index]
+      url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
 
-
-      ret = @conn.get "/v1/catalog/service/#{key}#{qs}"
+      ret = @conn.get concat_url url
 
       if meta and ret.headers
         meta[:index] = ret.headers["x-consul-index"]
@@ -41,6 +31,7 @@ module Diplomat
       if scope == :all
         return JSON.parse(ret.body).map { |service| OpenStruct.new service }
       end
+
       return OpenStruct.new JSON.parse(ret.body).first
     end
 
