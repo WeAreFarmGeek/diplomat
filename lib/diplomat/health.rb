@@ -95,7 +95,7 @@ module Diplomat
     # @note This is sugar, see (#critical)
     def self.critical
       Diplomat::Health.new.critical
-    end    
+    end
 
   end
 end
