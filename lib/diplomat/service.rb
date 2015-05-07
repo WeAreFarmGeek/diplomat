@@ -3,6 +3,8 @@ require 'faraday'
 
 module Diplomat
   class Service < Diplomat::RestClient
+    REGISTER_URL   = '/v1/agent/service/register'
+    DEREGISTER_URL = '/v1/agent/service/deregister'
 
     # Get a service by it's key
     # @param key [String] the key
@@ -42,9 +44,26 @@ module Diplomat
       return OpenStruct.new JSON.parse(ret.body).first
     end
 
+    def register(definition)
+      json_definition = JSON.dump(definition)
+      @conn.put Service::REGISTER_URL, json_definition
+    end
+
+    def deregister(service_name)
+      @conn.get "#{Service::DEREGISTER_URL}/#{service_name}"
+    end
+
     # @note This is sugar, see (#get)
     def self.get *args
       new(*args).get
+    end
+
+    def self.register definition
+      new().register definition
+    end
+
+    def self.deregister service_name
+      new().deregister service_name
     end
 
   end
