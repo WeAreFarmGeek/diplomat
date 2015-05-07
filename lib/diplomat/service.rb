@@ -44,13 +44,21 @@ module Diplomat
       return OpenStruct.new JSON.parse(ret.body).first
     end
 
+    # Register a service
+    # @param definition [Hash] Hash containing definition of service
+    # @return [Boolean]
     def register(definition)
       json_definition = JSON.dump(definition)
-      @conn.put Service::REGISTER_URL, json_definition
+      register = @conn.put Service::REGISTER_URL, json_definition
+      return register.status == 200
     end
 
+    # De-register a service
+    # @param service_name [String] Service name to de-register
+    # @return [Boolean]
     def deregister(service_name)
-      @conn.get "#{Service::DEREGISTER_URL}/#{service_name}"
+      deregister = @conn.get "#{Service::DEREGISTER_URL}/#{service_name}"
+      return deregister.status == 200
     end
 
     # @note This is sugar, see (#get)
