@@ -13,7 +13,7 @@ module Diplomat
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
-    #   :reject with exception, :wait for its next value, or :return its current value
+    #   :reject with exception, :return its current value, or :wait for its next value
     # @return [String] The base64-decoded value associated with the key
     # @note
     #   When trying to access a key, there are two possibilites:
@@ -33,8 +33,8 @@ module Diplomat
       @options = options
 
       url = ["/v1/kv/#{@key}"]
-      url += check_acl_token unless check_acl_token.nil?
-      url += use_consistency(@options) unless use_consistency(@options).nil?
+      url += check_acl_token
+      url += use_consistency(@options)
 
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
@@ -61,10 +61,7 @@ module Diplomat
       end
 
       # Wait for first/next value
-      url = ["/v1/kv/#{@key}"]
-      url += check_acl_token unless check_acl_token.nil?
-      url += use_consistency(@options) unless use_consistency(@options).nil?
-      url += ["index=#{index}"]
+      url += use_named_parameter("index", index)
       @raw = @conn.get do |req|
         req.url concat_url url
         req.options.timeout = 86400
@@ -83,8 +80,8 @@ module Diplomat
       @options = options
       @raw = @conn.put do |req|
         url = ["/v1/kv/#{key}"]
-        url += check_acl_token unless check_acl_token.nil?
-        url += use_cas(@options) unless use_cas(@options).nil?
+        url += check_acl_token
+        url += use_cas(@options)
         req.url concat_url url
         req.body = value
       end
@@ -101,7 +98,7 @@ module Diplomat
     def delete key
       @key = key
       url = ["/v1/kv/#{@key}"]
-      url += check_acl_token unless check_acl_token.nil?
+      url += check_acl_token
       @raw = @conn.delete concat_url url
     end
 
@@ -122,41 +119,16 @@ module Diplomat
 
     private
 
-    # Parse the body, apply it to the raw attribute
-    def parse_body
-      @raw = JSON.parse(@raw.body)
-    end
-
-    # Get the key from the raw output
-    def return_key
-      @key = @raw["Key"]
-    end
-
-    # Get the value from the raw output
-    def return_value
-      if @raw.count == 1
-        @value = @raw.first["Value"]
-        @value = Base64.decode64(@value) unless @value.nil?
-      else
-        @value = @raw.map do |e|
-                   {
-                     :key => e["Key"],
-                     :value => e["Value"].nil? ? e["Value"] : Base64.decode64(e["Value"])
-                   }
-                 end
-      end
-    end
-
     def check_acl_token
-      ["token=#{Diplomat.configuration.acl_token}"] if Diplomat.configuration.acl_token
+      use_named_parameter("token", Diplomat.configuration.acl_token)
     end
 
     def use_cas(options)
-      ["cas=#{options[:cas]}"] if options && options[:cas]
+      if options then use_named_parameter("cas", options[:cas]) else [] end
     end
 
     def use_consistency(options)
-      ["#{options[:consistency]}"] if options && options[:consistency]
+      if options && options[:consistency] then ["#{options[:consistency]}"] else [] end
     end
   end
 end
