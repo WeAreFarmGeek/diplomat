@@ -135,7 +135,7 @@ Diplomat::Event.get_all('do_something')
 Get the latest event with a certain name received by the local agent:
 
 ```ruby
-Dipomat::Event.get('do_something')
+Diplomat::Event.get('do_something')
 ```
 
 Iterate through the events with a certain name received by the local agent:
