@@ -63,15 +63,17 @@ module Diplomat
 
     # @note This is sugar, see (#get)
     def self.get *args
-      new(*args).get
+      Diplomat::Service.new(*args).get
     end
 
+    # @note This is sugar, see (#register)
     def self.register definition
-      new().register definition
+      Diplomat::Service.new.register definition
     end
 
+    # @note This is sugar, see (#deregister)
     def self.deregister service_name
-      new().deregister service_name
+      Diplomat::Service.new.deregister service_name
     end
 
   end
