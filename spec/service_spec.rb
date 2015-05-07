@@ -142,6 +142,44 @@ describe Diplomat::Service do
       end
     end
 
+    describe "Register service" do
+      let (:register_service_url) { '/v1/agent/service/register' }
+      let (:deregister_service_url) { '/v1/agent/service/deregister' }
+
+      let (:service_definition) do
+        {
+          Name: 'test_service_definition',
+          Check: {
+            Script: 'echo "true"',
+            Interval: "1s"
+          }
+        }
+      end
+
+      it 'can register a service' do
+
+        json_request = JSON.dump(service_definition)
+
+        expect(faraday).to receive(:put).with(register_service_url, json_request) do
+          OpenStruct.new({ body: '', status: 200})
+        end
+
+        service = Diplomat::Service.new(faraday)
+        s = service.register(service_definition)
+        expect(s.status).to eq 200
+      end
+
+      it 'can deregister a service' do
+        url = "#{deregister_service_url}/#{service_definition[:Name]}"
+        expect(faraday).to receive(:get).with(url) do
+          OpenStruct.new({ body: '', status: 200})
+        end
+        service = Diplomat::Service.new(faraday)
+        s = service.deregister(service_definition[:Name])
+        expect(s.status).to eq 200
+      end
+    end
+
   end
 
 end
