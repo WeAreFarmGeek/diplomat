@@ -27,6 +27,7 @@ module Diplomat
   class << self
 
     # Build optional configuration by yielding a block to configure
+    # @yield [Diplomat::Configuration]
     def configure
       self.configuration ||= Diplomat::Configuration.new
       yield(configuration)
@@ -34,6 +35,12 @@ module Diplomat
 
     private
 
+    # Send all other unknown commands to Diplomat::Kv
+    # @deprecated Please use Diplomat::Kv instead.
+    # @param name [Symbol] Method to send to Kv
+    # @param *args List of arguments to send to Kv
+    # @param &block block to send to Kv
+    # @return [Object]
     def method_missing(name, *args, &block)
       Diplomat::Kv.new.send(name, *args, &block)
     end
