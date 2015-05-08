@@ -3,7 +3,7 @@ require 'faraday'
 
 module Diplomat
   class Kv < Diplomat::RestClient
-
+    @access_methods = [ :get, :put, :delete ]
     attr_reader :key, :value, :raw
 
     # Get a value by its key, potentially blocking for the first or next value
@@ -100,21 +100,6 @@ module Diplomat
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token
       @raw = @conn.delete concat_url url
-    end
-
-    # @note This is sugar, see (#get)
-    def self.get *args
-      Diplomat::Kv.new.get *args
-    end
-
-    # @note This is sugar, see (#put)
-    def self.put *args
-      Diplomat::Kv.new.put *args
-    end
-
-    # @note This is sugar, see (#delete)
-    def self.delete *args
-      Diplomat::Kv.new.delete *args
     end
 
     private

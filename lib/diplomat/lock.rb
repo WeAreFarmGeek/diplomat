@@ -3,6 +3,8 @@ require 'faraday'
 module Diplomat
   class Lock < Diplomat::RestClient
 
+    @access_methods = [ :acquire, :wait_to_acquire, :release ]
+
     # Acquire a lock
     # @param key [String] the key
     # @param session [String] the session, generated from Diplomat::Session.create
@@ -41,21 +43,6 @@ module Diplomat
         req.url "/v1/kv/#{key}?release=#{session}"
       end
       return raw.body
-    end
-
-    # @note This is sugar, see (#acquire)
-    def self.acquire *args
-      Diplomat::Lock.new.acquire *args
-    end
-
-    # @note This is sugar, see (#wait_to_acquire)
-    def self.wait_to_acquire *args
-      Diplomat::Lock.new.wait_to_acquire *args
-    end
-
-    # @note This is sugar, see (#release)
-    def self.release *args
-      Diplomat::Lock.new.release *args
     end
   end
 end

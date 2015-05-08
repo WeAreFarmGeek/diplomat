@@ -3,6 +3,7 @@ require 'faraday'
 
 module Diplomat
   class Members < Diplomat::RestClient
+    @access_methods = [ :get ]
 
     # Get all members
     # @return [OpenStruct] all data associated with the service
@@ -10,11 +11,5 @@ module Diplomat
       ret = @conn.get "/v1/agent/members"
       return JSON.parse(ret.body)
     end
-
-    # @note This is sugar, see (#get)
-    def self.get
-      Diplomat::Members.new.get
-    end
-
   end
 end

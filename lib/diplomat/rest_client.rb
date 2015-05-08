@@ -4,6 +4,8 @@ require 'json'
 module Diplomat
   class RestClient
 
+    @access_methods = []
+
     def initialize api_connection=nil
       start_connection api_connection
     end
@@ -18,6 +20,18 @@ module Diplomat
       else
         parts.first
       end
+    end
+
+    class << self
+
+      def access_method? methId
+        @access_methods.include? methId
+      end
+
+      def method_missing(methId, *args)
+        access_method?(methId) ? new.send(methId, *args) : super
+      end
+
     end
 
     private

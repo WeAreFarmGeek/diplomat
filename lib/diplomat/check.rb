@@ -4,6 +4,9 @@ require 'faraday'
 module Diplomat
   class Check < Diplomat::RestClient
 
+    @access_methods = [ :checks, :register_script, :register_ttl,
+                        :deregister, :pass, :warn, :fail ]
+
     # Get registered checks
     # @return [OpenStruct] all data associated with the service
     def checks
@@ -86,41 +89,6 @@ module Diplomat
     def fail check_id
       ret = @conn.get "/v1/agent/check/fail/#{check_id}"
       return ret.status == 200
-    end
-
-    # @note This is sugar, see (#checks)
-    def self.checks
-      Diplomat::Check.new.checks
-    end
-
-    # @note This is sugar, see (#register_script)
-    def self.register_script *args
-      Diplomat::Check.new.register_script *args
-    end
-
-    # @note This is sugar, see (#register_ttl)
-    def self.register_ttl *args
-      Diplomat::Check.new.register_ttl *args
-    end
-
-    # @note This is sugar, see (#deregister)
-    def self.deregister *args
-      Diplomat::Check.new.deregister *args
-    end
-
-    # @note This is sugar, see (#pass)
-    def self.pass *args
-      Diplomat::Check.new.pass *args
-    end
-
-    # @note This is sugar, see (#warn)
-    def self.warn *args
-      Diplomat::Check.new.warn *args
-    end
-
-    # @note This is sugar, see (#fail)
-    def self.fail *args
-      Diplomat::Check.new.fail *args
     end
 
   end

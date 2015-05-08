@@ -2,6 +2,7 @@ require 'faraday'
 
 module Diplomat
   class Event < Diplomat::RestClient
+    @access_methods = [ :fire, :get_all, :get ]
 
     # Send an event
     # @param name [String] the event name
@@ -11,7 +12,7 @@ module Diplomat
     # @param tag [String] the target tag name, must only be used with service
     # @return [nil]
     def fire name, value=nil, service=nil, node=nil, tag=nil
-      raw = @conn.put do |req|
+      @conn.put do |req|
         url = [ "/v1/event/fire/#{name}" ]
         url += use_named_parameter("service", service)
         url += use_named_parameter("node", node)
@@ -139,21 +140,6 @@ module Diplomat
 
     end
 
-
-    # @note This is sugar, see (#fire)
-    def self.fire *args
-      Diplomat::Event.new.fire *args
-    end
-
-    # @note This is sugar, see (#get_all)
-    def self.get_all *args
-      Diplomat::Event.new.get_all *args
-    end
-
-    # @note This is sugar, see (#get)
-    def self.get *args
-      Diplomat::Event.new.get *args
-    end
 
     private
 

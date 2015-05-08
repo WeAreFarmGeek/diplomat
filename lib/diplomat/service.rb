@@ -3,6 +3,8 @@ require 'faraday'
 
 module Diplomat
   class Service < Diplomat::RestClient
+    
+    @access_methods = [ :get, :register, :deregister ]
 
     # Get a service by it's key
     # @param key [String] the key
@@ -48,21 +50,5 @@ module Diplomat
       deregister = @conn.get "/v1/agent/service/deregister/#{service_name}"
       return deregister.status == 200
     end
-
-    # @note This is sugar, see (#get)
-    def self.get *args
-      Diplomat::Service.new(*args).get
-    end
-
-    # @note This is sugar, see (#register)
-    def self.register definition
-      Diplomat::Service.new.register definition
-    end
-
-    # @note This is sugar, see (#deregister)
-    def self.deregister service_name
-      Diplomat::Service.new.deregister service_name
-    end
-
   end
 end

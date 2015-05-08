@@ -3,6 +3,8 @@ require 'faraday'
 module Diplomat
   class Session < Diplomat::RestClient
 
+    @access_methods = [ :create, :destroy ]
+
     # Create a new session
     # @param value [Object] hash or json representation of the session arguments
     # @return [String] The sesssion id
@@ -25,16 +27,6 @@ module Diplomat
         req.url "/v1/session/destroy/#{id}"
       end
       return raw.body
-    end
-
-    # @note This is sugar, see (#create)
-    def self.create *args
-      Diplomat::Session.new.create *args
-    end
-
-    # @note This is sugar, see (#destroy)
-    def self.destroy *args
-      Diplomat::Session.new.destroy *args
     end
   end
 end
