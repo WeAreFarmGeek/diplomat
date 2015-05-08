@@ -23,10 +23,10 @@ production:
   adapter:            postgresql
   encoding:           unicode
   host:               <%= Diplomat::Service.get('postgres').Address %>
-  database:           <%= Diplomat.get('project/db/name') %>
+  database:           <%= Diplomat::Kv.get('project/db/name') %>
   pool:               5
-  username:           <%= Diplomat.get('project/db/user') %>
-  password:           <%= Diplomat.get('project/db/pass') %>
+  username:           <%= Diplomat::Kv.get('project/db/user') %>
+  password:           <%= Diplomat::Kv.get('project/db/pass') %>
   port:               <%= Diplomat::Service.get('postgres').ServicePort %>
 <% end %>
 ```
@@ -52,7 +52,7 @@ Here's a few examples of how diplomat works:
 Getting the value of a key in the key-value store is as simple as using one of the following:
 
 ```ruby
-foo = Diplomat.get('foo')
+foo = Diplomat::Kv.get('foo')
 # => "bar"
 ```
 
@@ -61,7 +61,7 @@ foo = Diplomat.get('foo')
 Setting the value of a key is just as easy:
 
 ```ruby
-foo = Diplomat.put('foo', 'bar')
+foo = Diplomat::Kv.put('foo', 'bar')
 # => "bar"
 ```
 
