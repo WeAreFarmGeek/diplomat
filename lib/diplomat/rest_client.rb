@@ -6,14 +6,23 @@ module Diplomat
 
     @access_methods = []
 
+    # Initialize the fadaray connection
+    # @param api_connection [Faraday::Connection,nil] supply mock API Connection
     def initialize api_connection=nil
       start_connection api_connection
     end
 
+    # Format url parameters into strings correctly
+    # @param name [String] the name of the parameter
+    # @param value [String] the value of the parameter
+    # @return [Array] the resultant parameter string inside an array.
     def use_named_parameter(name, value)
       if value then ["#{name}=#{value}"] else [] end
     end
 
+    # Assemble a url from an array of parts.
+    # @param parts [Array] the url chunks to be assembled
+    # @return [String] the resultant url string
     def concat_url parts
       if parts.length > 1 then
         parts.first + '?' + parts.drop(1).join('&')
@@ -24,12 +33,19 @@ module Diplomat
 
     class << self
 
-      def access_method? methId
-        @access_methods.include? methId
+      def access_method? meth_id
+        @access_methods.include? meth_id
       end
 
-      def method_missing(methId, *args)
-        access_method?(methId) ? new.send(methId, *args) : super
+      # Allow certain methods to be accessed
+      # without defining "new".
+      # @overload method_missing(meth_id, *args)
+      #   @param meth_id [Symbol] symbol defining method requested
+      #   @params [Hash] options
+      #   @option options [Object] :arg an argument
+      #   @return [Boolean]
+      def method_missing(meth_id, *args)
+        access_method?(meth_id) ? new.send(meth_id, *args) : super
       end
 
     end

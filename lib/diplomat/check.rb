@@ -41,15 +41,19 @@ module Diplomat
       return ret.status == 200
     end
 
+    # Register a TTL check
+    # @param check_id [String] the unique id of the check
+    # @param name [String] the name
+    # @param notes [String] notes about the check
+    # @param ttl [String] time (with units) to mark a check down
+    # @return [Boolean] Success
     def register_ttl check_id, name, notes, ttl
-      json = JSON.generate(
-      {
-        "ID" => check_id,
-        "Name" => name,
+      json = JSON.generate({
+        "ID"    => check_id,
+        "Name"  => name,
         "Notes" => notes,
-        "TTL" => ttl,
-      }
-      )
+        "TTL"   => ttl,
+      })
 
       ret = @conn.put do |req|
         req.url "/v1/agent/check/register"
