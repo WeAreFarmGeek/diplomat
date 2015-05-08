@@ -11,7 +11,7 @@ module Diplomat
     # @param options [Hash] the query params
     # @option options [String] :consistency The read consistency type
     # @param not_found [Symbol] behaviour if the key doesn't exist;
-    #   :reject with exception, or :wait for it to appear
+    #   :reject with exception, :return degenerate value, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
     #   :reject with exception, :return its current value, or :wait for its next value
     # @return [String] The base64-decoded value associated with the key
@@ -24,6 +24,9 @@ module Diplomat
     #   - X X - meaningless; never return a value
     #   - X R - "normal" non-blocking get operation. Default
     #   - X W - get the next value only (must have a current value)
+    #   - R X - meaningless; never return a meaningful value
+    #   - R R - "safe" non-blocking, non-throwing get-or-default operation
+    #   - R W - get the next value or a default
     #   - W X - get the first value only (must not have a current value)
     #   - W R - get the first or current value; always return something, but
     #           block only when necessary
@@ -42,6 +45,8 @@ module Diplomat
         case not_found
           when :reject
             raise Diplomat::KeyNotFound, key
+          when :return
+            return @value = ""
           when :wait
             index = raw.headers["x-consul-index"]
         end

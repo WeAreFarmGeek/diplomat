@@ -26,7 +26,7 @@ module Diplomat
     # Get the list of events matching name
     # @param name [String] the name of the event (regex)
     # @param not_found [Symbol] behaviour if there are no events matching name;
-    #   :reject with exception, or :wait for a non-empty list
+    #   :reject with exception, :return degenerate value, or :wait for a non-empty list
     # @param found [Symbol] behaviour if there are already events matching name;
     #   :reject with exception, :return its current value, or :wait for its next value
     # @return [Array[hash]] The list of { :name, :payload } hashes
@@ -46,6 +46,9 @@ module Diplomat
     #   - X X - meaningless; never return a value
     #   - X R - "normal" non-blocking get operation. Default
     #   - X W - get the next value only (must have a current value)
+    #   - R X - meaningless; never return a meaningful value
+    #   - R R - "safe" non-blocking, non-throwing get-or-default operation
+    #   - R W - get the next value or a default
     #   - W X - get the first value only (must not have a current value)
     #   - W R - get the first or current value; always return something, but
     #           block only when necessary
@@ -61,6 +64,8 @@ module Diplomat
         case not_found
           when :reject
             raise Diplomat::EventNotFound, name
+          when :return
+            return []
         end
       else
         case found
@@ -83,7 +88,7 @@ module Diplomat
     #   String are tokens returned by previous calls to this function
     #   Symbols are the special tokens :first, :last, and :next
     # @param not_found [Symbol] behaviour if there is no matching event;
-    #   :reject with exception, or :wait for event
+    #   :reject with exception, :return degenerate value, or :wait for event
     # @param found [Symbol] behaviour if there is a matching event;
     #   :reject with exception, or :return its current value
     # @return [hash] A hash with keys :value and :token;
@@ -114,12 +119,19 @@ module Diplomat
         case not_found
           when :reject
             raise Diplomat::EventNotFound, name
+          when :return
+            event_name = ""
+            event_payload = ""
+            event_token = :last
           when :wait
             @raw = wait_for_next_event(url)
             parse_body
             # If it's possible for two events to arrive at once,
             # this needs to #find again:
             event = @raw.last
+            event_name = event["Name"]
+            event_payload = Base64.decode64(event["Payload"])
+            event_token = event["ID"]
         end
       else
         case found
@@ -127,17 +139,16 @@ module Diplomat
             raise Diplomat::EventAlreadyExits, name
           when :return
             event = body[idx]
+            event_name = event["Name"]
+            event_payload = Base64.decode64(event["Payload"])
+            event_token = event["ID"]
         end
       end
 
       {
-        :value => {
-          :name => event["Name"],
-          :payload => Base64.decode64(event["Payload"])
-        },
-        :token => event["ID"]
+        :value => { :name => event_name, :payload => event_payload },
+        :token => event_token
       }
-
     end
 
 
