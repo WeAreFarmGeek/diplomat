@@ -39,11 +39,9 @@ module Diplomat
 
       # Allow certain methods to be accessed
       # without defining "new".
-      # @overload method_missing(meth_id, *args)
-      #   @param meth_id [Symbol] symbol defining method requested
-      #   @params [Hash] options
-      #   @option options [Object] :arg an argument
-      #   @return [Boolean]
+      # @param meth_id [Symbol] symbol defining method requested
+      # @param *args Arguments list
+      # @return [Boolean]
       def method_missing(meth_id, *args)
         access_method?(meth_id) ? new.send(meth_id, *args) : super
       end

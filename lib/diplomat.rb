@@ -8,6 +8,7 @@ module Diplomat
 
     # Internal: Requires internal Faraday libraries.
     # @param *libs One or more relative String names to Faraday classes.
+    # @return [nil]
     def require_libs(*libs)
       libs.each do |lib|
         require "#{lib_path}/#{lib}"
