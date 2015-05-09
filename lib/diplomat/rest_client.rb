@@ -61,7 +61,7 @@ module Diplomat
       return api_connection || Faraday.new(:url => Diplomat.configuration.url) do |faraday|
         faraday.adapter  Faraday.default_adapter
         faraday.request  :url_encoded
-        faraday.response :raise_error if raise_error
+        faraday.response :raise_error unless raise_error
 
         Diplomat.configuration.middleware.each do |middleware|
           faraday.use middleware
