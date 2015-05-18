@@ -161,7 +161,7 @@ Diplomat.configure do |config|
   config.url = "localhost:8888"
   # Set up a custom Faraday Middleware
   config.middleware = MyCustomMiddleware
-  # Connect into consul with custom access token (ACL)gi
+  # Connect into consul with custom access token (ACL)
   config.acl_token =  "xxxxxxxx-yyyy-zzzz-1111-222222222222"
 end
 ```
