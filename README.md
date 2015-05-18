@@ -47,22 +47,33 @@ Here's a few examples of how diplomat works:
 
 ### Key Values
 
+#### Setting
+
+Setting the value of a key is easy as pie:
+
+```ruby
+foo = Diplomat::Kv.put('foo', 'bar')
+# => "bar"
+```
+
 #### Getting
 
-Getting the value of a key in the key-value store is as simple as using one of the following:
+Getting the value of a key is just as simple:
 
 ```ruby
 foo = Diplomat::Kv.get('foo')
 # => "bar"
 ```
 
-#### Setting
-
-Setting the value of a key is just as easy:
+You can also retrieve values recursively:
 
 ```ruby
-foo = Diplomat::Kv.put('foo', 'bar')
-# => "bar"
+Diplomat::Kv.put('foo/a', 'lorem')
+Diplomat::Kv.put('foo/b', 'ipsum')
+Diplomat::Kv.put('foo/c', 'dolor')
+
+Diplomat::Kv.get('foo/', recurse: true)
+# => [{:key=>"foo/a", :value=>"lorem"}, {:key=>"foo/b", :value=>"ipsum"}, {:key=>"foo/c", :value=>"dolor"}]
 ```
 
 ### Services
