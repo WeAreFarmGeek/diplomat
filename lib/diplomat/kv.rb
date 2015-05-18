@@ -1,21 +1,6 @@
 require 'base64'
 require 'faraday'
 
-# Add few helpers to merge multiple keyvalues
-
-class Array
-  def to_deep_hash(value)
-    self.reverse.inject(value) { |a, n| { n => a } }
-  end
-end
-
-class Hash
-  def deep_merge!(second)
-      merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
-      self.merge!(second, &merger)
-  end
-end
-
 module Diplomat
   class Kv < Diplomat::RestClient
 
@@ -70,7 +55,7 @@ module Diplomat
     # @return [Array] The list of keys with matching value
     def list_keys key,skip_directories=true
       @key = key
-      url = ["/v1/kv/#{@key}?keys"]
+      url = ["/v1/kv/#{@key}","keys"]
       url += check_acl_token unless check_acl_token.nil?
       @raw = @conn.get concat_url url
       parse_list(skip_directories)
@@ -82,7 +67,7 @@ module Diplomat
     # @return [Hash] The list of keys with matching value
     def get_recursive key
       @key = key
-      url = ["/v1/kv/#{@key}?recurse"]
+      url = ["/v1/kv/#{@key}","recurse"]
       url += check_acl_token unless check_acl_token.nil?
       @raw = @conn.get concat_url url
       parse_results
@@ -94,7 +79,7 @@ module Diplomat
     # @return [Hash] The list of keys with matching value
     def delete_recursive key
       @key = key
-      url = ["/v1/kv/#{@key}?recurse"]
+      url = ["/v1/kv/#{@key}","recurse"]
       url += check_acl_token unless check_acl_token.nil?
       @raw = @conn.delete concat_url url
     end
