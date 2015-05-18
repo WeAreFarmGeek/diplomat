@@ -1,3 +1,3 @@
 module Diplomat
-  VERSION = "0.9.3"
+  VERSION = "0.10.2"
 end
