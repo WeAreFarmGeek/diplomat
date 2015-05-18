@@ -36,6 +36,7 @@ module Diplomat
       @options = options
 
       url = ["/v1/kv/#{@key}"]
+      url += recurse_get(@options)
       url += check_acl_token
       url += use_consistency(@options)
 
@@ -119,6 +120,10 @@ module Diplomat
 
     def use_consistency(options)
       if options && options[:consistency] then ["#{options[:consistency]}"] else [] end
+    end
+
+    def recurse_get(options)
+      if options && options[:recurse] then ['recurse'] else [] end
     end
   end
 end
