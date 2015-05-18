@@ -95,20 +95,13 @@ module Diplomat
       namespace.gsub(/\/+$/, '')
       key_values = nested_hash_to_key_value_hash(hash,{},namespace)
 
-      success = true
       key_values.each do |k,v|
 
         # If value is nil act like key is directory
         k = "#{k}/" if v.nil?
 
-        begin
-          self.put k,v
-        rescue Exception => e
-          #puts "Error: #{k}=#{v}: #{e.message}"
-          success = false
-        end
+        self.put k,v
       end
-      success
     end
 
     # @note This is sugar, see (#get)
@@ -174,7 +167,7 @@ module Diplomat
       @value = Base64.decode64(@value) unless @value.nil?
     end
 
-    # Turn big nested hash into nice namespaced #{k}=#{v} hashes
+    # Turn big nested hash into nice namespaced #{k}=#{v} hashes 
     def nested_hash_to_key_value_hash(source, target = {}, namespace = nil)
       prefix = "#{namespace}/" if namespace
       case source
