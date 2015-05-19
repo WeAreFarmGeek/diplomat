@@ -3,7 +3,7 @@ require 'faraday'
 module Diplomat
   class Session < Diplomat::RestClient
 
-    @access_methods = [ :create, :destroy, :list ]
+    @access_methods = [ :create, :destroy, :list, :renew ]
 
     # Create a new session
     # @param value [Object] hash or json representation of the session arguments
@@ -35,7 +35,7 @@ module Diplomat
       raw = @conn.get do |req|
         req.url "/v1/session/list/"
       end
-      return JSON.parse(raw.body)
+      JSON.parse(raw.body)
     end
     
     # Renew session
@@ -43,10 +43,10 @@ module Diplomat
     # @return [Struct]
     
     def renew id
-      raw=@conn.put do |req|
+      raw = @conn.put do |req|
         req.url = "/v1/session/renew/#{id}"
       end
-      return JSON.parse(raw.body)
+      JSON.parse(raw.body)
     end
   end
 end
