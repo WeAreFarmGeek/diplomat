@@ -25,13 +25,16 @@ module Diplomat
     # @option options [Integer] :cas The modify index
     # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
     def put key, value, options=nil
+
+      # This will fail if both are not strings.
+      # use #to_s function to both
       @options = options
       @raw = @conn.put do |req|
-        url = ["/v1/kv/#{key}"]
+        url = ["/v1/kv/#{key.to_s}"]
         url += check_acl_token unless check_acl_token.nil?
         url += use_cas(@options) unless use_cas(@options).nil?
         req.url concat_url url
-        req.body = value
+        req.body = value.to_s
       end
       if @raw.body == "true"
         @key   = key
