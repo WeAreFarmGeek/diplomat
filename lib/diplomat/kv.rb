@@ -133,11 +133,10 @@ module Diplomat
     end
 
     # Parse consul '?recursive' answer
-    def parse_results 
+    def parse_results
       responses = JSON.parse(@raw.body)
       @results = {}
       responses.each do |item|
-
         # Remove the starting path from the key
         # So for example if we recursively searched everything under domains/example.com/
         # We will return just the things starting from domains/example.com/ but without the domains/example.com/ part
@@ -146,6 +145,13 @@ module Diplomat
 
         @value = item['Value']
         @value = Base64.decode64(@value) unless @value.nil?
+
+        # Values can be json so try to parse that too
+        begin
+          @value = JSON.parse(@value)  
+        rescue JSON::ParserError => e  
+          #Not JSON string
+        end 
 
         # Split path/to/key into array and turn it into hash
         # Point that hash into value
@@ -176,8 +182,14 @@ module Diplomat
           nested_hash_to_key_value_hash(value, target, "#{prefix}#{key}")
         end
       when Array
-        source.each_with_index do |value, index|
-          nested_hash_to_key_value_hash(value, target, "#{prefix}#{index}")
+        # If all elements are simple convert to json array
+        if source.all? {|element| element.is_a? String or element.is_a? Numeric}
+          target[namespace] = source.to_json
+        else
+          # Otherwise keep converting to nested paths
+          source.each_with_index do |value, index|
+            nested_hash_to_key_value_hash(value, target, "#{prefix}#{index}")
+          end
         end
       else
         target[namespace] = source
