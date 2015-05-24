@@ -107,6 +107,16 @@ Or destroying a session:
 Diplomat::Session.destroy("fc5ca01a-c317-39ea-05e8-221da00d3a12")
 ```
 
+Renew a session:
+```ruby
+Diplomat::Session.renew(sessionid)
+```
+
+List sessions:
+```ruby
+Diplomat::Session.list.each {|session| puts "#{session["ID"]} #{session["Name"]}"}
+```
+
 ### Locks
 
 Acquire a lock:
