@@ -29,6 +29,11 @@ describe Diplomat do
         expect(config.middleware).to be_a(Array)
         expect(config.middleware.length).to eq(0)
       end
+
+      it "Returns an empty options hash" do
+        expect(config.options).to be_a(Hash)
+        expect(config.options).to be_empty
+      end
     end
 
     context "Custom Configuration" do
@@ -48,12 +53,14 @@ describe Diplomat do
           config.url = "http://google.com"
           config.acl_token = "f45cbd0b-5022-47ab-8640-4eaa7c1f40f1"
           config.middleware = StubMiddleware
+          config.options = {ssl: { verify: true }}
         end
 
         expect(Diplomat.configuration.url).to eq("http://google.com")
         expect(Diplomat.configuration.acl_token).to eq("f45cbd0b-5022-47ab-8640-4eaa7c1f40f1")
         expect(Diplomat.configuration.middleware).to be_a(Array)
         expect(Diplomat.configuration.middleware.first).to eq(StubMiddleware)
+        expect(Diplomat.configuration.options).to eq({ssl: { verify: true }})
       end
 
       it "Can set multiple middleware" do

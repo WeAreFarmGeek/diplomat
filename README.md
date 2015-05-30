@@ -184,6 +184,8 @@ Diplomat.configure do |config|
   config.middleware = MyCustomMiddleware
   # Connect into consul with custom access token (ACL)
   config.acl_token =  "xxxxxxxx-yyyy-zzzz-1111-222222222222"
+  # Set extra Faraday configuration options
+  config.options = {ssl: { version: :TLSv1_2 }}
 end
 ```
 
@@ -194,7 +196,7 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 -  [ ] Updating Docs with latest changes
 -  [ ] Using custom objects for response objects (instead of openStruct)
 -  [ ] PUTing and DELETEing services
--  [ ] Custom SSL Cert Middleware for faraday
+-  [x] Custom SSL Cert Middleware for faraday
 -  [x] Allowing the custom configuration of the consul url to connect to
 -  [x] Deleting Keys
 -  [x] Listing available services
