@@ -58,7 +58,7 @@ module Diplomat
     end
 
     def build_connection(api_connection, raise_error=false)
-      return api_connection || Faraday.new(:url => Diplomat.configuration.url) do |faraday|
+      return api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
         faraday.adapter  Faraday.default_adapter
         faraday.request  :url_encoded
         faraday.response :raise_error unless raise_error
