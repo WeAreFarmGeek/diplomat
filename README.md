@@ -106,7 +106,7 @@ Getting a list of datacenters is quite simple and gives you the option to extrac
 all accessible datacenters if you need to.
 
 ```ruby
-datacenters = Diplomat::Service.get('foo', :all)
+datacenters = Diplomat::Datacenter.get()
 # => ["DC1", "DC2"]
 ```
 
