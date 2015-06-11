@@ -93,6 +93,23 @@ foo_service = Diplomat::Service.get('foo', :all)
 # => [#<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>,#<OpenStruct Node="indigo", Address="1.2.3.5", ServiceID="indigo_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>]
 ```
 
+Or if you want to find services for a particular datacenter
+
+```ruby
+foo_service = Diplomat::Service.get('foo', :all, { :dc => 'My_Datacenter'})
+# => [#<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>,#<OpenStruct Node="indigo", Address="1.2.3.5", ServiceID="indigo_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>]
+```
+
+### Datacenters
+
+Getting a list of datacenters is quite simple and gives you the option to extract all services out of
+all accessible datacenters if you need to.
+
+```ruby
+datacenters = Diplomat::Service.get('foo', :all)
+# => ["DC1", "DC2"]
+```
+
 ### Sessions
 
 Creating a session:
