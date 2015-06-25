@@ -80,11 +80,12 @@ module Diplomat
         @value = @raw.first["Value"]
         @value = Base64.decode64(@value) unless @value.nil?
       else
-        @value = @raw.map do |e|
-          {
+        @value = @raw.reduce([]) do |acc, e|
+          acc << {
             :key => e["Key"],
-            :value => (Base64.decode64(e["Value"]) unless e["Value"].nil?)
-          }
+            :value => Base64.decode64(e["Value"])
+          } unless e["Value"].nil?
+          acc
         end
       end
     end

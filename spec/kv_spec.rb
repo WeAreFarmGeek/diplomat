@@ -26,6 +26,11 @@ describe Diplomat::Kv do
               "Key"   => key,
               "Value" => Base64.encode64(key_params),
               "Flags" => 0
+            },
+            {
+              "Key"   => key + 'iamnil',
+              "Value" => nil,
+              "Flags" => 0
             }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
