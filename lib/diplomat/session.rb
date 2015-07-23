@@ -44,7 +44,7 @@ module Diplomat
     
     def renew id
       raw = @conn.put do |req|
-        req.url = "/v1/session/renew/#{id}"
+        req.url "/v1/session/renew/#{id}"
       end
       JSON.parse(raw.body)
     end
