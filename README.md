@@ -65,6 +65,12 @@ foo = Diplomat::Kv.get('foo')
 # => "bar"
 ```
 
+Or retrieve a value from another datacenter:
+```ruby
+foo = Diplomat::Kv.get('foo', :dc => 'dc-west')
+# => "baz"
+```
+
 You can also retrieve values recursively:
 
 ```ruby
@@ -84,7 +90,7 @@ Looking up a service is easy as pie:
 
 ```ruby
 foo_service = Diplomat::Service.get('foo')
-# => #<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432> 
+# => #<OpenStruct Node="hotel", Address="1.2.3.4", ServiceID="hotel_foo", ServiceName="foo", ServiceTags=["foo"], ServicePort=5432>
 ```
 Or if you have multiple nodes per service:
 
