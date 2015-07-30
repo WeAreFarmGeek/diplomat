@@ -14,6 +14,17 @@ describe Diplomat::Kv do
     let(:valid_acl_token) { "f45cbd0b-5022-47ab-8640-4eaa7c1f40f1" }
 
     describe "#get" do
+      context "Datacenter filter" do
+        it "GET" do
+          faraday.double()
+          kv = Diplomat::Kv.new(faraday)
+          expect(faraday).to receive(:get)
+                              .with(/dc=bar/)
+                              .and_return(OpenStruct.new({ status: 200, body: JSON.generate([]) }))
+          kv.get('foo', dc: 'bar')
+        end
+      end
+
       context "ACLs NOT enabled, recurse option ON" do
         it "GET" do
           json = JSON.generate([
@@ -168,14 +179,14 @@ describe Diplomat::Kv do
         it "DELETE" do
           faraday.stub(:delete).and_return(OpenStruct.new({ status: 200}))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.delete(key).status).to eq 200 
+          expect(kv.delete(key).status).to eq 200
         end
       end
       context "ACLs enabled, without valid_acl_token" do
         it "DELETE" do
           faraday.stub(:delete).and_return(OpenStruct.new({ status: 403}))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.delete(key).status).to eq 403 
+          expect(kv.delete(key).status).to eq 403
         end
       end
       context "ACLs enabled, with valid_acl_token" do
