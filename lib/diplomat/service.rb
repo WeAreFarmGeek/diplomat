@@ -3,7 +3,7 @@ require 'faraday'
 
 module Diplomat
   class Service < Diplomat::RestClient
-    
+
     @access_methods = [ :get, :register, :deregister ]
 
     # Get a service by it's key
@@ -19,7 +19,13 @@ module Diplomat
       url << use_named_parameter('index', options[:index]) if options and options[:index]
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
 
-      ret = @conn.get concat_url url
+      # If the request fails, it's probably due to a bad path
+      # so return a PathNotFound error.
+      begin
+        ret = @conn.get concat_url url
+      rescue Faraday::ClientError
+        raise Diplomat::PathNotFound
+      end
 
       if meta and ret.headers
         meta[:index] = ret.headers["x-consul-index"]

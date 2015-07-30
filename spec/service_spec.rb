@@ -129,6 +129,20 @@ describe Diplomat::Service do
         expect(s.Node).to eq("foo")
       end
 
+      it "bad datacenter option" do
+        faraday = double()
+
+        allow(faraday).to receive(:get)
+                            .with(key_url_with_datacenteroption)
+                            .and_raise(
+                              Faraday::ClientError.new({}, 500)
+                            )
+
+        service = Diplomat::Service.new(faraday)
+        options = { :dc => "somedc" }
+        expect{ service.get("toast", :first, options) }.to raise_error(Diplomat::PathNotFound)
+      end
+
       it "all options" do
         json = JSON.generate(body)
 
