@@ -10,6 +10,7 @@ module Diplomat
     # @param key [String] the key
     # @param options [Hash] the query params
     # @option options [String] :consistency The read consistency type
+    # @option options [String] :dc Target datacenter
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
@@ -39,6 +40,7 @@ module Diplomat
       url += recurse_get(@options)
       url += check_acl_token
       url += use_consistency(@options)
+      url += dc(@options)
 
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
@@ -81,6 +83,7 @@ module Diplomat
     # @param value [String] the value
     # @param options [Hash] the query params
     # @option options [Integer] :cas The modify index
+    # @option options [String] :dc Target datacenter
     # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
     def put key, value, options=nil
       @options = options
@@ -88,6 +91,7 @@ module Diplomat
         url = ["/v1/kv/#{key}"]
         url += check_acl_token
         url += use_cas(@options)
+        url += dc(@options)
         req.url concat_url url
         req.body = value
       end
@@ -100,11 +104,15 @@ module Diplomat
 
     # Delete a value by its key
     # @param key [String] the key
+    # @param options [Hash] the query params
+    # @option options [String] :dc Target datacenter
     # @return [OpenStruct]
-    def delete key
+    def delete key, options=nil
       @key = key
+      @options = options
       url = ["/v1/kv/#{@key}"]
       url += check_acl_token
+      url += dc(@options)
       @raw = @conn.delete concat_url url
     end
 
@@ -124,6 +132,10 @@ module Diplomat
 
     def recurse_get(options)
       if options && options[:recurse] then ['recurse'] else [] end
+    end
+
+    def dc(options)
+      if options && options[:dc] then use_named_parameter("dc", options[:dc]) else [] end
     end
   end
 end
