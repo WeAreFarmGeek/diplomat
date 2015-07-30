@@ -179,7 +179,7 @@ You can create a custom configuration using the following syntax:
 ```ruby
 Diplomat.configure do |config|
   # Set up a custom Consul URL
-  config.url = "localhost:8888"
+  config.url = "http://localhost:8888"
   # Set up a custom Faraday Middleware
   config.middleware = MyCustomMiddleware
   # Connect into consul with custom access token (ACL)
