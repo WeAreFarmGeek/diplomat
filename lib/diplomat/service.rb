@@ -18,6 +18,7 @@ module Diplomat
       url << use_named_parameter('wait', options[:wait]) if options and options[:wait]
       url << use_named_parameter('index', options[:index]) if options and options[:index]
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
+      url << use_named_parameter('tag', options[:tag]) if options and options[:tag]
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.

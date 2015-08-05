@@ -13,6 +13,7 @@ describe Diplomat::Service do
     let(:key_url_with_indexoption) { "/v1/catalog/service/#{key}?index=5" }
     let(:key_url_with_waitoption) { "/v1/catalog/service/#{key}?wait=6s" }
     let(:key_url_with_datacenteroption) { "/v1/catalog/service/#{key}?dc=somedc" }
+    let(:key_url_with_tagoption) { "/v1/catalog/service/#{key}?tag=sometag" }
     let(:body) {
       [
         {
@@ -20,7 +21,7 @@ describe Diplomat::Service do
           "Address"     => "10.1.10.12",
           "ServiceID"   => key,
           "ServiceName" => key,
-          "ServiceTags" => nil,
+          "ServiceTags" => ['sometag'],
           "ServicePort" => "70457"
         },
         {
@@ -28,7 +29,7 @@ describe Diplomat::Service do
           "Address"     => "10.1.10.13",
           "ServiceID"   => key,
           "ServiceName" => key,
-          "ServiceTags" => nil,
+          "ServiceTags" => ['sometag', 'anothertag'],
           "ServicePort" => "70457"
         }
       ]
@@ -141,6 +142,17 @@ describe Diplomat::Service do
         service = Diplomat::Service.new(faraday)
         options = { :dc => "somedc" }
         expect{ service.get("toast", :first, options) }.to raise_error(Diplomat::PathNotFound)
+      end
+
+      it "tag option" do
+        json = JSON.generate(body)
+
+        faraday.stub(:get).with(key_url_with_tagoption).and_return(OpenStruct.new({ body: json, headers: headers }))
+
+        service = Diplomat::Service.new(faraday)
+        options = { :tag => "sometag" }
+        s = service.get("toast", :first, options)
+        expect(s.Node).to eq("foo")
       end
 
       it "all options" do
