@@ -33,7 +33,7 @@ module Diplomat
     # @return [Struct]
     def list
       raw = @conn.get do |req|
-        req.url "/v1/session/list/"
+        req.url "/v1/session/list"
       end
       JSON.parse(raw.body)
     end
