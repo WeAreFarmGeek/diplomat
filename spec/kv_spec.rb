@@ -50,6 +50,18 @@ describe Diplomat::Kv do
             { key: 'key', value: "toast" }
           ])
         end
+
+        it "Recursive GET with one response should return an array" do
+          json = JSON.generate([
+                                   {
+                                       "Key"   => key + 'dewfr',
+                                       "Value" => Base64.encode64(key_params),
+                                       "Flags" => 0
+                                   }])
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get("key", {:recurse=>true})).to eql([{ key: 'keydewfr', value: "toast" }])
+        end
       end
 
       context "ACLs NOT enabled" do

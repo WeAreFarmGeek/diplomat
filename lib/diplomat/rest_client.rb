@@ -75,8 +75,16 @@ module Diplomat
     end
 
     # Get the key/value(s) from the raw output
-    def return_value
-      if @raw.count == 1
+    #
+    #
+    #
+    # @param [bool] is_recurse, true if we're handling the result of a recursive search
+    # @returns [String|Array] a string equal to the value if it was a regular get and there is
+    #                         a result, otherwise, an array of hashes, where the hash contains
+    #                         :key & :value entries. When nothing was found, either for a recursive
+    #                         search or for a regular one, we return an empty array
+    def return_value is_recurse
+      if @raw.count == 1 && !is_recurse
         @value = @raw.first["Value"]
         @value = Base64.decode64(@value) unless @value.nil?
       else
