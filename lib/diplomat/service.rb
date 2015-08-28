@@ -42,6 +42,7 @@ module Diplomat
     end
 
     # Get all the services
+    # @return [OpenStruct] the list of all services
     def get_all
       url = "/v1/catalog/services"
       begin
