@@ -4,7 +4,7 @@ require 'faraday'
 module Diplomat
   class Service < Diplomat::RestClient
 
-    @access_methods = [ :get, :register, :deregister ]
+    @access_methods = [ :get, :get_all, :register, :deregister ]
 
     # Get a service by it's key
     # @param key [String] the key
@@ -39,6 +39,18 @@ module Diplomat
       end
 
       return OpenStruct.new JSON.parse(ret.body).first
+    end
+
+    # Get all the services
+    def get_all
+      url = "/v1/catalog/services"
+      begin
+        ret = @conn.get url
+      rescue Faraday::ClientError
+        raise Diplomat::PathNotFound
+      end
+
+      return OpenStruct.new JSON.parse(ret.body)
     end
 
     # Register a service
