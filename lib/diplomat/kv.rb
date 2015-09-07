@@ -44,7 +44,7 @@ module Diplomat
       url += use_consistency(@options)
       url += dc(@options)
 
-      return_nil_values = @options and @options[:nil_values]
+      return_nil_values = (@options and @options[:nil_values])
 
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
