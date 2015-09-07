@@ -9,8 +9,10 @@ module Diplomat
     # Get a value by its key, potentially blocking for the first or next value
     # @param key [String] the key
     # @param options [Hash] the query params
+    # @option options [Boolean] :recurse If to make recursive get or not
     # @option options [String] :consistency The read consistency type
     # @option options [String] :dc Target datacenter
+    # @option options [Boolean] :nil_values If to return keys/dirs with nil values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
@@ -42,6 +44,8 @@ module Diplomat
       url += use_consistency(@options)
       url += dc(@options)
 
+      return_nil_values = @options and @options[:nil_values]
+
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
       if raw.status == 404
@@ -60,7 +64,7 @@ module Diplomat
           when :return
             @raw = raw
             parse_body
-            return return_value
+            return return_value(return_nil_values)
           when :wait
             index = raw.headers["x-consul-index"]
         end
@@ -75,7 +79,7 @@ module Diplomat
         req.options.timeout = 86400
       end
       parse_body
-      return_value
+      return_value(return_nil_values)
     end
 
     # Associate a value with a key
