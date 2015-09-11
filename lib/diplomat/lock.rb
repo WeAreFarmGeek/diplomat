@@ -17,7 +17,7 @@ module Diplomat
       raw.body == 'true'
     end
 
-    # wait to aquire a lock
+    # wait to acquire a lock
     # @param key [String] the key
     # @param session [String] the session, generated from Diplomat::Session.create
     # @param value [String] the value for the key
