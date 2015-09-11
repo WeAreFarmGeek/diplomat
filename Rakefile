@@ -1,4 +1,4 @@
-require "bundler/setup"
+require 'bundler/setup'
 Bundler.setup
 
 require 'rspec/core/rake_task'
@@ -7,12 +7,12 @@ require 'cucumber/rake/task'
 
 RSpec::Core::RakeTask.new(:spec)
 Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = "features --format pretty"
+  t.cucumber_opts = 'features --format pretty'
 end
 
-desc "Run a bootstrapped consul server for testing"
+desc 'Run a bootstrapped consul server for testing'
 task :consul do
-  system("consul agent -server -bootstrap -data-dir=/tmp")
+  system('consul agent -server -bootstrap -data-dir=/tmp')
 end
 
 task :default => :spec

@@ -3,12 +3,11 @@ require 'json'
 
 module Diplomat
   class RestClient
-
     @access_methods = []
 
     # Initialize the fadaray connection
     # @param api_connection [Faraday::Connection,nil] supply mock API Connection
-    def initialize api_connection=nil
+    def initialize(api_connection = nil)
       start_connection api_connection
     end
 
@@ -17,14 +16,14 @@ module Diplomat
     # @param value [String] the value of the parameter
     # @return [Array] the resultant parameter string inside an array.
     def use_named_parameter(name, value)
-      if value then ["#{name}=#{value}"] else [] end
+      value ? ["#{name}=#{value}"] : []
     end
 
     # Assemble a url from an array of parts.
     # @param parts [Array] the url chunks to be assembled
     # @return [String] the resultant url string
-    def concat_url parts
-      if parts.length > 1 then
+    def concat_url(parts)
+      if parts.length > 1
         parts.first + '?' + parts.drop(1).join('&')
       else
         parts.first
@@ -32,8 +31,7 @@ module Diplomat
     end
 
     class << self
-
-      def access_method? meth_id
+      def access_method?(meth_id)
         @access_methods.include? meth_id
       end
 
@@ -45,20 +43,19 @@ module Diplomat
       def method_missing(meth_id, *args)
         access_method?(meth_id) ? new.send(meth_id, *args) : super
       end
-
     end
 
     private
 
     # Build the API Client
     # @param api_connection [Faraday::Connection,nil] supply mock API Connection
-    def start_connection api_connection=nil
+    def start_connection(api_connection = nil)
       @conn = build_connection(api_connection)
       @conn_no_err = build_connection(api_connection, true)
     end
 
-    def build_connection(api_connection, raise_error=false)
-      return api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
+    def build_connection(api_connection, raise_error = false)
+      api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
         faraday.adapter  Faraday.default_adapter
         faraday.request  :url_encoded
         faraday.response :raise_error unless raise_error
@@ -77,15 +74,14 @@ module Diplomat
     # Get the key/value(s) from the raw output
     def return_value
       if @raw.count == 1
-        @value = @raw.first["Value"]
+        @value = @raw.first['Value']
         @value = Base64.decode64(@value) unless @value.nil?
       else
-        @value = @raw.reduce([]) do |acc, e|
+        @value = @raw.each_with_object([]) do |e, acc|
           acc << {
-            :key => e["Key"],
-            :value => Base64.decode64(e["Value"])
-          } unless e["Value"].nil?
-          acc
+            :key => e['Key'],
+            :value => Base64.decode64(e['Value'])
+          } unless e['Value'].nil?
         end
       end
     end
@@ -93,10 +89,9 @@ module Diplomat
     # Get the name and payload(s) from the raw output
     def return_payload
       @value = @raw.map do |e|
-        { :name => e["Name"],
-          :payload => (Base64.decode64(e["Payload"]) unless e["Payload"].nil?) }
+        { :name => e['Name'],
+          :payload => (Base64.decode64(e['Payload']) unless e['Payload'].nil?) }
       end
     end
-
   end
 end
