@@ -3,12 +3,10 @@ require 'json'
 require 'base64'
 
 describe Diplomat::Health do
-
   let(:faraday) { fake }
 
-  context "health" do
-
-    it "node" do
+  context 'health' do
+    it 'node' do
       json = <<EOF
       [
             {
@@ -34,14 +32,14 @@ describe Diplomat::Health do
         ]
 EOF
 
-      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+      faraday.stub(:get).and_return(OpenStruct.new(:body => json))
 
       health = Diplomat::Health.new(faraday)
 
-      expect(health.node("foobar")[0]["Node"]).to eq("foobar")
+      expect(health.node('foobar')[0]['Node']).to eq('foobar')
     end
 
-    it "checks" do
+    it 'checks' do
       json = <<EOF
 [
     {
@@ -57,14 +55,14 @@ EOF
 ]
 EOF
 
-      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+      faraday.stub(:get).and_return(OpenStruct.new(:body => json))
 
       health = Diplomat::Health.new(faraday)
 
-      expect(health.checks("foobar")[0]["Node"]).to eq("foobar")
+      expect(health.checks('foobar')[0]['Node']).to eq('foobar')
     end
 
-    it "service" do
+    it 'service' do
       json = <<EOF
 [
     {
@@ -104,15 +102,15 @@ EOF
 ]
 EOF
 
-      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+      faraday.stub(:get).and_return(OpenStruct.new(:body => json))
 
       health = Diplomat::Health.new(faraday)
 
-      expect(health.service("foobar")[0]["Node"]["Node"]).to eq("foobar")
+      expect(health.service('foobar')[0]['Node']['Node']).to eq('foobar')
     end
 
-it "state" do
-      json = <<EOF
+    it 'state' do
+          json = <<EOF
 [
     {
         "Node": "foobar",
@@ -137,14 +135,11 @@ it "state" do
 ]
 EOF
 
-      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+          faraday.stub(:get).and_return(OpenStruct.new(:body => json))
 
-      health = Diplomat::Health.new(faraday)
+          health = Diplomat::Health.new(faraday)
 
-      expect(health.state("foobar")[0]["Node"]).to eq("foobar")
-    end
-
-
+          expect(health.state('foobar')[0]['Node']).to eq('foobar')
+        end
   end
-
 end

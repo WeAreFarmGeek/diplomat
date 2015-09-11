@@ -3,7 +3,7 @@ require 'faraday'
 
 module Diplomat
   class Kv < Diplomat::RestClient
-    @access_methods = [ :get, :put, :delete ]
+    @access_methods = [:get, :put, :delete]
     attr_reader :key, :value, :raw
 
     # Get a value by its key, potentially blocking for the first or next value
@@ -32,7 +32,7 @@ module Diplomat
     #   - W R - get the first or current value; always return something, but
     #           block only when necessary
     #   - W W - get the first or next value; wait until there is an update
-    def get key, options=nil, not_found=:reject, found=:return
+    def get(key, options = nil, not_found = :reject, found = :return)
       @key = key
       @options = options
 
@@ -46,33 +46,33 @@ module Diplomat
       raw = @conn_no_err.get concat_url url
       if raw.status == 404
         case not_found
-          when :reject
-            raise Diplomat::KeyNotFound, key
-          when :return
-            return @value = ""
-          when :wait
-            index = raw.headers["x-consul-index"]
+        when :reject
+          raise Diplomat::KeyNotFound, key
+        when :return
+          return @value = ''
+        when :wait
+          index = raw.headers['x-consul-index']
         end
       elsif raw.status == 200
         case found
-          when :reject
-            raise Diplomat::KeyAlreadyExists, key
-          when :return
-            @raw = raw
-            parse_body
-            return return_value
-          when :wait
-            index = raw.headers["x-consul-index"]
+        when :reject
+          raise Diplomat::KeyAlreadyExists, key
+        when :return
+          @raw = raw
+          parse_body
+          return return_value
+        when :wait
+          index = raw.headers['x-consul-index']
         end
       else
         raise Diplomat::UnknownStatus, "status #{raw.status}"
       end
 
       # Wait for first/next value
-      url += use_named_parameter("index", index)
+      url += use_named_parameter('index', index)
       @raw = @conn.get do |req|
         req.url concat_url url
-        req.options.timeout = 86400
+        req.options.timeout = 86_400
       end
       parse_body
       return_value
@@ -85,7 +85,7 @@ module Diplomat
     # @option options [Integer] :cas The modify index
     # @option options [String] :dc Target datacenter
     # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
-    def put key, value, options=nil
+    def put(key, value, options = nil)
       @options = options
       @raw = @conn.put do |req|
         url = ["/v1/kv/#{key}"]
@@ -95,11 +95,11 @@ module Diplomat
         req.url concat_url url
         req.body = value
       end
-      if @raw.body == "true"
+      if @raw.body == 'true'
         @key   = key
         @value = value
       end
-      @raw.body == "true"
+      @raw.body == 'true'
     end
 
     # Delete a value by its key
@@ -107,7 +107,7 @@ module Diplomat
     # @param options [Hash] the query params
     # @option options [String] :dc Target datacenter
     # @return [OpenStruct]
-    def delete key, options=nil
+    def delete(key, options = nil)
       @key = key
       @options = options
       url = ["/v1/kv/#{@key}"]
@@ -119,23 +119,23 @@ module Diplomat
     private
 
     def check_acl_token
-      use_named_parameter("token", Diplomat.configuration.acl_token)
+      use_named_parameter('token', Diplomat.configuration.acl_token)
     end
 
     def use_cas(options)
-      if options then use_named_parameter("cas", options[:cas]) else [] end
+      options ? use_named_parameter('cas', options[:cas]) : []
     end
 
     def use_consistency(options)
-      if options && options[:consistency] then ["#{options[:consistency]}"] else [] end
+      options && options[:consistency] ? ["#{options[:consistency]}"] : []
     end
 
     def recurse_get(options)
-      if options && options[:recurse] then ['recurse'] else [] end
+      options && options[:recurse] ? ['recurse'] : []
     end
 
     def dc(options)
-      if options && options[:dc] then use_named_parameter("dc", options[:dc]) else [] end
+      options && options[:dc] ? use_named_parameter('dc', options[:dc]) : []
     end
   end
 end

@@ -2,7 +2,7 @@ require 'faraday'
 
 module Diplomat
   class Event < Diplomat::RestClient
-    @access_methods = [ :fire, :get_all, :get ]
+    @access_methods = [:fire, :get_all, :get]
 
     # Send an event
     # @param name [String] the event name
@@ -11,12 +11,12 @@ module Diplomat
     # @param node [String] the target node name
     # @param tag [String] the target tag name, must only be used with service
     # @return [nil]
-    def fire name, value=nil, service=nil, node=nil, tag=nil
+    def fire(name, value = nil, service = nil, node = nil, tag = nil)
       @conn.put do |req|
-        url = [ "/v1/event/fire/#{name}" ]
-        url += use_named_parameter("service", service)
-        url += use_named_parameter("node", node)
-        url += use_named_parameter("tag", tag) if service
+        url = ["/v1/event/fire/#{name}"]
+        url += use_named_parameter('service', service)
+        url += use_named_parameter('node', node)
+        url += use_named_parameter('tag', tag) if service
         req.url concat_url url
         req.body = value unless value.nil?
       end
@@ -53,27 +53,27 @@ module Diplomat
     #   - W R - get the first or current value; always return something, but
     #           block only when necessary
     #   - W W - get the first or next value; wait until there is an update
-    def get_all name=nil, not_found=:reject, found=:return
-      url = ["/v1/event/list"]
-      url += use_named_parameter("name", name)
+    def get_all(name = nil, not_found = :reject, found = :return)
+      url = ['/v1/event/list']
+      url += use_named_parameter('name', name)
       url = concat_url url
 
       # Event list never returns 404 or blocks, but may return an empty list
       @raw = @conn.get url
       if JSON.parse(@raw.body).count == 0
         case not_found
-          when :reject
-            raise Diplomat::EventNotFound, name
-          when :return
-            return []
+        when :reject
+          raise Diplomat::EventNotFound, name
+        when :return
+          return []
         end
       else
         case found
-          when :reject
-            raise Diplomat::EventAlreadyExists, name
-          when :return
-            parse_body
-            return return_payload
+        when :reject
+          raise Diplomat::EventAlreadyExists, name
+        when :return
+          parse_body
+          return return_payload
         end
       end
 
@@ -102,46 +102,46 @@ module Diplomat
     #   middle, though these can only be identified relative to the preceding
     #   event. However, this is ideal for iterating through the sequence of
     #   events (while being sure that none are missed).
-    def get name=nil, token=:last, not_found=:wait, found=:return
-      url = ["/v1/event/list"]
-      url += use_named_parameter("name", name)
+    def get(name = nil, token = :last, not_found = :wait, found = :return)
+      url = ['/v1/event/list']
+      url += use_named_parameter('name', name)
       url = concat_url url
       @raw = @conn.get url
       body = JSON.parse(@raw.body)
       # TODO: deal with unknown symbols, invalid indices (find_index will return nil)
       idx = case token
-              when :first then 0
-              when :last then body.length - 1
-              when :next then body.length
-              else body.find_index { |e| e["ID"] == token } + 1
+            when :first then 0
+            when :last then body.length - 1
+            when :next then body.length
+            else body.find_index { |e| e['ID'] == token } + 1
             end
-      if idx == body.length then
+      if idx == body.length
         case not_found
-          when :reject
-            raise Diplomat::EventNotFound, name
-          when :return
-            event_name = ""
-            event_payload = ""
-            event_token = :last
-          when :wait
-            @raw = wait_for_next_event(url)
-            parse_body
-            # If it's possible for two events to arrive at once,
-            # this needs to #find again:
-            event = @raw.last
-            event_name = event["Name"]
-            event_payload = Base64.decode64(event["Payload"])
-            event_token = event["ID"]
+        when :reject
+          raise Diplomat::EventNotFound, name
+        when :return
+          event_name = ''
+          event_payload = ''
+          event_token = :last
+        when :wait
+          @raw = wait_for_next_event(url)
+          parse_body
+          # If it's possible for two events to arrive at once,
+          # this needs to #find again:
+          event = @raw.last
+          event_name = event['Name']
+          event_payload = Base64.decode64(event['Payload'])
+          event_token = event['ID']
         end
       else
         case found
-          when :reject
-            raise Diplomat::EventAlreadyExits, name
-          when :return
-            event = body[idx]
-            event_name = event["Name"]
-            event_payload = Base64.decode64(event["Payload"])
-            event_token = event["ID"]
+        when :reject
+          raise Diplomat::EventAlreadyExits, name
+        when :return
+          event = body[idx]
+          event_name = event['Name']
+          event_payload = Base64.decode64(event['Payload'])
+          event_token = event['ID']
         end
       end
 
@@ -151,17 +151,15 @@ module Diplomat
       }
     end
 
-
     private
 
-    def wait_for_next_event url
-      index = @raw.headers["x-consul-index"]
-      url = [url, use_named_parameter("index", index)].join("&")
-      return @conn.get do |req|
+    def wait_for_next_event(url)
+      index = @raw.headers['x-consul-index']
+      url = [url, use_named_parameter('index', index)].join('&')
+      @conn.get do |req|
         req.url concat_url url
-        req.options.timeout = 86400
+        req.options.timeout = 86_400
       end
     end
-
   end
 end
