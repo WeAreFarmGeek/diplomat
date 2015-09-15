@@ -6,7 +6,7 @@ module Diplomat
     @access_methods = [ :get ]
 
     # Get all nodes
-    # @return [OpenStruct] all data associated with the service
+    # @return [OpenStruct] all data associated with the nodes in catalog
     def get
       ret = @conn.get "/v1/catalog/nodes"
       return JSON.parse(ret.body)
