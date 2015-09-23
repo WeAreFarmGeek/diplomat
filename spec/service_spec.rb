@@ -34,6 +34,12 @@ describe Diplomat::Service do
         }
       ]
     }
+    let(:body_all) {
+      {
+        service1: ["tag one", "tag two", "tag three"],
+        service2: ["tag four"]
+      }
+    }
     let(:headers) {
       {
         "x-consul-index"        => "8",
@@ -165,6 +171,20 @@ describe Diplomat::Service do
         options = { :wait => "5m", :index => "3", :dc => 'somedc' }
         s = service.get("toast", :first, options)
         expect(s.Node).to eq("foo")
+      end
+    end
+
+    describe "GET ALL" do
+      it "lists all the services" do
+        json = JSON.generate(body_all)
+
+        faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+
+        service = Diplomat::Service.new(faraday)
+        expect(service.get_all.service1).to be_an(Array)
+        expect(service.get_all.service2).to be_an(Array)
+        expect(service.get_all.service1.first).to eq("tag one")
+        expect(service.get_all.service2.first).to eq("tag four")
       end
     end
 
