@@ -11,11 +11,15 @@ module Diplomat
     # @param options [Hash] the query params
     # @option options [String] :consistency The read consistency type
     # @option options [String] :dc Target datacenter
+    # @option options [String] :recurse indicates that we're performing a recursive get
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
     #   :reject with exception, :return its current value, or :wait for its next value
-    # @return [String] The base64-decoded value associated with the key
+    # @return [String|Array] a string equal to the value if it was a regular get and there is
+    #                         a result, otherwise, an array of hashes, where the hash contains
+    #                         :key & :value entries. When nothing was found, either for a recursive
+    #                         search or for a regular one, we return an empty array
     # @note
     #   When trying to access a key, there are two possibilites:
     #   - The key doesn't (yet) exist
@@ -42,6 +46,11 @@ module Diplomat
       url += use_consistency(@options)
       url += dc(@options)
 
+      # We need to know if this is a recursive search so we know how to parse the output. But
+      # the user can invoke a recursive get in two ways: (1) by adding '?recurse' to the key
+      # string or by adding a {:recurse => true} to the options hash.
+      is_recurse = key.end_with?('?recurse') || ( options && options[:recurse] )
+
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
       if raw.status == 404
@@ -60,7 +69,7 @@ module Diplomat
           when :return
             @raw = raw
             parse_body
-            return return_value
+            return return_value is_recurse
           when :wait
             index = raw.headers["x-consul-index"]
         end
@@ -75,7 +84,7 @@ module Diplomat
         req.options.timeout = 86400
       end
       parse_body
-      return_value
+      return_value is_recurse
     end
 
     # Associate a value with a key
