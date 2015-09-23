@@ -181,8 +181,9 @@ describe Diplomat::Service do
         faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
 
         service = Diplomat::Service.new(faraday)
-        expect(service.get_all.to_h.keys.size).to eq(2)
-        expect(service.get_all.service1.size).to eq(3)
+        expect(service.get_all.service1).to be_an(Array)
+        expect(service.get_all.service2).to be_an(Array)
+        expect(service.get_all.service1.first).to eq("tag one")
         expect(service.get_all.service2.first).to eq("tag four")
       end
     end
