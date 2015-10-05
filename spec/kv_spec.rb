@@ -62,6 +62,38 @@ describe Diplomat::Kv do
           ])
         end
       end
+      context "ACLs NOT enabled, recurse option ON with transformation" do
+        let(:number) { 1 }
+        let(:string) { "x" }
+        let(:hash) { "{\"x\": 1}" }
+        let(:json) { JSON.generate([
+          {
+            "Key"   => key + 'number',
+            "Value" => Base64.encode64(number.to_s),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + 'string',
+            "Value" => Base64.encode64("\"#{string}\""),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + 'hash',
+            "Value" => Base64.encode64(hash),
+            "Flags" => 0
+          }])
+        }
+
+        it "GET" do
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get(key, recurse: true, transformation: Proc.new{|x| JSON.parse("[#{x}]")[0]} )).to eql([
+            { key: key + 'number', value: number },
+            { key: key + 'string', value: string },
+            { key: key + 'hash', value: {"x" => 1} },
+          ])
+        end
+      end
       context "ACLs NOT enabled" do
         it "GET" do
           json = JSON.generate([{
