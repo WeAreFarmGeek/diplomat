@@ -13,6 +13,7 @@ module Diplomat
     # @option options [String] :consistency The read consistency type
     # @option options [String] :dc Target datacenter
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
+    # @option options [Boolean] :raw_values If to return raw values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
@@ -45,6 +46,7 @@ module Diplomat
       url += dc(@options)
 
       return_nil_values = (@options and @options[:nil_values])
+      raw_values = (@options and @options[:raw_values])
 
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
@@ -79,7 +81,7 @@ module Diplomat
         req.options.timeout = 86400
       end
       parse_body
-      return_value(return_nil_values)
+      return_value(return_nil_values, raw_values)
     end
 
     # Associate a value with a key
