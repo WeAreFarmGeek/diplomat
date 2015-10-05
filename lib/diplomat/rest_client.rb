@@ -75,16 +75,17 @@ module Diplomat
     end
 
     # Get the key/value(s) from the raw output
-    def return_value
+    def return_value(nil_values=false)
       if @raw.count == 1
         @value = @raw.first["Value"]
         @value = Base64.decode64(@value) unless @value.nil?
       else
         @value = @raw.reduce([]) do |acc, e|
+          val = e["Value"].nil? ? nil : Base64.decode64(e["Value"])
           acc << {
             :key => e["Key"],
-            :value => Base64.decode64(e["Value"])
-          } unless e["Value"].nil?
+            :value => val
+          } if val or nil_values
           acc
         end
       end

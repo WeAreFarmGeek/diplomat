@@ -26,32 +26,42 @@ describe Diplomat::Kv do
       end
 
       context "ACLs NOT enabled, recurse option ON" do
+        let(:json) { JSON.generate([
+          {
+            "Key"   => key + 'dewfr',
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key,
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + 'iamnil',
+            "Value" => nil,
+            "Flags" => 0
+          }])
+        }
+
         it "GET" do
-          json = JSON.generate([
-            {
-              "Key"   => key + 'dewfr',
-              "Value" => Base64.encode64(key_params),
-              "Flags" => 0
-            },
-            {
-              "Key"   => key,
-              "Value" => Base64.encode64(key_params),
-              "Flags" => 0
-            },
-            {
-              "Key"   => key + 'iamnil',
-              "Value" => nil,
-              "Flags" => 0
-            }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key?recurse")).to eql([
-            { key: 'keydewfr', value: "toast" },
-            { key: 'key', value: "toast" }
+          expect(kv.get(key, recurse: true)).to eql([
+            { key: key + 'dewfr', value: "toast" },
+            { key: key, value: "toast" }
+          ])
+        end
+        it "GET with nil values" do
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get(key, recurse: true, nil_values: true )).to eql([
+            { key: key + 'dewfr', value: "toast" },
+            { key: key, value: "toast" },
+            { key: key + 'iamnil', value: nil }
           ])
         end
       end
-
       context "ACLs NOT enabled" do
         it "GET" do
           json = JSON.generate([{
