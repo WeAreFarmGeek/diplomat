@@ -12,6 +12,8 @@ module Diplomat
     # @option options [Boolean] :recurse If to make recursive get or not
     # @option options [String] :consistency The read consistency type
     # @option options [String] :dc Target datacenter
+    # @option options [String] :keys Only return key names.
+    # @option options [String] :separator List only up to a given separator. Only applies when combined with :keys option.
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
@@ -43,6 +45,8 @@ module Diplomat
       url += check_acl_token
       url += use_consistency(@options)
       url += dc(@options)
+      url += keys(@options)
+      url += separator(@options)
 
       return_nil_values = (@options and @options[:nil_values])
 
@@ -140,6 +144,14 @@ module Diplomat
 
     def dc(options)
       if options && options[:dc] then use_named_parameter("dc", options[:dc]) else [] end
+    end
+    
+    def keys(options)
+      if options && options[:keys] then ['keys'] else [] end
+    end
+    
+    def separator(options)
+      if options && options[:separator] then use_named_parameter("separator", options[:separator]) else [] end
     end
   end
 end
