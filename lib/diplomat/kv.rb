@@ -12,7 +12,7 @@ module Diplomat
     # @option options [Boolean] :recurse If to make recursive get or not
     # @option options [String] :consistency The read consistency type
     # @option options [String] :dc Target datacenter
-    # @option options [String] :keys Only return key names.
+    # @option options [Boolean] :keys Only return key names.
     # @option options [String] :separator List only up to a given separator. Only applies when combined with :keys option.
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
@@ -139,7 +139,7 @@ module Diplomat
     end
 
     def recurse_get(options)
-      if options && options[:recurse] then ['recurse'] else [] end
+      if options && options[:recurse] == true then ['recurse'] else [] end
     end
 
     def dc(options)
@@ -147,7 +147,7 @@ module Diplomat
     end
     
     def keys(options)
-      if options && options[:keys] then ['keys'] else [] end
+      if options && options[:keys] == true then ['keys'] else [] end
     end
     
     def separator(options)
