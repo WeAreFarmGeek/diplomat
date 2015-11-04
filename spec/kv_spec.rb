@@ -62,6 +62,14 @@ describe Diplomat::Kv do
           ])
         end
       end
+      context "ACLs NOT enabled, keys option ON" do
+        let(:json) { JSON.generate([ key, key + "ring", key + "tar" ]) }
+        it "GET" do
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get(key, keys: true)).to eql([ key, key + "ring", key + "tar" ])
+        end
+      end
       context "ACLs NOT enabled" do
         it "GET" do
           json = JSON.generate([{

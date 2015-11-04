@@ -76,6 +76,7 @@ module Diplomat
 
     # Get the key/value(s) from the raw output
     def return_value(nil_values=false)
+      return @value = @raw if @raw.first.is_a? String
       if @raw.count == 1
         @value = @raw.first["Value"]
         @value = Base64.decode64(@value) unless @value.nil?
