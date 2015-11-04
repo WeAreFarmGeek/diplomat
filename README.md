@@ -82,6 +82,24 @@ Diplomat::Kv.get('foo/', recurse: true)
 # => [{:key=>"foo/a", :value=>"lorem"}, {:key=>"foo/b", :value=>"ipsum"}, {:key=>"foo/c", :value=>"dolor"}]
 ```
 
+### Nodes
+
+#### Getting
+
+Look up a node:
+
+```ruby
+foo_service = Diplomat::Node.get('foo')
+# => {"Node"=>{"Node"=>"foobar", "Address"=>"10.1.10.12"}, "Services"=>{"consul"=>{"ID"=>"consul", "Service"=>"consul", "Tags"=>nil, "Port"=>8300}, "redis"=>{"ID"=>"redis", "Service"=>"redis", "Tags"=>["v1"], "Port"=>8000}}}
+```
+
+Get all nodes:
+
+```ruby
+nodes = Diplomat::Node.get_all
+# => [#<OpenStruct Address="10.1.10.12", Node="foo">, #<OpenStruct Address="10.1.10.13", Node="bar">]
+```
+
 ### Services
 
 #### Getting
