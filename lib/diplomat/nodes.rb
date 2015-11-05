@@ -6,6 +6,7 @@ module Diplomat
     @access_methods = [ :get ]
 
     # Get all nodes
+    # @deprecated Please use Diplomat::Node instead.
     # @return [OpenStruct] all data associated with the nodes in catalog
     def get
       ret = @conn.get "/v1/catalog/nodes"
