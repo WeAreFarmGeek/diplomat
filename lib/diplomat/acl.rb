@@ -22,7 +22,7 @@ module Diplomat
       if raw.status == 200 and raw.body
         case found
           when :reject
-            raise Diplomat::KeyAlreadyExists, key
+            raise Diplomat::AclAlreadyExists, @id
           when :return
             @raw = raw
             return parse_body
@@ -30,7 +30,7 @@ module Diplomat
       elsif raw.status == 200 and !raw.body
         case not_found
           when :reject
-            raise Diplomat::KeyNotFound, key
+            raise Diplomat::AclNotFound, @id
           when :return
             return nil
         end
@@ -55,17 +55,25 @@ module Diplomat
     end
 
     # Update an Acl definition, create if not present
-    # @param ID [String] the ID, mandatory
-    # @param name [String] the name of the Acl
-    # @param type [String] acl type
-    # @option rules [String] rule definition in HCL
-    # @return [String] The ID of the Affected Acl
-    def update id, name=nil, type=nil, rules=nil
-      value = {}
-      value['Name'] = name unless name.nil?
-      value['ID'] = id unless id.nil?
-      value['Type'] = type unless name.nil?
-      value['Rules'] = rules unless rules.nil?
+    # @param value [Hash] Acl definition, ID field is mandatory
+    # @return [Hash] The result Acl
+    def update value
+      raise Diplomat::IdParameterRequired unless value['ID']
+
+      @raw = @conn.put do |req|
+        url = ["/v1/acl/update"]
+        url += check_acl_token
+        url += use_cas(@options)
+        req.url concat_url url
+        req.body = value.to_json
+      end
+      JSON.parse(@raw.body)
+    end
+
+    # Create an Acl definition
+    # @param value [Hash] Acl definition, ID field is mandatory
+    # @return [Hash] The result Acl
+    def create value
       @raw = @conn.put do |req|
         url = ["/v1/acl/create"]
         url += check_acl_token
@@ -73,17 +81,7 @@ module Diplomat
         req.url concat_url url
         req.body = value.to_json
       end
-      JSON.parse(@raw.body)['ID']
-    end
-
-    # Create an Acl definition, create if not present
-    # uses update without a given ID
-    # @param name [String] the name of the Acl
-    # @param type [String] acl type
-    # @option rules [String] rule definition in HCL
-    # @return [String] The ID of the Affected Acl
-    def create name=nil, type=nil, rules=nil
-      update(nil,name,type,rules)
+      JSON.parse(@raw.body)
     end
 
     # Destroy an ACl token by its id
