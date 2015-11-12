@@ -80,7 +80,7 @@ describe Diplomat::Acl do
         json = JSON.generate(list_body)
 
         url = key_url + '/list'
-        faraday.stub(:get).with(url).and_return(OpenStruct.new({ body: json, status: 200}))
+        expect(faraday).to receive(:get).with(/#{url}/).and_return(OpenStruct.new({ body: json, status: 200}))
 
         acl = Diplomat::Acl.new(faraday)
         list = acl.list

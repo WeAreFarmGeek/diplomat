@@ -21,9 +21,9 @@ module Diplomat
   self.root_path = File.expand_path "..", __FILE__
   self.lib_path = File.expand_path "../diplomat", __FILE__
 
-  require_libs "configuration", "rest_client", "kv", "datacenter", "service",
-    "members", "node", "nodes", "check", "health", "session", "lock", "error",
-    "event", "acl"
+  require_libs "configuration", "rest_client", "api_options", "kv", "datacenter",
+    "service", "members", "node", "nodes", "check", "health", "session", "lock",
+    "error", "event", "acl"
   self.configuration ||= Diplomat::Configuration.new
 
   class << self

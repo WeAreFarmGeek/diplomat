@@ -3,9 +3,11 @@ require 'faraday'
 
 module Diplomat
   class Acl < Diplomat::RestClient
+
+    include ApiOptions
+
     @access_methods = [ :list, :info, :create, :destroy, :update ]
     attr_reader :id, :type, :acl
-
 
     # Get Acl info by ID
     # @param id [String] ID of the Acl to get
@@ -48,7 +50,7 @@ module Diplomat
 
       if raw.status == 200
         @raw = raw
-        return  parse_body
+        return parse_body
       else
         raise Diplomat::UnknownStatus, "status #{raw.status}"
       end
@@ -94,20 +96,5 @@ module Diplomat
       @raw = @conn.put concat_url url
       @raw.body == "true"
     end
-
-    private
-
-    def check_acl_token
-      use_named_parameter("token", Diplomat.configuration.acl_token)
-    end
-
-    def use_cas(options)
-      if options then use_named_parameter("cas", options[:cas]) else [] end
-    end
-
-    def use_consistency(options)
-      if options && options[:consistency] then ["#{options[:consistency]}"] else [] end
-    end
-
   end
 end
