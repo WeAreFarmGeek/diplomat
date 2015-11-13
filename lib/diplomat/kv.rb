@@ -3,6 +3,9 @@ require 'faraday'
 
 module Diplomat
   class Kv < Diplomat::RestClient
+
+    include ApiOptions
+
     @access_methods = [ :get, :put, :delete ]
     attr_reader :key, :value, :raw
 
@@ -125,18 +128,6 @@ module Diplomat
     end
 
     private
-
-    def check_acl_token
-      use_named_parameter("token", Diplomat.configuration.acl_token)
-    end
-
-    def use_cas(options)
-      if options then use_named_parameter("cas", options[:cas]) else [] end
-    end
-
-    def use_consistency(options)
-      if options && options[:consistency] then ["#{options[:consistency]}"] else [] end
-    end
 
     def recurse_get(options)
       if options && options[:recurse] == true then ['recurse'] else [] end
