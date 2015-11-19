@@ -72,7 +72,7 @@ module Diplomat
           when :return
             @raw = raw
             parse_body
-            if @options[:modify_index]
+            if @options and @options[:modify_index]
               return @raw.first['ModifyIndex']
             end
             return return_value(return_nil_values)
