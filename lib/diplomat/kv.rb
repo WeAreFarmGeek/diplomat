@@ -16,6 +16,7 @@ module Diplomat
     # @option options [String] :consistency The read consistency type
     # @option options [String] :dc Target datacenter
     # @option options [Boolean] :keys Only return key names.
+    # @option options [Boolean] :modify_index Only return ModifyIndex value.
     # @option options [String] :separator List only up to a given separator. Only applies when combined with :keys option.
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
@@ -71,6 +72,9 @@ module Diplomat
           when :return
             @raw = raw
             parse_body
+            if @options[:modify_index]
+              return @raw.first['ModifyIndex']
+            end
             return return_value(return_nil_values)
           when :wait
             index = raw.headers["x-consul-index"]
@@ -136,11 +140,11 @@ module Diplomat
     def dc(options)
       if options && options[:dc] then use_named_parameter("dc", options[:dc]) else [] end
     end
-    
+
     def keys(options)
       if options && options[:keys] == true then ['keys'] else [] end
     end
-    
+
     def separator(options)
       if options && options[:separator] then use_named_parameter("separator", options[:separator]) else [] end
     end
