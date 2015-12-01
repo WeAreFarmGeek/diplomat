@@ -42,11 +42,13 @@ module Diplomat
     end
 
     # Get all the services
+    # @param options [Hash] :dc Consul datacenter to query
     # @return [OpenStruct] the list of all services
-    def get_all
-      url = "/v1/catalog/services"
+    def get_all options=nil
+      url = ["/v1/catalog/services"]
+      url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       begin
-        ret = @conn.get url
+        ret = @conn.get concat_url url
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end

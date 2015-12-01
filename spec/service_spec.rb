@@ -14,6 +14,7 @@ describe Diplomat::Service do
     let(:key_url_with_waitoption) { "/v1/catalog/service/#{key}?wait=6s" }
     let(:key_url_with_datacenteroption) { "/v1/catalog/service/#{key}?dc=somedc" }
     let(:key_url_with_tagoption) { "/v1/catalog/service/#{key}?tag=sometag" }
+    let(:services_url_with_datacenteroption) { "/v1/catalog/services?dc=somedc" }
     let(:body) {
       [
         {
@@ -175,7 +176,7 @@ describe Diplomat::Service do
     end
 
     describe "GET ALL" do
-      it "lists all the services" do
+      it "lists all the services for the default datacenter" do
         json = JSON.generate(body_all)
 
         faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
@@ -185,6 +186,18 @@ describe Diplomat::Service do
         expect(service.get_all.service2).to be_an(Array)
         expect(service.get_all.service1.first).to eq("tag one")
         expect(service.get_all.service2.first).to eq("tag four")
+      end
+      it "lists all the services for the specified datacenter" do
+        json = JSON.generate(body_all)
+
+        faraday.stub(:get).with(services_url_with_datacenteroption).and_return(OpenStruct.new({ body: json }))
+
+        options = { :dc => "somedc" }
+        service = Diplomat::Service.new(faraday)
+        expect(service.get_all(options).service1).to be_an(Array)
+        expect(service.get_all(options).service2).to be_an(Array)
+        expect(service.get_all(options).service1.first).to eq("tag one")
+        expect(service.get_all(options).service2.first).to eq("tag four")
       end
     end
 
