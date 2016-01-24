@@ -43,7 +43,17 @@ module Diplomat
       # @param *args Arguments list
       # @return [Boolean]
       def method_missing(meth_id, *args)
-        access_method?(meth_id) ? new.send(meth_id, *args) : super
+        if access_method?(meth_id)
+          new.send(meth_id, *args)
+        else
+
+          # See https://bugs.ruby-lang.org/issues/10969
+          begin
+            super
+          rescue NameError => err
+            raise NoMethodError, err
+          end
+        end
       end
 
       # Make `respond_to?` aware of method short-cuts.
