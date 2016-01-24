@@ -46,6 +46,22 @@ module Diplomat
         access_method?(meth_id) ? new.send(meth_id, *args) : super
       end
 
+      # Make `respond_to?` aware of method short-cuts.
+      #
+      # @param meth_id [Symbol] the tested method
+      # @oaram with_private if private methods should be tested too
+      def respond_to?(meth_id, with_private = false)
+        access_method?(meth_id) || super
+      end
+
+      # Make `respond_to_missing` aware of method short-cuts. This is needed for
+      # {#method} to work on these, which is helpful for testing purposes.
+      #
+      # @param meth_id [Symbol] the tested method
+      # @oaram with_private if private methods should be tested too
+      def respond_to_missing?(meth_id, with_private = false)
+        access_method?(meth_id) || super
+      end
     end
 
     private
