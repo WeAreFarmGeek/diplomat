@@ -62,6 +62,7 @@ module Diplomat
 
     # Get service health
     # @param s [String] the state ("unknown", "passing", "warning", or "critical")
+    # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the node
     def state s, options=nil
        url = ["/v1/health/state/#{s}"]
