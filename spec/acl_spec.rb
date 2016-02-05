@@ -64,7 +64,7 @@ describe Diplomat::Acl do
       end
 
       it "returns does not return acl" do
-        json = nil
+        json = 'null'
 
         url = key_url + '/info/' + 'none'
         expect(faraday).to receive(:get).with(/#{url}/).and_return(OpenStruct.new({ body: json, status: 200}))

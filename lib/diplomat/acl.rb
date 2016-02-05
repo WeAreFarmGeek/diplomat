@@ -21,7 +21,7 @@ module Diplomat
       url += use_consistency(@options)
 
       raw = @conn_no_err.get concat_url url
-      if raw.status == 200 and raw.body
+      if raw.status == 200 and raw.body != "null"
         case found
           when :reject
             raise Diplomat::AclAlreadyExists, @id
@@ -29,7 +29,7 @@ module Diplomat
             @raw = raw
             return parse_body
         end
-      elsif raw.status == 200 and !raw.body
+      elsif raw.status == 200 and raw.body == "null"
         case not_found
           when :reject
             raise Diplomat::AclNotFound, @id
