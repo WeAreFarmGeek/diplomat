@@ -4,7 +4,7 @@ require 'faraday'
 module Diplomat
   class Service < Diplomat::RestClient
 
-    @access_methods = [ :get, :get_all, :register, :deregister ]
+    @access_methods = [ :get, :get_all, :register, :deregister, :register_external, :deregister_external ]
 
     # Get a service by it's key
     # @param key [String] the key
@@ -59,9 +59,9 @@ module Diplomat
     # Register a service
     # @param definition [Hash] Hash containing definition of service
     # @return [Boolean]
-    def register(definition)
+    def register(definition, path='/v1/agent/service/register')
       json_definition = JSON.dump(definition)
-      register = @conn.put '/v1/agent/service/register', json_definition
+      register = @conn.put path, json_definition
       return register.status == 200
     end
 
@@ -70,6 +70,22 @@ module Diplomat
     # @return [Boolean]
     def deregister(service_name)
       deregister = @conn.get "/v1/agent/service/deregister/#{service_name}"
+      return deregister.status == 200
+    end
+
+    # Register an external service
+    # @param definition [Hash] Hash containing definition of service
+    # @return [Boolean]
+    def register_external(definition)
+      register(definition, '/v1/catalog/register')
+    end
+
+    # Deregister an external service
+    # @param definition [Hash] Hash containing definition of service
+    # @return [Boolean]
+    def deregister_external(definition)
+      json_definition = JSON.dump(definition)
+      deregister = @conn.put '/v1/catalog/deregister', json_definition
       return deregister.status == 200
     end
   end

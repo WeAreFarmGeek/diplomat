@@ -239,6 +239,53 @@ describe Diplomat::Service do
       end
     end
 
+    describe 'Register external service' do
+      let (:register_service_url) { '/v1/catalog/register' }
+      let (:deregister_service_url) { '/v1/catalog/deregister' }
+
+      let (:service_definition) do
+        {
+          Datacenter: :dc1,
+          Node: :google,
+          Address: 'www.google.com',
+          Service: {
+            Service: :search,
+            Port: 80
+          }
+        }
+      end
+
+      let (:deregister_definition) do
+        {
+          Datacenter: :dc1,
+          Node: :google
+        }
+      end
+
+      it 'can register a service' do
+        json_request = JSON.dump(service_definition)
+
+        expect(faraday).to receive(:put).with(register_service_url, json_request) do
+          OpenStruct.new({ body: '', status: 200 })
+        end
+
+        service = Diplomat::Service.new(faraday)
+        s = service.register_external(service_definition)
+        expect(s).to eq(true)
+      end
+
+      it 'can deregister a service' do
+        json_request = JSON.dump(deregister_definition)
+        expect(faraday).to receive(:put).with(deregister_service_url, json_request) do
+          OpenStruct.new({ body: '', status: 200 })
+        end
+
+        service = Diplomat::Service.new(faraday)
+        s = service.deregister_external(deregister_definition)
+        expect(s).to eq(true)
+      end
+    end
+
   end
 
 end
