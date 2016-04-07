@@ -3,7 +3,7 @@ require 'faraday'
 
 module Diplomat
   class Nodes < Diplomat::RestClient
-    @access_methods = [ :get ]
+    @access_methods = [ :get, :get_all ]
 
     # Get all nodes
     # @deprecated Please use Diplomat::Node instead.
