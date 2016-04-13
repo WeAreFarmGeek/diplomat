@@ -74,21 +74,28 @@ module Diplomat
       @raw = JSON.parse(@raw.body)
     end
 
+    # Return @raw with Value fields decoded
+    def decode_values
+      return @raw if @raw.first.is_a? String
+      @raw.inject([]) do |acc, el|
+        new_el = el.dup
+        new_el["Value"] = (Base64.decode64(el["Value"]) rescue nil)
+        acc << new_el
+        acc
+      end
+    end
+
     # Get the key/value(s) from the raw output
     def return_value(nil_values=false)
-      return @value = @raw if @raw.first.is_a? String
-      if @raw.count == 1
-        @value = @raw.first["Value"]
-        @value = Base64.decode64(@value) unless @value.nil?
+      @value = decode_values
+      if @value.first.is_a? String
+        return @value
+      elsif @value.count == 1
+        @value.first["Value"]
       else
-        @value = @raw.reduce([]) do |acc, e|
-          val = e["Value"].nil? ? nil : Base64.decode64(e["Value"])
-          acc << {
-            :key => e["Key"],
-            :value => val
-          } if val or nil_values
-          acc
-        end
+        @value = @value.map do |el|
+          { :key => el["Key"], :value => el["Value"] } if el["Value"] or nil_values
+        end.compact
       end
     end
 

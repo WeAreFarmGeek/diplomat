@@ -17,6 +17,7 @@ module Diplomat
     # @option options [String] :dc Target datacenter
     # @option options [Boolean] :keys Only return key names.
     # @option options [Boolean] :modify_index Only return ModifyIndex value.
+    # @option options [Boolean] :decode_values Return consul response with decoded values.
     # @option options [String] :separator List only up to a given separator. Only applies when combined with :keys option.
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
@@ -74,6 +75,9 @@ module Diplomat
             parse_body
             if @options and @options[:modify_index]
               return @raw.first['ModifyIndex']
+            end
+            if @options and @options[:decode_values]
+              return decode_values
             end
             return return_value(return_nil_values)
           when :wait

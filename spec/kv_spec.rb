@@ -70,6 +70,30 @@ describe Diplomat::Kv do
           expect(kv.get(key, keys: true)).to eql([ key, key + "ring", key + "tar" ])
         end
       end
+      context "ACLs NOT enabled, decode_values option ON" do
+        let(:json) { JSON.generate([
+          {
+            "Key"   => key + 'dewfr',
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key,
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + 'iamnil',
+            "Value" => nil,
+            "Flags" => 0
+          }])
+        }
+        it "GET" do
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get(key, decode_values: true)).to include({"Key" => key, "Value" => key_params, "Flags" => 0})
+        end
+      end
       context "ACLs NOT enabled" do
         it "GET" do
           json = JSON.generate([{
