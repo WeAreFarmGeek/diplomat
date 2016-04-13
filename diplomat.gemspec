@@ -5,7 +5,7 @@ Gem::Specification.new "diplomat", Diplomat::VERSION do |spec|
   spec.email         = ["john@johnhamelink.com"]
   spec.description   = spec.summary = "Diplomat is a simple wrapper for Consul"
   spec.homepage      = "https://github.com/johnhamelink/diplomat"
-  spec.license       = "BSD"
+  spec.license       = "BSD-3-Clause"
 
   spec.files         = `git ls-files lib README.md LICENSE features`.split($/)
 
