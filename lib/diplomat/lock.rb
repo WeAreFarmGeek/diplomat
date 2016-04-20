@@ -3,6 +3,8 @@ require 'faraday'
 module Diplomat
   class Lock < Diplomat::RestClient
 
+    include ApiOptions
+
     @access_methods = [ :acquire, :wait_to_acquire, :release ]
 
     # Acquire a lock
@@ -12,7 +14,11 @@ module Diplomat
     # @return [Boolean] If the lock was acquired
     def acquire key, session, value=nil
       raw = @conn.put do |req|
-        req.url "/v1/kv/#{key}?acquire=#{session}"
+        url = ["/v1/kv/#{key}"]
+        url += use_named_parameter('acquire', session)
+        url += check_acl_token
+
+        req.url concat_url url
         req.body = value unless value.nil?
       end
       raw.body == 'true'
@@ -40,7 +46,11 @@ module Diplomat
     # @return [nil]
     def release  key, session
       raw = @conn.put do |req|
-        req.url "/v1/kv/#{key}?release=#{session}"
+        url = ["/v1/kv/#{key}"]
+        url += use_named_parameter('release', session)
+        url += check_acl_token
+
+        req.url concat_url url
       end
       return raw.body
     end
