@@ -4,6 +4,8 @@ require 'faraday'
 module Diplomat
   class Service < Diplomat::RestClient
 
+    include ApiOptions
+
     @access_methods = [ :get, :get_all, :register, :deregister ]
 
     # Get a service by it's key
@@ -19,6 +21,7 @@ module Diplomat
       url << use_named_parameter('index', options[:index]) if options and options[:index]
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       url << use_named_parameter('tag', options[:tag]) if options and options[:tag]
+      url += check_acl_token
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -47,6 +50,7 @@ module Diplomat
     def get_all options=nil
       url = ["/v1/catalog/services"]
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
+      url += check_acl_token
       begin
         ret = @conn.get concat_url url
       rescue Faraday::ClientError
