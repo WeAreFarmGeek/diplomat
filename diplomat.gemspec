@@ -19,6 +19,6 @@ Gem::Specification.new "diplomat", Diplomat::VERSION do |spec|
   spec.add_development_dependency "gem-release", "~> 0.7"
   spec.add_development_dependency "cucumber", "~> 2.0"
 
-  spec.add_runtime_dependency "json", "~> 1.8"
+  spec.add_runtime_dependency "json"
   spec.add_runtime_dependency "faraday", "~> 0.9"
 end
