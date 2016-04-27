@@ -91,8 +91,9 @@ module Diplomat
       if @value.first.is_a? String
         return @value
       elsif @value.count == 1
-        @value.first["Value"]
+        @value = @value.first["Value"]
         @value = transformation.call(@value) if transformation and not @value.nil?
+        return @value
       else
         @value = @value.map do |el|
           el["Value"] = transformation.call(el["Value"]) if transformation and not el["Value"].nil?

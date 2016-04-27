@@ -148,7 +148,7 @@ describe Diplomat::Kv do
           }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get(key, options)).to eq("toast")
+          expect(kv.get("key", options)).to eq("toast")
         end
       end
       context "ACLs enabled, without valid_acl_token" do
@@ -160,7 +160,7 @@ describe Diplomat::Kv do
           }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get(key)).to be_nil
+          expect(kv.get(key)).to eq("Faraday::ResourceNotFound: the server responded with status 404")
         end
         it "GET with consistency param, without valid_acl_token" do
           options = {:consistency => "consistent"}
@@ -171,7 +171,7 @@ describe Diplomat::Kv do
           }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get(key, options)).to be_nil
+          expect(kv.get("key", options)).to eq("Faraday::ResourceNotFound: the server responded with status 404")
         end
       end
       context "ACLs enabled, with valid_acl_token" do
@@ -196,7 +196,7 @@ describe Diplomat::Kv do
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get(key, options)).to eq("toast")
+          expect(kv.get("key", options)).to eq("toast")
         end
       end
     end
