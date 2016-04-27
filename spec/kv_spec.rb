@@ -70,6 +70,7 @@ describe Diplomat::Kv do
           expect(kv.get(key, keys: true)).to eql([ key, key + "ring", key + "tar" ])
         end
       end
+
       context "ACLs NOT enabled, decode_values option ON" do
         let(:json) { JSON.generate([
           {
@@ -94,6 +95,39 @@ describe Diplomat::Kv do
           expect(kv.get(key, decode_values: true)).to include({"Key" => key, "Value" => key_params, "Flags" => 0})
         end
       end
+
+      context "ACLs NOT enabled, recurse option ON with transformation" do
+        let(:number) { 1 }
+        let(:string) { "x" }
+        let(:hash) { "{\"x\": 1}" }
+        let(:json) { JSON.generate([
+          {
+            "Key"   => key + 'number',
+            "Value" => Base64.encode64(number.to_s),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + 'string',
+            "Value" => Base64.encode64("\"#{string}\""),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + 'hash',
+            "Value" => Base64.encode64(hash),
+            "Flags" => 0
+          }])
+        }
+
+        it "GET" do
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get(key, recurse: true, transformation: Proc.new{|x| JSON.parse("[#{x}]")[0]} )).to eql([
+            { key: key + 'number', value: number },
+            { key: key + 'string', value: string },
+            { key: key + 'hash', value: {"x" => 1} },
+          ])
+        end
+      end
       context "ACLs NOT enabled" do
         it "GET" do
           json = JSON.generate([{
@@ -103,7 +137,7 @@ describe Diplomat::Kv do
           }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key")).to eq("toast")
+          expect(kv.get(key)).to eq("toast")
         end
         it "GET with consistency param" do
           options = {:consistency => "consistent"}
@@ -114,7 +148,7 @@ describe Diplomat::Kv do
           }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key", options)).to eq("toast")
+          expect(kv.get(key, options)).to eq("toast")
         end
       end
       context "ACLs enabled, without valid_acl_token" do
@@ -126,7 +160,7 @@ describe Diplomat::Kv do
           }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key")).to eq("Faraday::ResourceNotFound: the server responded with status 404")
+          expect(kv.get(key)).to be_nil
         end
         it "GET with consistency param, without valid_acl_token" do
           options = {:consistency => "consistent"}
@@ -137,7 +171,7 @@ describe Diplomat::Kv do
           }])
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key", options)).to eq("Faraday::ResourceNotFound: the server responded with status 404")
+          expect(kv.get(key, options)).to be_nil
         end
       end
       context "ACLs enabled, with valid_acl_token" do
@@ -150,7 +184,7 @@ describe Diplomat::Kv do
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key")).to eq("toast")
+          expect(kv.get(key)).to eq("toast")
         end
         it "GET with consistency param, with valid_acl_token" do
           options = {:consistency => "consistent"}
@@ -162,7 +196,7 @@ describe Diplomat::Kv do
           faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get("key", options)).to eq("toast")
+          expect(kv.get(key, options)).to eq("toast")
         end
       end
     end

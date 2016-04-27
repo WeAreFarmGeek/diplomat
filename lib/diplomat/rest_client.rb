@@ -86,14 +86,16 @@ module Diplomat
     end
 
     # Get the key/value(s) from the raw output
-    def return_value(nil_values=false)
+    def return_value(nil_values=false, transformation=nil)
       @value = decode_values
       if @value.first.is_a? String
         return @value
       elsif @value.count == 1
         @value.first["Value"]
+        @value = transformation.call(@value) if transformation and not @value.nil?
       else
         @value = @value.map do |el|
+          el["Value"] = transformation.call(el["Value"]) if transformation and not el["Value"].nil?
           { :key => el["Key"], :value => el["Value"] } if el["Value"] or nil_values
         end.compact
       end

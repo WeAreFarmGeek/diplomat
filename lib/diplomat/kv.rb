@@ -20,6 +20,7 @@ module Diplomat
     # @option options [Boolean] :decode_values Return consul response with decoded values.
     # @option options [String] :separator List only up to a given separator. Only applies when combined with :keys option.
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
+    # @option options [Callable] :transformation funnction to invoke on keys values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
@@ -54,6 +55,7 @@ module Diplomat
       url += separator(@options)
 
       return_nil_values = (@options and @options[:nil_values])
+      transformation = (@options and @options[:transformation] and @options[:transformation].methods.find_index(:call)) ? @options[:transformation] : nil
 
       # 404s OK using this connection
       raw = @conn_no_err.get concat_url url
@@ -79,7 +81,7 @@ module Diplomat
             if @options and @options[:decode_values]
               return decode_values
             end
-            return return_value(return_nil_values)
+            return return_value(return_nil_values, transformation)
           when :wait
             index = raw.headers["x-consul-index"]
         end
@@ -94,7 +96,7 @@ module Diplomat
         req.options.timeout = 86400
       end
       parse_body
-      return_value(return_nil_values)
+      return_value(return_nil_values, transformation)
     end
 
     # Associate a value with a key
