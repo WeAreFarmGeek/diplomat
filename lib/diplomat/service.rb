@@ -17,11 +17,11 @@ module Diplomat
     def get key, scope=:first, options=nil, meta=nil
 
       url = ["/v1/catalog/service/#{key}"]
+      url += check_acl_token
       url << use_named_parameter('wait', options[:wait]) if options and options[:wait]
       url << use_named_parameter('index', options[:index]) if options and options[:index]
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       url << use_named_parameter('tag', options[:tag]) if options and options[:tag]
-      url += check_acl_token
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -49,8 +49,8 @@ module Diplomat
     # @return [OpenStruct] the list of all services
     def get_all options=nil
       url = ["/v1/catalog/services"]
-      url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       url += check_acl_token
+      url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       begin
         ret = @conn.get concat_url url
       rescue Faraday::ClientError
