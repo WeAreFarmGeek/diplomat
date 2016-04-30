@@ -4,6 +4,8 @@ require 'faraday'
 module Diplomat
   class Node < Diplomat::RestClient
 
+    include ApiOptions
+
     @access_methods = [ :get, :get_all ]
 
     # Get a node by it's key
