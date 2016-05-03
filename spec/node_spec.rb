@@ -6,6 +6,46 @@ describe Diplomat::Node do
 
   let(:faraday) { fake }
 
+  context "nodes" do
+    let(:node_definition) {
+      {
+        "Node" => "foobar",
+        "Address" => "192.168.10.10"
+      }
+    }
+
+    describe "#register" do
+      let(:path) { "/v1/catalog/register" }
+
+      it "registers a node" do
+        json = JSON.generate(node_definition)
+
+        faraday.stub(:put).with(path, json).and_return( OpenStruct.new({ body: "", status: 200 }) )
+
+        node = Diplomat::Node.new(faraday)
+
+        n = node.register(node_definition)
+        expect(n).to eq(true)
+      end
+    end
+
+    describe "#deregister" do
+      let(:path) { "/v1/catalog/deregister" }
+
+      it "de-registers a node" do
+        json = JSON.generate(node_definition)
+
+        faraday.stub(:put).with(path, json).and_return( OpenStruct.new({ body: "", status: 200 }) )
+
+        node = Diplomat::Node.new(faraday)
+
+        n = node.deregister(node_definition)
+        expect(n).to eq(true)
+      end
+    end
+
+  end
+
   context "services" do
     let(:key) { "foobar" }
     let(:key_url) { "/v1/catalog/node/#{key}" }
