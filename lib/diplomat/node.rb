@@ -4,7 +4,7 @@ require 'faraday'
 module Diplomat
   class Node < Diplomat::RestClient
 
-    @access_methods = [ :get, :get_all ]
+    @access_methods = [ :get, :get_all, :register, :deregister ]
 
     # Get a node by it's key
     # @param key [String] the key
@@ -36,6 +36,24 @@ module Diplomat
       end
 
       return JSON.parse(ret.body).map { |service| OpenStruct.new service }
+    end
+
+    # Register a node
+    # @param definition [Hash] Hash containing definition of a node to register
+    # @return [Boolean]
+    def register(definition, path='/v1/catalog/register')
+      register = @conn.put path, JSON.dump(definition)
+
+      return register.status == 200
+    end
+
+    # De-register a node (and all associated services and checks)
+    # @param definition [Hash] Hash containing definition of a node to de-register
+    # @return [Boolean]
+    def deregister(definition, path="/v1/catalog/deregister")
+      deregister = @conn.put path, JSON.dump(definition)
+
+      return deregister.status == 200
     end
   end
 end

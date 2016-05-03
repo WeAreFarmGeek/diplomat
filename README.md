@@ -100,6 +100,20 @@ nodes = Diplomat::Node.get_all
 # => [#<OpenStruct Address="10.1.10.12", Node="foo">, #<OpenStruct Address="10.1.10.13", Node="bar">]
 ```
 
+Register a node:
+
+```ruby
+Diplomat::Node.register({ :Node => "app1", :Address => "10.0.0.2" })
+# => true
+```
+
+De-register a node:
+
+```ruby
+Diplomat::Node.deregister({ :Node => "app1", :Address => "10.0.0.2" })
+# => true
+```
+
 ### Services
 
 #### Getting
