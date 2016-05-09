@@ -53,6 +53,7 @@ describe Diplomat::Service do
       it ":first" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url).and_return(OpenStruct.new({ body: json }))
 
         service = Diplomat::Service.new(faraday)
@@ -63,6 +64,7 @@ describe Diplomat::Service do
       it ":all" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url).and_return(OpenStruct.new({ body: json }))
 
         service = Diplomat::Service.new(faraday)
@@ -76,6 +78,7 @@ describe Diplomat::Service do
       it "empty headers" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url).and_return(OpenStruct.new({ body: json, headers: nil }))
 
         service = Diplomat::Service.new(faraday)
@@ -89,6 +92,7 @@ describe Diplomat::Service do
       it "filled headers" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url).and_return(OpenStruct.new({ body: json, headers: headers }))
 
         service = Diplomat::Service.new(faraday)
@@ -104,6 +108,7 @@ describe Diplomat::Service do
       it "index option" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url_with_indexoption).and_return(OpenStruct.new({ body: json, headers: headers }))
 
         service = Diplomat::Service.new(faraday)
@@ -116,6 +121,7 @@ describe Diplomat::Service do
       it "wait option" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url_with_waitoption).and_return(OpenStruct.new({ body: json, headers: headers }))
 
         service = Diplomat::Service.new(faraday)
@@ -128,6 +134,7 @@ describe Diplomat::Service do
       it "datacenter option" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url_with_datacenteroption).and_return(OpenStruct.new({ body: json, headers: headers }))
 
         service = Diplomat::Service.new(faraday)
@@ -146,6 +153,7 @@ describe Diplomat::Service do
                               Faraday::ClientError.new({}, 500)
                             )
 
+        Diplomat.configuration.acl_token = nil
         service = Diplomat::Service.new(faraday)
         options = { :dc => "somedc" }
         expect{ service.get("toast", :first, options) }.to raise_error(Diplomat::PathNotFound)
@@ -154,6 +162,7 @@ describe Diplomat::Service do
       it "tag option" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url_with_tagoption).and_return(OpenStruct.new({ body: json, headers: headers }))
 
         service = Diplomat::Service.new(faraday)
@@ -165,6 +174,7 @@ describe Diplomat::Service do
       it "all options" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url_with_alloptions).and_return(OpenStruct.new({ body: json, headers: headers }))
 
         service = Diplomat::Service.new(faraday)
@@ -179,6 +189,7 @@ describe Diplomat::Service do
       it "lists all the services for the default datacenter" do
         json = JSON.generate(body_all)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
 
         service = Diplomat::Service.new(faraday)
@@ -190,6 +201,7 @@ describe Diplomat::Service do
       it "lists all the services for the specified datacenter" do
         json = JSON.generate(body_all)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(services_url_with_datacenteroption).and_return(OpenStruct.new({ body: json }))
 
         options = { :dc => "somedc" }
