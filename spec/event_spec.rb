@@ -62,7 +62,9 @@ describe Diplomat::Event do
 
 
   describe "#get_all" do
-
+    before do
+      Diplomat.configuration.acl_token = nil
+    end
     context "empty list" do
       let(:faraday) { double("Faraday") }
 
@@ -128,7 +130,9 @@ describe Diplomat::Event do
 
 
   describe "#get" do
-
+    before do
+      Diplomat.configuration.acl_token = nil
+    end
     context "non-empty list" do
       let(:faraday) { double("Faraday") }
 
@@ -164,4 +168,77 @@ describe Diplomat::Event do
     end
 
   end
+
+  context 'acl' do
+    let(:acl_token) { 'f45cbd0b-5022-47ab-8640-4eaa7c1f40f1' }
+    let(:faraday) { fake }
+
+    describe 'FIRE' do
+      let(:event_name) { 'test_event' }
+      before do
+        allow(faraday).to receive(:put)
+      end
+
+      it 'token empty' do
+        expect(faraday).to receive(:put).with("/v1/event/fire/#{event_name}", nil)
+        Diplomat.configuration.acl_token = nil
+        ev = Diplomat::Event.new(faraday)
+        
+        ev.fire(event_name)
+      end
+      
+      it 'token specified' do
+        expect(faraday).to receive(:put).with("/v1/event/fire/#{event_name}?token=#{acl_token}", nil)
+        Diplomat.configuration.acl_token = acl_token
+        ev = Diplomat::Event.new(faraday)
+        
+        ev.fire(event_name)
+      end
+    end
+
+    describe 'GET_ALL' do
+      before do
+        allow(faraday).to receive(:get).and_return(OpenStruct.new(body: @events_json))
+      end
+
+      it 'token empty' do
+        expect(faraday).to receive(:get).with('/v1/event/list')
+        Diplomat.configuration.acl_token = nil
+        ev = Diplomat::Event.new(faraday)
+
+        ev.get_all
+      end
+
+      it 'token specified' do
+        expect(faraday).to receive(:get).with("/v1/event/list?token=#{acl_token}")
+        Diplomat.configuration.acl_token = acl_token
+        ev = Diplomat::Event.new(faraday)
+
+        ev.get_all
+      end
+    end
+    
+    describe 'GET' do
+      before do
+        allow(faraday).to receive(:get).and_return(OpenStruct.new(body: @events_json))
+      end
+
+      it 'token empty' do
+        expect(faraday).to receive(:get).with("/v1/event/list")
+        Diplomat.configuration.acl_token = nil
+        ev = Diplomat::Event.new(faraday)
+
+        ev.get
+      end
+
+      it 'token specified' do
+        expect(faraday).to receive(:get).with("/v1/event/list?token=#{acl_token}")
+        Diplomat.configuration.acl_token = acl_token
+        ev = Diplomat::Event.new(faraday)
+
+        ev.get
+      end
+    end
+  end
+
 end
