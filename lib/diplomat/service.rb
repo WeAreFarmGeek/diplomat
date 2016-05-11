@@ -4,6 +4,8 @@ require 'faraday'
 module Diplomat
   class Service < Diplomat::RestClient
 
+    include ApiOptions
+
     @access_methods = [ :get, :get_all, :register, :deregister, :register_external, :deregister_external ]
 
     # Get a service by it's key
@@ -15,6 +17,7 @@ module Diplomat
     def get key, scope=:first, options=nil, meta=nil
 
       url = ["/v1/catalog/service/#{key}"]
+      url += check_acl_token
       url << use_named_parameter('wait', options[:wait]) if options and options[:wait]
       url << use_named_parameter('index', options[:index]) if options and options[:index]
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
@@ -46,6 +49,7 @@ module Diplomat
     # @return [OpenStruct] the list of all services
     def get_all options=nil
       url = ["/v1/catalog/services"]
+      url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       begin
         ret = @conn.get concat_url url

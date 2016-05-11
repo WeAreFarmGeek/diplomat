@@ -49,6 +49,11 @@ describe Diplomat::Service do
       }
     }
 
+    # Do not use ACL tokens for basic service tests
+    before do
+      Diplomat.configuration.acl_token = nil
+    end
+
     describe "GET" do
       it ":first" do
         json = JSON.generate(body)
@@ -288,4 +293,53 @@ describe Diplomat::Service do
 
   end
 
+  context 'acl' do
+    let(:acl_token) { 'f45cbd0b-5022-47ab-8640-4eaa7c1f40f1' }
+
+    describe 'GET' do
+      let(:service_name) { 'toast' }
+
+      before do
+        allow(faraday).to receive(:get).and_return(OpenStruct.new(body: '{}'))
+      end
+
+      it 'token empty' do
+        expect(faraday).to receive(:get).with("/v1/catalog/service/#{service_name}")
+        Diplomat.configuration.acl_token = nil
+        service = Diplomat::Service.new(faraday)
+
+        service.get(service_name)
+      end
+
+      it 'token specified' do
+        expect(faraday).to receive(:get).with("/v1/catalog/service/#{service_name}?token=#{acl_token}")
+        Diplomat.configuration.acl_token = acl_token
+        service = Diplomat::Service.new(faraday)
+
+        service.get(service_name)
+      end
+    end
+
+    describe 'GET_ALL' do
+      before do
+        allow(faraday).to receive(:get).and_return(OpenStruct.new(body: '{}'))
+      end
+
+      it 'token empty' do
+        expect(faraday).to receive(:get).with("/v1/catalog/services")
+        Diplomat.configuration.acl_token = nil
+        service = Diplomat::Service.new(faraday)
+
+        service.get_all
+      end
+
+      it 'token specified' do
+        expect(faraday).to receive(:get).with("/v1/catalog/services?token=#{acl_token}")
+        Diplomat.configuration.acl_token = acl_token
+        service = Diplomat::Service.new(faraday)
+
+        service.get_all
+      end
+    end
+  end
 end
