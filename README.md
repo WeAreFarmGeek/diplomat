@@ -241,6 +241,21 @@ end
 events.each{ |e| puts e }
 ```
 
+### Maintenance mode
+
+Enable maintenance mode on a host, with optional reason and DC (requires access to local agent)
+
+```ruby
+Diplomat::Maintenance.enable(true, 'doing stuff', :dc => 'abc')
+```
+
+Determine if a host has maintenance mode enabled
+
+```ruby
+Diplomat::Maintenance.enabled?('foobar')
+# => true
+```
+
 ### Custom configuration
 
 You can create a custom configuration using the following syntax:
