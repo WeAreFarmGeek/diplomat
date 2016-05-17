@@ -7,7 +7,7 @@ describe Diplomat::Maintenance do
   let(:faraday) { fake }
   let(:req) { fake }
 
-  context "enabled?" do
+  context "enabled" do
     it "enabled" do
       json = <<EOF
       [
@@ -26,7 +26,7 @@ describe Diplomat::Maintenance do
                 "CheckID": "_node_maintenance",
                 "Name": "Node Maintenance Mode",
                 "Status": "critical",
-                "Notes": "foo",
+                "Notes": "foo bar",
                 "Output": "",
                 "ServiceID": "",
                 "ServiceName": "",
@@ -37,7 +37,7 @@ describe Diplomat::Maintenance do
 EOF
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
       maintenance = Diplomat::Maintenance.new(faraday)
-      expect(maintenance.enabled?("foobar")).to eq(true)
+      expect(maintenance.enabled("foobar")).to eq({:enabled => true, :reason => 'foo bar'})
     end
 
     it "disabled" do
@@ -57,7 +57,7 @@ EOF
 EOF
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
       maintenance = Diplomat::Maintenance.new(faraday)
-      expect(maintenance.enabled?("foobar")).to eq(false)
+      expect(maintenance.enabled("foobar")).to eq({:enabled => false, :reason => nil})
     end
   end
 

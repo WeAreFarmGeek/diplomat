@@ -3,16 +3,22 @@ require 'faraday'
 
 module Diplomat
   class Maintenance < Diplomat::RestClient
-    @access_methods = [ :enabled?, :enable]
+    @access_methods = [ :enabled, :enable]
 
     # Get the maintenance state of a host
     # @param n [String] the node
     # @param options [Hash] :dc string for dc specific query
-    # @return true if maintenance mode is enabled
-    def enabled? n, options=nil
+    # @return [Hash] { :enabled => true, :reason => 'foo' }
+    def enabled n, options=nil
       health = Diplomat::Health.new(@conn)
-      health.node(n, options).
-        select { |check| check['CheckID'] == '_node_maintenance' }.size > 0
+      result = health.node(n, options).
+        select { |check| check['CheckID'] == '_node_maintenance' }
+
+      if result.size > 0
+        { :enabled => true, :reason => result.first['Notes'] }
+      else
+        { :enabled => false, :reason => nil }
+      end
     end
 
     # Enable or disable maintenance mode.  This endpoint only works
