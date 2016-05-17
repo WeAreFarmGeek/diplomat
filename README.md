@@ -252,8 +252,8 @@ Diplomat::Maintenance.enable(true, 'doing stuff', :dc => 'abc')
 Determine if a host has maintenance mode enabled
 
 ```ruby
-Diplomat::Maintenance.enabled?('foobar')
-# => true
+Diplomat::Maintenance.enabled('foobar')
+# => { :enabled => true, :reason => 'doing stuff' }
 ```
 
 ### Custom configuration
