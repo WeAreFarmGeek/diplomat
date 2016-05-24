@@ -3,8 +3,8 @@
 ## Submit a Pull Request
 
 Diplomat uses Github's Pull request system to accept contributions. Please
-(https://help.github.com/articles/using-pull-requests/)[make yourself familiar
-with github's pull request system] before continuing with this guide.
+[make yourself familiar
+with github's pull request system](https://help.github.com/articles/using-pull-requests/) before continuing with this guide.
 
 ## Acceptance requirements
 
@@ -35,5 +35,5 @@ has been changed in each PR.
 ### Add your changes to the Changelog
 
 Add a line or two describing a summary of what you've done in the "unreleased"
-section at the top of the changelog, with the date in YYYY-MM-DD format. (http://keepachangelog.com/)[Read
-more here.]
+section at the top of the changelog, with the date in YYYY-MM-DD format. [Read
+more here.](http://keepachangelog.com/)
