@@ -2,6 +2,9 @@ require 'faraday'
 
 module Diplomat
   class Event < Diplomat::RestClient
+  
+    include ApiOptions
+  
     @access_methods = [ :fire, :get_all, :get ]
 
     # Send an event
@@ -12,14 +15,14 @@ module Diplomat
     # @param tag [String] the target tag name, must only be used with service
     # @return [nil]
     def fire name, value=nil, service=nil, node=nil, tag=nil
-      @conn.put do |req|
-        url = [ "/v1/event/fire/#{name}" ]
-        url += use_named_parameter("service", service)
-        url += use_named_parameter("node", node)
-        url += use_named_parameter("tag", tag) if service
-        req.url concat_url url
-        req.body = value unless value.nil?
-      end
+      url = [ "/v1/event/fire/#{name}" ]
+      url += check_acl_token
+      url += use_named_parameter("service", service)
+      url += use_named_parameter("node", node)
+      url += use_named_parameter("tag", tag) if service
+      url = concat_url url
+
+      @conn.put(url, value)
       nil
     end
 
@@ -55,6 +58,7 @@ module Diplomat
     #   - W W - get the first or next value; wait until there is an update
     def get_all name=nil, not_found=:reject, found=:return
       url = ["/v1/event/list"]
+      url += check_acl_token
       url += use_named_parameter("name", name)
       url = concat_url url
 
@@ -104,6 +108,7 @@ module Diplomat
     #   events (while being sure that none are missed).
     def get name=nil, token=:last, not_found=:wait, found=:return
       url = ["/v1/event/list"]
+      url += check_acl_token
       url += use_named_parameter("name", name)
       url = concat_url url
       @raw = @conn.get url

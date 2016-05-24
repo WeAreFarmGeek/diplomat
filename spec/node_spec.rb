@@ -103,6 +103,7 @@ describe Diplomat::Node do
       it "gets a node" do
         json = JSON.generate(body)
 
+        Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url).and_return(OpenStruct.new({ body: json }))
 
         node = Diplomat::Node.new(faraday)
@@ -111,7 +112,37 @@ describe Diplomat::Node do
         expect(cn["Node"].length).to eq(2)
       end
     end
-
   end
 
+  context 'acl' do
+    let(:node_name) { 'foobar' }
+    let(:acl_token) { 'f45cbd0b-5022-47ab-8640-4eaa7c1f40f1' }
+
+    describe 'GET' do
+      # Stub Faraday's get method and return valid '{}' empty json for each parameter
+      before do
+        allow(faraday).to receive(:get).and_return(OpenStruct.new(body: '{}'))
+      end
+
+      # Verify that URL passed to Faraday is without token
+      it 'token empty' do
+        expect(faraday).to receive(:get).with("/v1/catalog/node/#{node_name}")
+
+        Diplomat.configuration.acl_token = nil
+        node = Diplomat::Node.new(faraday)
+
+        node.get(node_name)
+      end
+
+      # Verify that URL passed to Faraday has token from Diplomat.configuration.acl_token
+      it 'token specified' do
+        expect(faraday).to receive(:get).with("/v1/catalog/node/#{node_name}?token=#{acl_token}")
+
+        Diplomat.configuration.acl_token = acl_token
+        node = Diplomat::Node.new(faraday)
+
+        node.get(node_name)
+      end
+    end
+  end
 end

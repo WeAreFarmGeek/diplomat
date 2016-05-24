@@ -4,6 +4,8 @@ require 'faraday'
 module Diplomat
   class Node < Diplomat::RestClient
 
+    include ApiOptions
+
     @access_methods = [ :get, :get_all, :register, :deregister ]
 
     # Get a node by it's key
@@ -13,6 +15,7 @@ module Diplomat
     def get key, options=nil
 
       url = ["/v1/catalog/node/#{key}"]
+      url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
 
       # If the request fails, it's probably due to a bad path
