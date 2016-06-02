@@ -100,6 +100,13 @@ nodes = Diplomat::Node.get_all
 # => [#<OpenStruct Address="10.1.10.12", Node="foo">, #<OpenStruct Address="10.1.10.13", Node="bar">]
 ```
 
+Get all nodes for a particular datacenter
+
+```ruby
+nodes = Diplomat::Node.get_all({ :dc => 'My_Datacenter' })
+# => [#<OpenStruct Address="10.1.10.12", Node="foo">, #<OpenStruct Address="10.1.10.13", Node="bar">]
+```
+
 Register a node:
 
 ```ruby
