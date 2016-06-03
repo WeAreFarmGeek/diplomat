@@ -87,6 +87,15 @@ describe Diplomat::Node do
         }
       }
     }
+    let(:all_with_dc_url) { "/v1/catalog/nodes?dc=dc1" }
+    let(:body_all_with_dc) {
+      [
+        {
+          "Address"     => "10.1.10.14",
+          "Node"        => "foo"
+        },
+      ]
+    }
 
     describe "GET ALL" do
       it "lists all the nodes" do
@@ -96,6 +105,15 @@ describe Diplomat::Node do
 
         node = Diplomat::Node.new(faraday)
         expect(node.get_all.size).to eq(2)
+      end
+
+      it "lists all the nodes" do
+        json = JSON.generate(body_all_with_dc)
+
+        faraday.stub(:get).with(all_with_dc_url).and_return(OpenStruct.new({ body: json }))
+
+        node = Diplomat::Node.new(faraday)
+        expect(node.get_all({ :dc => 'dc1' }).size).to eq(1)
       end
     end
 

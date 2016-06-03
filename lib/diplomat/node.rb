@@ -29,11 +29,13 @@ module Diplomat
     end
 
     # Get all the nodes
+    # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] the list of all nodes
-    def get_all
-      url = "/v1/catalog/nodes"
+    def get_all options=nil
+      url = ["/v1/catalog/nodes"]
+      url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       begin
-        ret = @conn.get url
+        ret = @conn.get concat_url url
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end
