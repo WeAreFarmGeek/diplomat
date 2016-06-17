@@ -27,8 +27,8 @@ module Diplomat
       # so return a PathNotFound error.
       begin
         ret = @conn.get concat_url url
-      rescue Faraday::ClientError
-        raise Diplomat::PathNotFound
+      rescue Faraday::ClientError => e
+        raise Diplomat::PathNotFound, e
       end
 
       if meta and ret.headers
