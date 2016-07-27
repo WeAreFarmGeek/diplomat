@@ -17,7 +17,7 @@
 
  - 2016-04-27 Ryan Schlesinger <ryan@outstand.com> Added external service registration
  - 2016-04-27 Improvements to ACL info method when the ACL doesn't exist
-
+ 
 ## 0.16.2
 
  - 2016-04-13 Grégoire Seux <g.seux@criteo.com> Refactor HTTP deserialization to allow for raw responses to deserialize properly.

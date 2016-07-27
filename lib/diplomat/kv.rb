@@ -143,7 +143,7 @@ module Diplomat
 
     private
 
-      def recurse_get(options)
+    def recurse_get(options)
       if options && options[:recurse] == true then ['recurse'] else [] end
     end
 
