@@ -1,5 +1,6 @@
 require 'faraday'
 require 'json'
+require_relative '../helpers/to_hash'
 
 module Diplomat
   class RestClient
@@ -67,6 +68,39 @@ module Diplomat
           faraday.use middleware
         end
       end
+    end
+
+    #Converts k/v data into ruby hash
+    def convert_to_hash(data)
+      collection = []
+      master     = {}
+      data.each do |item|
+        split_up = item[:key].split ?/
+        sub_hash = {}
+        temp = nil
+        real_size = split_up.size - 1
+        for i in 0..real_size do
+           if i == 0
+              temp = {}
+              sub_hash[split_up[i]] = temp
+              next
+           end
+           if i == real_size
+              temp[split_up[i]] = item[:value]
+           else
+              new_h = {}
+              temp[split_up[i]] = new_h
+              temp = new_h
+           end
+         end
+         collection << sub_hash
+      end
+
+      collection.each do |h|
+         n = master.deep_merge(h)
+         master = n
+      end
+      master
     end
 
     # Parse the body, apply it to the raw attribute

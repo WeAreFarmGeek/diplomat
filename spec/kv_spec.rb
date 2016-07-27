@@ -62,6 +62,45 @@ describe Diplomat::Kv do
           ])
         end
       end
+
+      context "ACLs NOT enabled, recurse option ON, convert_to_hash option ON" do
+        let(:json) { JSON.generate([
+          {
+            "Key"   => key + '/dewfr',
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key,
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + '/iamnil',
+            "Value" => nil,
+            "Flags" => 0
+          }])
+        }
+
+        it "GET" do
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          answer = {}
+          answer[key] = {}
+          answer[key]['dewfr'] = 'toast'
+          expect(kv.get(key, recurse: true, convert_to_hash: true)).to eql(answer)
+        end
+        it "GET with nil values" do
+          faraday.stub(:get).and_return(OpenStruct.new({ status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          answer = {}
+          answer[key] = {}
+          answer[key]['dewfr'] = 'toast'
+          answer[key]['iamnil'] = nil
+          expect(kv.get(key, recurse: true, convert_to_hash: true, nil_values: true)).to eql(answer)
+        end
+      end
+
       context "ACLs NOT enabled, keys option ON" do
         let(:json) { JSON.generate([ key, key + "ring", key + "tar" ]) }
         it "GET" do
