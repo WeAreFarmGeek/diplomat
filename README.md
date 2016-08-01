@@ -82,6 +82,12 @@ Diplomat::Kv.get('foo/', recurse: true)
 # => [{:key=>"foo/a", :value=>"lorem"}, {:key=>"foo/b", :value=>"ipsum"}, {:key=>"foo/c", :value=>"dolor"}]
 ```
 
+Or list all available keys:
+
+```ruby
+Diplomat::Kv.get('/', :keys => true) # => ['foo/a', 'foo/b']
+```
+
 ### Nodes
 
 #### Getting
