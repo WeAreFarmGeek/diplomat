@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+ - 2016-08-02 John Hamelink <john@johnhamelink.com> Improve ACL and Event endpoints by uniformly raising an error for statuscodes which aren't 200.
  - 2016-08-02 Sandstrom <alexander@skovik.com> Add documentation for listing all keys
  - 2016-08-02 Alexander Vagin <laplugin73@gmail.com> Add state option to Health service
  - 2016-08-02 John Hamelink <john@johnhamelink.com> Removed Ruby 1.x support. Added check to raise error for ruby versions < 2.0.0
