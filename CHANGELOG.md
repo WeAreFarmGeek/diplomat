@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+ - 2016-08-02 Alexander Vagin <laplugin73@gmail.com> Add state option to Health service
 
 ## 0.18.0
 
