@@ -76,13 +76,16 @@ module Diplomat
           when :reject
             raise Diplomat::EventAlreadyExists, name
           when :return
-            parse_body
+            # Always set the response to 200 so we always return
+            # the response body.
+            @raw.status = 200
+            @raw = parse_body
             return return_payload
         end
       end
 
       @raw = wait_for_next_event(url)
-      parse_body
+      @raw = parse_body
       return_payload
     end
 
@@ -130,7 +133,7 @@ module Diplomat
             event_token = :last
           when :wait
             @raw = wait_for_next_event(url)
-            parse_body
+            @raw = parse_body
             # If it's possible for two events to arrive at once,
             # this needs to #find again:
             event = @raw.last

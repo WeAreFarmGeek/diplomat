@@ -71,7 +71,8 @@ module Diplomat
 
     # Parse the body, apply it to the raw attribute
     def parse_body
-      @raw = JSON.parse(@raw.body)
+      return JSON.parse(@raw.body) if @raw.status == 200
+      raise Diplomat::UnknownStatus, "status #{@raw.status}"
     end
 
     # Return @raw with Value fields decoded

@@ -74,7 +74,7 @@ module Diplomat
             raise Diplomat::KeyAlreadyExists, key
           when :return
             @raw = raw
-            parse_body
+            @raw = parse_body
             if @options and @options[:modify_index]
               return @raw.first['ModifyIndex']
             end

@@ -46,14 +46,8 @@ module Diplomat
     def list
       url = ["/v1/acl/list"]
       url += check_acl_token
-      raw = @conn_no_err.get concat_url url
-
-      if raw.status == 200
-        @raw = raw
-        return parse_body
-      else
-        raise Diplomat::UnknownStatus, "status #{raw.status}"
-      end
+      @raw = @conn_no_err.get concat_url url
+      return parse_body
     end
 
     # Update an Acl definition, create if not present
@@ -69,7 +63,7 @@ module Diplomat
         req.url concat_url url
         req.body = value.to_json
       end
-      JSON.parse(@raw.body)
+      return parse_body
     end
 
     # Create an Acl definition
@@ -83,7 +77,7 @@ module Diplomat
         req.url concat_url url
         req.body = value.to_json
       end
-      JSON.parse(@raw.body)
+      return parse_body
     end
 
     # Destroy an ACl token by its id
@@ -94,7 +88,7 @@ module Diplomat
       url = ["/v1/acl/destroy/#{@id}"]
       url += check_acl_token
       @raw = @conn.put concat_url url
-      @raw.body == "true"
+      return @raw.body == "true"
     end
   end
 end

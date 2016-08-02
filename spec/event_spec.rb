@@ -217,7 +217,7 @@ describe Diplomat::Event do
         ev.get_all
       end
     end
-    
+
     describe 'GET' do
       before do
         allow(faraday).to receive(:get).and_return(OpenStruct.new(body: @events_json))
