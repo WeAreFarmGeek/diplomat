@@ -39,6 +39,10 @@ production:
 
 [See here](http://www.consul.io/intro/). I managed to roll it out on my production machines with the help of [Ansible](http://www.ansible.com/) in one working day.
 
+### Which versions of Ruby does Diplomat support?
+
+Check out [Travis](https://travis-ci.org/WeAreFarmGeek/diplomat) to see which versions of ruby we currently test when we're making builds.
+
 ## Usage
 
 [The most up to date place to read about the API is here.](http://rubydoc.info/github/WeAreFarmGeek/diplomat)
