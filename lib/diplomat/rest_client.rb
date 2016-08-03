@@ -1,6 +1,5 @@
 require 'faraday'
 require 'json'
-require_relative '../helpers/to_hash'
 
 module Diplomat
   class RestClient
@@ -97,10 +96,15 @@ module Diplomat
       end
 
       collection.each do |h|
-         n = master.deep_merge(h)
+         n = deep_merge(master, h)
          master = n
       end
       master
+    end
+
+    def deep_merge(first, second)
+        merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+        first.merge(second, &merger)
     end
 
     # Parse the body, apply it to the raw attribute
