@@ -39,9 +39,11 @@ production:
 
 [See here](http://www.consul.io/intro/). I managed to roll it out on my production machines with the help of [Ansible](http://www.ansible.com/) in one working day.
 
-### Which versions of Ruby does Diplomat support?
+### Which versions of Ruby does Diplomat support? Where did my ruby 1.9 compatibility go?
 
 Check out [Travis](https://travis-ci.org/WeAreFarmGeek/diplomat) to see which versions of ruby we currently test when we're making builds.
+
+We've dropped ruby 1.9 support. You can still depend on Diplomat by directly using the `ruby-1.9-compatible` branch on github, although be advised it's not actively maintained anymore.
 
 ## Usage
 
