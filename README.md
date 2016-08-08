@@ -4,6 +4,8 @@
 
 ![Diplomacy Boad Game](http://i.imgur.com/Nkuy4b7.jpg)
 
+# FYI: This is a legacy branch for Ruby 1.9 users. It is no longer actively maintained.
+
 
 ## FAQ
 
