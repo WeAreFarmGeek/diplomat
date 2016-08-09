@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+ - 2016-08-09 Stefan Merettig <stefan-merettig@nuriaproject.org> Add .respond_to? and .respond_to_missing? to Diplomat::RestClient
+
+## 0.19.0, 1.0.0
  - 2016-08-02 John Hamelink <john@johnhamelink.com> Improve ACL and Event endpoints by uniformly raising an error for statuscodes which aren't 200.
  - 2016-08-02 Sandstrom <alexander@skovik.com> Add documentation for listing all keys
  - 2016-08-02 Alexander Vagin <laplugin73@gmail.com> Add state option to Health service
