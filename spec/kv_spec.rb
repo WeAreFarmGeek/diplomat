@@ -258,6 +258,18 @@ describe Diplomat::Kv do
           expect(kv.delete(key).status).to eq 200
         end
       end
+
+      context "ACLs NOT enabled, recurse option ON" do
+        it "DELETE" do
+          faraday.double()
+          expect(faraday).to receive(:delete)
+                              .with(/recurse/)
+                              .and_return(OpenStruct.new({ status: 200}))
+
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.delete(key, :recurse => true).status).to eq 200
+        end
+      end
       context "ACLs enabled, without valid_acl_token" do
         it "DELETE" do
           faraday.stub(:delete).and_return(OpenStruct.new({ status: 403}))
