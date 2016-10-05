@@ -78,7 +78,6 @@ foo = Diplomat::Kv.get('foo', :dc => 'dc-west')
 ```
 
 You can also retrieve values recursively:
-
 ```ruby
 Diplomat::Kv.put('foo/a', 'lorem')
 Diplomat::Kv.put('foo/b', 'ipsum')
@@ -88,10 +87,20 @@ Diplomat::Kv.get('foo/', recurse: true)
 # => [{:key=>"foo/a", :value=>"lorem"}, {:key=>"foo/b", :value=>"ipsum"}, {:key=>"foo/c", :value=>"dolor"}]
 ```
 
+
 Or list all available keys:
 
 ```ruby
 Diplomat::Kv.get('/', :keys => true) # => ['foo/a', 'foo/b']
+```
+You can convert the consul data to a ruby hash
+```ruby
+Diplomat::Kv.put('foo/a', 'lorem')
+Diplomat::Kv.put('foo/b', 'ipsum')
+Diplomat::Kv.put('foo/c', 'dolor')
+
+Diplomat::Kv.get('foo/', recurse: true, convert_to_hash: true)
+# => {"foo"=>{"a"=>"lorem", "b"=>"ipsum", "c"=>"dolor"}}
 ```
 
 ### Nodes

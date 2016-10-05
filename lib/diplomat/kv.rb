@@ -20,6 +20,7 @@ module Diplomat
     # @option options [Boolean] :decode_values Return consul response with decoded values.
     # @option options [String] :separator List only up to a given separator. Only applies when combined with :keys option.
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
+    # @option options [Boolean] :convert_to_hash Take the data returned from consul and build a hash
     # @option options [Callable] :transformation funnction to invoke on keys values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
@@ -80,6 +81,9 @@ module Diplomat
             end
             if @options and @options[:decode_values]
               return decode_values
+            end
+            if @options and @options[:convert_to_hash]
+              return convert_to_hash(return_value(return_nil_values, transformation))
             end
             return return_value(return_nil_values, transformation)
           when :wait
