@@ -127,11 +127,13 @@ module Diplomat
     # @param key [String] the key
     # @param options [Hash] the query params
     # @option options [String] :dc Target datacenter
+    # @option options [Boolean] :recurse If to make recursive get or not
     # @return [OpenStruct]
     def delete key, options=nil
       @key = key
       @options = options
       url = ["/v1/kv/#{@key}"]
+      url += recurse_get(@options)
       url += check_acl_token
       url += dc(@options)
       @raw = @conn.delete concat_url url
