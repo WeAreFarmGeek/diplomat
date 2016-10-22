@@ -99,7 +99,7 @@ module Diplomat
         req.url concat_url url
         req.options.timeout = 86400
       end
-      parse_body
+      @raw = parse_body
       return_value(return_nil_values, transformation)
     end
 

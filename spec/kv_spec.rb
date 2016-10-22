@@ -63,6 +63,49 @@ describe Diplomat::Kv do
         end
       end
 
+      context "ACLs NOT enabled, recurse option ON, blocking" do
+        let(:json) { JSON.generate([
+          {
+            "Key"   => key + 'dewfr',
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key,
+            "Value" => Base64.encode64(key_params),
+            "Flags" => 0
+          },
+          {
+            "Key"   => key + 'iamnil',
+            "Value" => nil,
+            "Flags" => 0
+          }])
+        }
+        let(:headers) { JSON.generate({
+          "x-consul-index" => "12345"
+        })}
+
+        it "GET" do
+          faraday.stub(:get).and_return(OpenStruct.new({ headers: headers, status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          allow(kv).to receive_message_chain(:raw, :headers).and_return("x-consul-index" => "12345")
+          expect(kv.get(key, { recurse: true }, :wait, :wait)).to eql([
+            { key: key + 'dewfr', value: "toast" },
+            { key: key, value: "toast" }
+          ])
+        end
+        it "GET with nil values" do
+          faraday.stub(:get).and_return(OpenStruct.new({ headers: headers, status: 200, body: json }))
+          kv = Diplomat::Kv.new(faraday)
+          allow(kv).to receive_message_chain(:raw, :headers).and_return("x-consul-index" => "12345")
+          expect(kv.get(key, { recurse: true, nil_values: true }, :wait, :wait)).to eql([
+            { key: key + 'dewfr', value: "toast" },
+            { key: key, value: "toast" },
+            { key: key + 'iamnil', value: nil }
+          ])
+        end
+      end
+
       context "ACLs NOT enabled, recurse option ON, convert_to_hash option ON" do
         let(:json) { JSON.generate([
           {
