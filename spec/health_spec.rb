@@ -220,6 +220,55 @@ EOF
       expect(health.service("foobar", options: options)[0]["Node"]["Node"]).to eq("foobar")
     end
 
+    it "service with tag options" do
+      json = <<EOF
+[
+    {
+        "Node": {
+            "Node": "foobar",
+            "Address": "10.1.10.12"
+        },
+        "Service": {
+            "ID": "redis",
+            "Service": "redis",
+            "Tags": ["v1"],
+            "Port": 8000
+        },
+        "Checks": [
+            {
+                "Node": "foobar",
+                "CheckID": "service:redis",
+                "Name": "Service 'redis' check",
+                "Status": "passing",
+                "Notes": "",
+                "Output": "",
+                "ServiceID": "redis",
+                "ServiceName": "redis"
+            },
+            {
+                "Node": "foobar",
+                "CheckID": "serfHealth",
+                "Name": "Serf Health Status",
+                "Status": "passing",
+                "Notes": "",
+                "Output": "",
+                "ServiceID": "",
+                "ServiceName": ""
+            }
+        ]
+    }
+]
+EOF
+
+      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+
+      health = Diplomat::Health.new(faraday)
+
+      options = { tag: 'v1' }
+
+      expect(health.service("foobar", options: options)[0]["Node"]["Node"]).to eq("foobar")
+    end
+
     it "state" do
       json = <<EOF
 [

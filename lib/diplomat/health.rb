@@ -46,11 +46,13 @@ module Diplomat
     # @param s [String] the service
     # @param options [Hash] :dc string for dc specific query
     # @param options [Hash] :state string for specific service state
+    # @param options [Hash] :tag string for specific tag
     # @return [OpenStruct] all data associated with the node
     def service s, options=nil
       url = ["/v1/health/service/#{s}"]
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       url << options[:state] if options and options[:state]
+      url << use_named_parameter('tag', options[:tag]) if options and options[:tag]
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error. 
