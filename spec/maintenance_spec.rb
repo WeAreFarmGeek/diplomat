@@ -96,7 +96,7 @@ EOF
       expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new({ body: "", status: 500}))
       maintenance = Diplomat::Maintenance.new(faraday)
       expect(req).to receive(:url).with('/v1/agent/maintenance?enable=true')
-      expect{ maintenance.enable(true) }.to raise_error(Diplomat::UnknownStatus, 'status 500')
+      expect{ maintenance.enable(true) }.to raise_error(Diplomat::UnknownStatus, 'status 500: ')
     end
   end
 end

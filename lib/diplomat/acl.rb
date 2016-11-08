@@ -37,7 +37,7 @@ module Diplomat
             return nil
         end
       else
-        raise Diplomat::UnknownStatus, "status #{raw.status}"
+        raise Diplomat::UnknownStatus, "status #{raw.status}: #{raw.body}"
       end
     end
 

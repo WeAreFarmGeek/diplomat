@@ -40,7 +40,7 @@ module Diplomat
         @raw = raw
         return true
       else
-        raise Diplomat::UnknownStatus, "status #{raw.status}"
+        raise Diplomat::UnknownStatus, "status #{raw.status}: #{raw.body}"
       end
     end
   end
