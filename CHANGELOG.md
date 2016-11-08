@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 1.1.0
  - 2016-08-09 Stefan Merettig <stefan-merettig@nuriaproject.org> Add .respond_to? and .respond_to_missing? to Diplomat::RestClient
  - 2016-09-21 Dana Pieluszczak <dana@greenhouse.io> Add recurse option to Kv#delete
  - 2016-10-24 Ryan Duffield <rduffield@pagerduty.com> Add tag option to Health#service
