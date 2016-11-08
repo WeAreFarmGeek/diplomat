@@ -25,7 +25,7 @@ module Diplomat
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end
-      return JSON.parse(ret.body)
+      return OpenStruct.new JSON.parse(ret.body)
     end
 
     # Get all the nodes
