@@ -90,7 +90,7 @@ module Diplomat
             index = raw.headers["x-consul-index"]
         end
       else
-        raise Diplomat::UnknownStatus, "status #{raw.status}"
+        raise Diplomat::UnknownStatus, "status #{raw.status}: #{raw.body}"
       end
 
       # Wait for first/next value
