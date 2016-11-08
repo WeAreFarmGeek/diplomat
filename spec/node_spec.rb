@@ -118,16 +118,20 @@ describe Diplomat::Node do
     end
 
     describe "GET" do
-      it "gets a node" do
+      let(:cn) do
         json = JSON.generate(body)
-
         Diplomat.configuration.acl_token = nil
         faraday.stub(:get).with(key_url).and_return(OpenStruct.new({ body: json }))
-
         node = Diplomat::Node.new(faraday)
+        node.get("foobar")
+      end
 
-        cn = node.get("foobar")
+      it "gets a node" do
         expect(cn["Node"].length).to eq(2)
+      end
+
+      it "returns an OpenStruct" do
+        expect(cn).to be_a_kind_of(OpenStruct)
       end
     end
   end
