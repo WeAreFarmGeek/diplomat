@@ -21,7 +21,7 @@ module Diplomat
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end
-      return JSON.parse(ret.body)
+      return JSON.parse(ret.body).map { |node| OpenStruct.new node }
     end
 
     # Get service checks
@@ -39,7 +39,7 @@ module Diplomat
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end
-      return JSON.parse(ret.body)
+      return JSON.parse(ret.body).map { |check| OpenStruct.new check }
     end
 
     # Get service health
@@ -61,7 +61,7 @@ module Diplomat
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end
-      return JSON.parse(ret.body)
+      return JSON.parse(ret.body).map { |service| OpenStruct.new service }
     end
 
     # Get service health
@@ -79,8 +79,7 @@ module Diplomat
        rescue Faraday::ClientError
          raise Diplomat::PathNotFound
        end
-       return JSON.parse(ret.body)
-
+       return JSON.parse(ret.body).map { |state| OpenStruct.new state }
     end
 
     # Convenience method to get services in unknown state
