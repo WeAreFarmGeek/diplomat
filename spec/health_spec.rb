@@ -6,337 +6,226 @@ describe Diplomat::Health do
 
   let(:faraday) { fake }
 
-  context "health" do
-
-    it "node" do
-      json = <<EOF
-      [
-            {
-                "Node": "foobar",
-                "CheckID": "serfHealth",
-                "Name": "Serf Health Status",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "",
-                "ServiceName": ""
-            },
-            {
-                "Node": "foobar",
-                "CheckID": "service:redis",
-                "Name": "Service 'redis' check",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "redis",
-                "ServiceName": "redis"
-            }
-        ]
-EOF
-
+  describe '#node' do
+    let(:node_definition) {[
+      {
+        Node: 'foobar',
+        CheckID: 'serfHealth',
+        Name: 'Serf Health Status',
+        Status: 'passing',
+        Notes: '',
+        Output: '',
+        ServiceID: '',
+        ServiceName: ''
+      },
+      {
+        Node: 'foobar',
+        CheckID: 'service:redis',
+        Name: 'Service \'redis\' check',
+        Status: 'passing',
+        Notes: '',
+        Output: '',
+        ServiceID: 'redis',
+        ServiceName: 'redis'
+      }
+    ]}
+    let(:json) { node_definition.to_json }
+    let(:ch) {
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
+      health.node('foobar')
+    }
 
-      expect(health.node("foobar")[0]["Node"]).to eq("foobar")
+    it 'should return an array of checks' do
+      expect(ch).to be_a_kind_of(Array)
     end
 
-    it "node with dc option" do
-      json = <<EOF
-      [
-            {
-                "Node": "foobar",
-                "CheckID": "serfHealth",
-                "Name": "Serf Health Status",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "",
-                "ServiceName": ""
-            },
-            {
-                "Node": "foobar",
-                "CheckID": "service:redis",
-                "Name": "Service 'redis' check",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "redis",
-                "ServiceName": "redis"
-            }
-        ]
-EOF
+    it 'should return an OpenStruct for each check' do
+      ch.each do |check|
+        expect(check).to be_a_kind_of(OpenStruct)
+      end
+    end
 
+    it 'should return the node name' do
+      expect(ch.first['Node']).to eq('foobar')
+    end
+
+    it 'should check with \'dc\' option' do
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
-
       options = { dc: 'some-dc' }
 
-      expect(health.node("foobar", options: options)[0]["Node"]).to eq("foobar")
+      expect(health.node('foobar', options: options).first['Node']).to eq('foobar')
     end
+  end
 
-    it "checks with dc option" do
-      json = <<EOF
-[
-    {
-        "Node": "foobar",
-        "CheckID": "service:redis",
-        "Name": "Service 'redis' check",
-        "Status": "passing",
-        "Notes": "",
-        "Output": "",
-        "ServiceID": "redis",
-        "ServiceName": "redis"
-    }
-]
-EOF
-
+  describe '#checks' do
+    let(:check_definition) {[
+      {
+        Node: 'foobar',
+        CheckID: 'service:redis',
+        Name: 'Service \'redis\' check',
+        Status: 'passing',
+        Notes: '',
+        Output: '',
+        ServiceID: 'redis',
+        ServiceName: 'redis'
+      }
+    ]}
+    let(:json) { check_definition.to_json }
+    let(:ch) {
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
+      health.checks('foobar')
+    }
 
+    it 'should check with dc option' do
+      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+      health = Diplomat::Health.new(faraday)
       options = { dc: 'some-dc' }
 
-      expect(health.checks("foobar", options: options)[0]["Node"]).to eq("foobar")
+      expect(health.checks('foobar', options: options).first['Node']).to eq('foobar')
     end
 
-    it "checks" do
-      json = <<EOF
-[
-    {
-        "Node": "foobar",
-        "CheckID": "service:redis",
-        "Name": "Service 'redis' check",
-        "Status": "passing",
-        "Notes": "",
-        "Output": "",
-        "ServiceID": "redis",
-        "ServiceName": "redis"
-    }
-]
-EOF
-
-      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
-      health = Diplomat::Health.new(faraday)
-
-      expect(health.checks("foobar")[0]["Node"]).to eq("foobar")
+    it 'should return the node name' do
+      expect(ch.first['Node']).to eq('foobar')
     end
 
-    it "service" do
-      json = <<EOF
-[
-    {
-        "Node": {
-            "Node": "foobar",
-            "Address": "10.1.10.12"
+    it 'should return an array of checks' do
+      expect(ch).to be_a_kind_of(Array)
+    end
+
+    it 'should return an OpenStruct for each check' do
+      ch.each do |check|
+        expect(check).to be_a_kind_of(OpenStruct)
+      end
+    end
+  end
+
+  describe '#service' do
+    let(:service_definition) {[
+      {
+        Node: {
+          Node: 'foobar',
+          Address: '10.1.10.12'
+          },
+        Service: {
+          ID: 'redis',
+          Service: 'redis',
+          Tags: ['v1'],
+          Port: 8000
         },
-        "Service": {
-            "ID": "redis",
-            "Service": "redis",
-            "Tags": null,
-            "Port": 8000
-        },
-        "Checks": [
-            {
-                "Node": "foobar",
-                "CheckID": "service:redis",
-                "Name": "Service 'redis' check",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "redis",
-                "ServiceName": "redis"
-            },
-            {
-                "Node": "foobar",
-                "CheckID": "serfHealth",
-                "Name": "Serf Health Status",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "",
-                "ServiceName": ""
-            }
+        Checks: [
+          {
+            Node: 'foobar',
+            CheckID: 'service:redis',
+            Name: 'Service \'redis\' check',
+            Status: 'passing',
+            Notes: '',
+            Output: '',
+            ServiceID: 'redis',
+            ServiceName: 'redis'
+          },
+          {
+            Node: 'foobar',
+            CheckID: 'serfHealth',
+            Name: 'Serf Health Status',
+            Status: 'passing',
+            Notes: '',
+            Output: '',
+            ServiceID: '',
+            ServiceName: ''
+          }
         ]
-    }
-]
-EOF
-
+      }
+    ]}
+    let(:json) { service_definition.to_json }
+    let(:ch) {
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
+      health.service('foobar')
+    }
 
-      expect(health.service("foobar")[0]["Node"]["Node"]).to eq("foobar")
+    it 'should return the node name' do
+      expect(ch.first['Node']['Node']).to eq('foobar')
     end
 
-    it "service with dc options" do
-      json = <<EOF
-[
-    {
-        "Node": {
-            "Node": "foobar",
-            "Address": "10.1.10.12"
-        },
-        "Service": {
-            "ID": "redis",
-            "Service": "redis",
-            "Tags": null,
-            "Port": 8000
-        },
-        "Checks": [
-            {
-                "Node": "foobar",
-                "CheckID": "service:redis",
-                "Name": "Service 'redis' check",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "redis",
-                "ServiceName": "redis"
-            },
-            {
-                "Node": "foobar",
-                "CheckID": "serfHealth",
-                "Name": "Serf Health Status",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "",
-                "ServiceName": ""
-            }
-        ]
-    }
-]
-EOF
-
+    it 'should check service with dc options' do
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
-
       options = { dc: 'some-dc' }
 
-      expect(health.service("foobar", options: options)[0]["Node"]["Node"]).to eq("foobar")
+      expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
     end
 
-    it "service with tag options" do
-      json = <<EOF
-[
-    {
-        "Node": {
-            "Node": "foobar",
-            "Address": "10.1.10.12"
-        },
-        "Service": {
-            "ID": "redis",
-            "Service": "redis",
-            "Tags": ["v1"],
-            "Port": 8000
-        },
-        "Checks": [
-            {
-                "Node": "foobar",
-                "CheckID": "service:redis",
-                "Name": "Service 'redis' check",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "redis",
-                "ServiceName": "redis"
-            },
-            {
-                "Node": "foobar",
-                "CheckID": "serfHealth",
-                "Name": "Serf Health Status",
-                "Status": "passing",
-                "Notes": "",
-                "Output": "",
-                "ServiceID": "",
-                "ServiceName": ""
-            }
-        ]
-    }
-]
-EOF
-
+    it 'check service with tag options' do
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
-
       options = { tag: 'v1' }
 
-      expect(health.service("foobar", options: options)[0]["Node"]["Node"]).to eq("foobar")
+      expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
     end
 
-    it "state" do
-      json = <<EOF
-[
-    {
-        "Node": "foobar",
-        "CheckID": "serfHealth",
-        "Name": "Serf Health Status",
-        "Status": "passing",
-        "Notes": "",
-        "Output": "",
-        "ServiceID": "",
-        "ServiceName": ""
-    },
-    {
-        "Node": "foobar",
-        "CheckID": "service:redis",
-        "Name": "Service 'redis' check",
-        "Status": "passing",
-        "Notes": "",
-        "Output": "",
-        "ServiceID": "redis",
-        "ServiceName": "redis"
-    }
-]
-EOF
+    it 'should return an array of checks' do
+      expect(ch).to be_a_kind_of(Array)
+    end
 
+    it 'should return an OpenStruct for each check' do
+      ch.each do |check|
+        expect(check).to be_a_kind_of(OpenStruct)
+      end
+    end
+  end
+
+  describe '#state'
+    let(:state_definition) {[
+      {
+        Node: 'foobar',
+        CheckID: 'serfHealth',
+        Name: 'Serf Health Status',
+        Status: 'passing',
+        Notes: '',
+        Output: '',
+        ServiceID: '',
+        ServiceName: ''
+      },
+      {
+        Node: 'foobar',
+        CheckID: 'service:redis',
+        Name: 'Service \'redis\' check',
+        Status: 'passing',
+        Notes: '',
+        Output: '',
+        ServiceID: 'redis',
+        ServiceName: 'redis'
+      }
+    ]}
+    let(:json) { state_definition.to_json }
+    let(:ch) {
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
+      health.state('foobar')
+    }
 
-      expect(health.state("foobar")[0]["Node"]).to eq("foobar")
+    it 'should return the node name' do
+      expect(ch.first['Node']).to eq('foobar')
     end
 
     it "state with dc options" do
-      json = <<EOF
-[
-    {
-        "Node": "foobar",
-        "CheckID": "serfHealth",
-        "Name": "Serf Health Status",
-        "Status": "passing",
-        "Notes": "",
-        "Output": "",
-        "ServiceID": "",
-        "ServiceName": ""
-    },
-    {
-        "Node": "foobar",
-        "CheckID": "service:redis",
-        "Name": "Service 'redis' check",
-        "Status": "passing",
-        "Notes": "",
-        "Output": "",
-        "ServiceID": "redis",
-        "ServiceName": "redis"
-    }
-]
-EOF
-
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
-
       health = Diplomat::Health.new(faraday)
-
       options = { dc: 'some-dc' }
 
-      expect(health.state("foobar", options: options)[0]["Node"]).to eq("foobar")
+      expect(health.state('foobar', options: options).first['Node']).to eq('foobar')
     end
 
-  end
+    it 'should return an array of checks' do
+      expect(ch).to be_a_kind_of(Array)
+    end
 
+    it 'should return an OpenStruct for each check' do
+      ch.each do |check|
+        expect(check).to be_a_kind_of(OpenStruct)
+      end
+    end
 end

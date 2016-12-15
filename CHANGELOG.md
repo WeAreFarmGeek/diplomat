@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+## 1.2.0
+ - 2016-12-15 Trevor Wood <trevor.g.wood@gmail.com> Diplomat::Health returns hashes instead of OpenStructs
 
 ## 1.1.0
  - 2016-08-09 Stefan Merettig <stefan-merettig@nuriaproject.org> Add .respond_to? and .respond_to_missing? to Diplomat::RestClient
