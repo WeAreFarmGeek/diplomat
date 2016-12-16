@@ -130,7 +130,7 @@ describe Diplomat::Health do
             Node: 'foobar',
             CheckID: 'serfHealth',
             Name: 'Serf Health Status',
-            Status: 'passing',
+            Status: 'failing',
             Notes: '',
             Output: '',
             ServiceID: '',
@@ -150,12 +150,28 @@ describe Diplomat::Health do
       expect(ch.first['Node']['Node']).to eq('foobar')
     end
 
-    it 'should check service with dc options' do
+    it 'should check service with dc option' do
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
       health = Diplomat::Health.new(faraday)
       options = { dc: 'some-dc' }
 
       expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
+    end
+
+    it 'should check service with near option' do
+      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+      health = Diplomat::Health.new(faraday)
+      options = { near: 'some-node' }
+
+      expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
+    end
+
+    it 'should check service with passing option' do
+      faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
+      health = Diplomat::Health.new(faraday)
+      options = { passing: true }
+
+      expect(health.service('foobar', options: options).first['Checks'].first['CheckID']).to eq('service:redis')
     end
 
     it 'check service with tag options' do
@@ -207,11 +223,11 @@ describe Diplomat::Health do
       health.state('foobar')
     }
 
-    it 'should return the node name' do
+    it 'should return the state' do
       expect(ch.first['Node']).to eq('foobar')
     end
 
-    it "state with dc options" do
+    it 'should return state with dc options' do
       faraday.stub(:get).and_return(OpenStruct.new({ body: json }))
       health = Diplomat::Health.new(faraday)
       options = { dc: 'some-dc' }
