@@ -82,7 +82,7 @@ module Diplomat
       url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
       json_definition = JSON.dump(definition)
       ret = @conn.put do |req|
-        req.url = concat_url url
+        req.url concat_url url
         req.body = json_definition
       end
       return ret.status == 200
