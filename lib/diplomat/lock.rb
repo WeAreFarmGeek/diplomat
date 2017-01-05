@@ -49,7 +49,7 @@ module Diplomat
     # @option options [String] :value the value to set on the key
     # @return [String] The consul KV response body. Can be nil
     def raw action, key, options={}
-      options[:session] ||= Diplomat::Session.create(nil, dc: options[:dc])
+      raise Diplomat::IdParameterRequired unless options[:session]
       raw = @conn.put do |req|
         url = ["/v1/kv/#{key}"]
         url += use_named_parameter(action.to_s, options[:session])
