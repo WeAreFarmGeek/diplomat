@@ -16,8 +16,9 @@ describe Diplomat::Kv do
         it 'GET' do
           faraday.double
           kv = Diplomat::Kv.new(faraday)
-          expect(faraday).to receive(:get).with(/dc=bar/)
-                                          .and_return(OpenStruct.new(status: 200, body: JSON.generate([])))
+          expect(faraday).to receive(:get).with(/dc=bar/).and_return(
+            OpenStruct.new(status: 200, body: JSON.generate([]))
+          )
           kv.get('foo', dc: 'bar')
         end
       end
@@ -263,89 +264,83 @@ describe Diplomat::Kv do
         end
       end
       context 'ACLs NOT enabled' do
-        let(:json) do
-          JSON.generate(
-            [
-              {
-                'Key'   => key,
-                'Value' => Base64.encode64(key_params),
-                'Flags' => 0
-              }
-            ]
-          )
-        end
+        let(:valid_return) { [{ key: key, value: 'toast' }] }
+        let(:encoded_value) { Base64.encode64(key_params) }
 
         it 'GET' do
+          json = JSON.generate([{
+                                 'Key'   => key,
+                                 'Value' => encoded_value,
+                                 'Flags' => 0
+                               }])
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get(key)).to eq('toast')
+          expect(kv.get(key)).to eq(valid_return)
         end
-
         it 'GET with consistency param' do
           options = { consistency: 'consistent' }
-
+          json = JSON.generate([{
+                                 'Key'   => key,
+                                 'Value' => encoded_value,
+                                 'Flags' => 0
+                               }])
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get('key', options)).to eq('toast')
+          expect(kv.get('key', options)).to eq(valid_return)
         end
       end
       context 'ACLs enabled, without valid_acl_token' do
-        let(:json) do
-          JSON.generate(
-            [
-              {
-                'Key'   => key,
-                'Value' => Base64.encode64('Faraday::ResourceNotFound: the server responded with status 404'),
-                'Flags' => 0
-              }
-            ]
-          )
-        end
+        let(:valid_return) { [{ key: key, value: 'Faraday::ResourceNotFound: the server responded with status 404' }] }
+        let(:encoded_value) { Base64.encode64('Faraday::ResourceNotFound: the server responded with status 404') }
 
         it 'GET with ACLs enabled, no valid_acl_token' do
+          json = JSON.generate([{
+                                 'Key'   => key,
+                                 'Value' => encoded_value,
+                                 'Flags' => 0
+                               }])
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           kv = Diplomat::Kv.new(faraday)
-
-          expect(kv.get(key)).to eq('Faraday::ResourceNotFound: the server responded with status 404')
+          expect(kv.get(key)).to eq(valid_return)
         end
-
         it 'GET with consistency param, without valid_acl_token' do
           options = { consistency: 'consistent' }
-
+          json = JSON.generate([{
+                                 'Key'   => key,
+                                 'Value' => encoded_value,
+                                 'Flags' => 0
+                               }])
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           kv = Diplomat::Kv.new(faraday)
-
-          expect(kv.get('key', options)).to eq('Faraday::ResourceNotFound: the server responded with status 404')
+          expect(kv.get('key', options)).to eq(valid_return)
         end
       end
       context 'ACLs enabled, with valid_acl_token' do
-        let(:json) do
-          JSON.generate(
-            [
-              {
-                'Key'   => key,
-                'Value' => Base64.encode64(key_params),
-                'Flags' => 0
-              }
-            ]
-          )
-        end
+        let(:valid_return) { [{ key: key, value: 'toast' }] }
+        let(:encoded_value) { Base64.encode64(key_params) }
 
         it 'GET with ACLs enabled, valid_acl_token' do
+          json = JSON.generate([{
+                                 'Key'   => key,
+                                 'Value' => encoded_value,
+                                 'Flags' => 0
+                               }])
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
-
-          expect(kv.get(key)).to eq('toast')
+          expect(kv.get(key)).to eq(valid_return)
         end
         it 'GET with consistency param, with valid_acl_token' do
           options = { consistency: 'consistent' }
-
+          json = JSON.generate([{
+                                 'Key'   => key,
+                                 'Value' => Base64.encode64(key_params),
+                                 'Flags' => 0
+                               }])
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
-
-          expect(kv.get('key', options)).to eq('toast')
+          expect(kv.get('key', options)).to eq(valid_return)
         end
       end
     end
