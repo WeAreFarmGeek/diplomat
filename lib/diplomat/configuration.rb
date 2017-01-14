@@ -1,6 +1,6 @@
 module Diplomat
   class Configuration
-    attr_accessor :middleware
+    attr_accessor :middleware, :adapter
     attr_accessor :url, :acl_token, :options
 
     # Override defaults for configuration
@@ -12,6 +12,7 @@ module Diplomat
       @url = url
       @acl_token = acl_token
       @options = options
+      @adapter = nil
     end
 
     # Define a middleware for Faraday

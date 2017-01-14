@@ -16,7 +16,7 @@ describe Diplomat do
     context "Default" do
       let(:config) { Diplomat.configuration }
 
-      it "Returns a Diplmant::Configuration" do
+      it "Returns a Diplomat::Configuration" do
         expect(config).to be_a Diplomat::Configuration
       end
 
@@ -29,6 +29,10 @@ describe Diplomat do
         expect(config.middleware).to be_a(Array)
         expect(config.middleware.length).to eq(0)
       end
+
+      it "Returns no default adapter" do
+        expect(Diplomat.configuration.adapter).to be_nil
+      end 
 
       it "Returns an empty options hash" do
         expect(config.options).to be_a(Hash)
@@ -54,6 +58,7 @@ describe Diplomat do
           config.acl_token = "f45cbd0b-5022-47ab-8640-4eaa7c1f40f1"
           config.middleware = StubMiddleware
           config.options = {ssl: { verify: true }}
+          config.adapter = Faraday::Adapter::NetHttpPersistent
         end
 
         expect(Diplomat.configuration.url).to eq("http://google.com")
@@ -71,6 +76,15 @@ describe Diplomat do
         expect(Diplomat.configuration.middleware).to be_a(Array)
         expect(Diplomat.configuration.middleware.length).to eq(3)
         expect(Diplomat.configuration.middleware.first).to eq(StubMiddleware)
+      end
+
+      it "Can set adapter" do
+        Diplomat.configure do |config|
+          config.adapter = :net_http_persistent
+        end
+
+        expect(Diplomat.configuration.adapter).to be_a(Symbol)
+        expect(Diplomat.configuration.adapter).to eq(:net_http_persistent)
       end
     end
   end
