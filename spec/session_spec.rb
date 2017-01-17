@@ -1,18 +1,16 @@
 require 'spec_helper'
-require 'json'
-require 'base64'
 
 describe Diplomat::Session do
   let(:faraday) { fake }
   let(:uuid) { 'fc5ca01a-c317-39ea-05e8-221da00d3a12' }
-  let(:single_object) { {'ID' => uuid}  }
+  let(:single_object) { { 'ID' => uuid } }
   let(:collection_object) { [single_object] }
   let(:single_json) { JSON.generate(single_object) }
-  let(:collection_json) {JSON.generate(collection_object)}
+  let(:collection_json) { JSON.generate(collection_object) }
 
   describe '#create' do
     let(:cs) do
-      faraday.stub(:put).and_return(OpenStruct.new({ body: single_json }))
+      faraday.stub(:put).and_return(OpenStruct.new(body: single_json))
       session = Diplomat::Session.new(faraday)
       session.create({})
     end
@@ -22,7 +20,7 @@ describe Diplomat::Session do
     end
 
     it 'should create session with dc option' do
-      faraday.stub(:put).and_return(OpenStruct.new({ body: single_json }))
+      faraday.stub(:put).and_return(OpenStruct.new(body: single_json))
       session = Diplomat::Session.new(faraday)
       options = { dc: 'some-dc' }
       expect(session.create({}, options)).to eq(uuid)
@@ -31,7 +29,7 @@ describe Diplomat::Session do
 
   describe '#destroy' do
     let(:cs) do
-      faraday.stub(:put).and_return(OpenStruct.new({ body: 'true'}))
+      faraday.stub(:put).and_return(OpenStruct.new(body: 'true'))
       session = Diplomat::Session.new(faraday)
       session.destroy(uuid)
     end
@@ -45,7 +43,7 @@ describe Diplomat::Session do
     end
 
     it 'should destroy session with dc option' do
-      faraday.stub(:put).and_return(OpenStruct.new({ body: 'true'}))
+      faraday.stub(:put).and_return(OpenStruct.new(body: 'true'))
       session = Diplomat::Session.new(faraday)
       options = { dc: 'some-dc' }
       expect(session.destroy(uuid, options)).to eq('true')
@@ -54,7 +52,7 @@ describe Diplomat::Session do
 
   describe '#list' do
     let(:cs) do
-      faraday.stub(:get).and_return(OpenStruct.new({body: collection_json}))
+      faraday.stub(:get).and_return(OpenStruct.new(body: collection_json))
       sessions = Diplomat::Session.new(faraday)
       sessions.list
     end
@@ -76,7 +74,7 @@ describe Diplomat::Session do
     end
 
     it 'should list sessions with dc option' do
-      faraday.stub(:get).and_return(OpenStruct.new({body: collection_json}))
+      faraday.stub(:get).and_return(OpenStruct.new(body: collection_json))
       sessions = Diplomat::Session.new(faraday)
       options = { dc: 'some-dc' }
       sessions.list(options).each do |resp|
@@ -87,7 +85,7 @@ describe Diplomat::Session do
 
   describe '#renew' do
     let(:cs) do
-      faraday.stub(:put).and_return(OpenStruct.new({body: collection_json}))
+      faraday.stub(:put).and_return(OpenStruct.new(body: collection_json))
       session = Diplomat::Session.new(faraday)
       session.renew(uuid)
     end
@@ -109,7 +107,7 @@ describe Diplomat::Session do
     end
 
     it 'should renew session with dc option' do
-      faraday.stub(:put).and_return(OpenStruct.new({body: collection_json}))
+      faraday.stub(:put).and_return(OpenStruct.new(body: collection_json))
       sessions = Diplomat::Session.new(faraday)
       options = { dc: 'some-dc' }
       sessions.renew(uuid, options).each do |resp|
@@ -126,13 +124,13 @@ describe Diplomat::Session do
           'Checks' => ['serfHealth'],
           'Node' => 'foobar',
           'ID' => 'fc5ca01a-c317-39ea-05e8-221da00d3a12',
-          'CreateIndex' => 1086449
+          'CreateIndex' => 1_086_449
         }
       ]
     end
     let(:json) { JSON.generate(raw_return) }
     let(:cs) do
-      faraday.stub(:get).and_return(OpenStruct.new({body: json}))
+      faraday.stub(:get).and_return(OpenStruct.new(body: json))
       session = Diplomat::Session.new(faraday)
       session.info(uuid)
     end
@@ -154,7 +152,7 @@ describe Diplomat::Session do
     end
 
     it 'should return session info with dc option' do
-      faraday.stub(:get).and_return(OpenStruct.new({body: collection_json}))
+      faraday.stub(:get).and_return(OpenStruct.new(body: collection_json))
       sessions = Diplomat::Session.new(faraday)
       options = { dc: 'some-dc' }
       sessions.info(uuid, options).each do |resp|
@@ -171,14 +169,14 @@ describe Diplomat::Session do
           'Checks' => ['serfHealth'],
           'Node' => 'foobar',
           'ID' => 'fc5ca01a-c317-39ea-05e8-221da00d3a12',
-          'CreateIndex' => 1086449
+          'CreateIndex' => 1_086_449
         }
       ]
     end
     let(:json) { JSON.generate(raw_return) }
     let(:node) { 'foobar' }
     let(:cs) do
-      faraday.stub(:get).and_return(OpenStruct.new({body: json}))
+      faraday.stub(:get).and_return(OpenStruct.new(body: json))
       session = Diplomat::Session.new(faraday)
       session.node(node)
     end
@@ -200,7 +198,7 @@ describe Diplomat::Session do
     end
 
     it 'should return session info for the node with dc option' do
-      faraday.stub(:get).and_return(OpenStruct.new({body: collection_json}))
+      faraday.stub(:get).and_return(OpenStruct.new(body: collection_json))
       sessions = Diplomat::Session.new(faraday)
       options = { dc: 'some-dc' }
       sessions.node(node, options).each do |resp|

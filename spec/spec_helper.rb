@@ -1,8 +1,11 @@
-require "bundler/setup"
+require 'bundler/setup'
 Bundler.setup
 
+require 'json'
+require 'base64'
+
 if ENV['CI'] == true
-  require "codeclimate-test-reporter"
+  require 'codeclimate-test-reporter'
   CodeClimate::TestReporter.start
 end
 
