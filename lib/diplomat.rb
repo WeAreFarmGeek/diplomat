@@ -1,7 +1,10 @@
+require 'json'
+require 'base64'
+require 'faraday'
+
+# Top level namespace ensures all required libraries are included and initializes the gem configration.
 module Diplomat
-
   class << self
-
     attr_accessor :root_path
     attr_accessor :lib_path
     attr_accessor :configuration
@@ -24,12 +27,11 @@ module Diplomat
   self.lib_path = File.expand_path '../diplomat', __FILE__
 
   require_libs 'configuration', 'rest_client', 'api_options', 'kv', 'datacenter',
-    'service', 'members', 'node', 'nodes', 'check', 'health', 'session', 'lock',
-    'error', 'event', 'acl', 'maintenance', 'query'
+               'service', 'members', 'node', 'nodes', 'check', 'health', 'session', 'lock',
+               'error', 'event', 'acl', 'maintenance', 'query'
   self.configuration ||= Diplomat::Configuration.new
 
   class << self
-
     # Build optional configuration by yielding a block to configure
     # @yield [Diplomat::Configuration]
     def configure
@@ -46,7 +48,15 @@ module Diplomat
     # @param &block block to send to Kv
     # @return [Object]
     def method_missing(name, *args, &block)
-      Diplomat::Kv.new.send(name, *args, &block)
+      Diplomat::Kv.new.send(name, *args, &block) || super
+    end
+
+    # Make `respond_to_missing?` fall back to super
+    #
+    # @param meth_id [Symbol] the tested method
+    # @oaram with_private if private methods should be tested too
+    def respond_to_missing?(meth_id, with_private = false)
+      access_method?(meth_id) || super
     end
   end
 end

@@ -1,14 +1,11 @@
-require 'faraday'
-require 'json'
-
 module Diplomat
+  # Base class for interacting with the Consul RESTful API
   class RestClient
-
     @access_methods = []
 
     # Initialize the fadaray connection
     # @param api_connection [Faraday::Connection,nil] supply mock API Connection
-    def initialize api_connection=nil
+    def initialize(api_connection = nil)
       start_connection api_connection
     end
 
@@ -17,14 +14,14 @@ module Diplomat
     # @param value [String] the value of the parameter
     # @return [Array] the resultant parameter string inside an array.
     def use_named_parameter(name, value)
-      if value then ["#{name}=#{value}"] else [] end
+      value ? ["#{name}=#{value}"] : []
     end
 
     # Assemble a url from an array of parts.
     # @param parts [Array] the url chunks to be assembled
     # @return [String] the resultant url string
-    def concat_url parts
-      if parts.length > 1 then
+    def concat_url(parts)
+      if parts.length > 1
         parts.first + '?' + parts.drop(1).join('&')
       else
         parts.first
@@ -32,8 +29,7 @@ module Diplomat
     end
 
     class << self
-
-      def access_method? meth_id
+      def access_method?(meth_id)
         @access_methods.include? meth_id
       end
 
@@ -78,13 +74,13 @@ module Diplomat
 
     # Build the API Client
     # @param api_connection [Faraday::Connection,nil] supply mock API Connection
-    def start_connection api_connection=nil
+    def start_connection(api_connection = nil)
       @conn = build_connection(api_connection)
       @conn_no_err = build_connection(api_connection, true)
     end
 
-    def build_connection(api_connection, raise_error=false)
-      return api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
+    def build_connection(api_connection, raise_error = false)
+      api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
         faraday.adapter  Faraday.default_adapter
         faraday.request  :url_encoded
         faraday.response :raise_error unless raise_error
@@ -95,42 +91,43 @@ module Diplomat
       end
     end
 
-    #Converts k/v data into ruby hash
+    # Converts k/v data into ruby hash
+    # rubocop:disable MethodLength, AbcSize
     def convert_to_hash(data)
       collection = []
       master     = {}
       data.each do |item|
-        split_up = item[:key].split ?/
+        split_up = item[:key].split('/')
         sub_hash = {}
         temp = nil
         real_size = split_up.size - 1
-        for i in 0..real_size do
-           if i == 0
-              temp = {}
-              sub_hash[split_up[i]] = temp
-              next
-           end
-           if i == real_size
-              temp[split_up[i]] = item[:value]
-           else
-              new_h = {}
-              temp[split_up[i]] = new_h
-              temp = new_h
-           end
-         end
-         collection << sub_hash
+        (0..real_size).each do |i|
+          if i.zero?
+            temp = {}
+            sub_hash[split_up[i]] = temp
+            next
+          end
+          if i == real_size
+            temp[split_up[i]] = item[:value]
+          else
+            new_h = {}
+            temp[split_up[i]] = new_h
+            temp = new_h
+          end
+        end
+        collection << sub_hash
       end
 
       collection.each do |h|
-         n = deep_merge(master, h)
-         master = n
+        master = deep_merge(master, h)
       end
       master
     end
+    # rubocop:enable MethodLength, AbcSize
 
     def deep_merge(first, second)
-        merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
-        first.merge(second, &merger)
+      merger = proc { |_key, v1, v2| v1.is_a?(Hash) && v2.is_a?(Hash) ? v1.merge(v2, &merger) : v2 }
+      first.merge(second, &merger)
     end
 
     # Parse the body, apply it to the raw attribute
@@ -142,38 +139,37 @@ module Diplomat
     # Return @raw with Value fields decoded
     def decode_values
       return @raw if @raw.first.is_a? String
-      @raw.inject([]) do |acc, el|
-        new_el = el.dup
-        new_el["Value"] = (Base64.decode64(el["Value"]) rescue nil)
-        acc << new_el
-        acc
+      @raw.each_with_object([]) do |acc, el|
+        acc['Value'] = Base64.decode64(acc['Value']) rescue nil # rubocop:disable RescueModifier
+        el << acc
+        el
       end
     end
 
     # Get the key/value(s) from the raw output
-    def return_value(nil_values=false, transformation=nil)
+    # rubocop:disable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
+    def return_value(nil_values = false, transformation = nil)
       @value = decode_values
-      if @value.first.is_a? String
-        return @value
-      elsif @value.count == 1
-        @value = @value.first["Value"]
-        @value = transformation.call(@value) if transformation and not @value.nil?
+      return @value if @value.first.is_a? String
+      if @value.count == 1
+        @value = @value.first['Value']
+        @value = transformation.call(@value) if transformation && !@value.nil?
         return @value
       else
         @value = @value.map do |el|
-          el["Value"] = transformation.call(el["Value"]) if transformation and not el["Value"].nil?
-          { :key => el["Key"], :value => el["Value"] } if el["Value"] or nil_values
+          el['Value'] = transformation.call(el['Value']) if transformation && !el['Value'].nil?
+          { key: el['Key'], value: el['Value'] } if el['Value'] || nil_values
         end.compact
       end
     end
+    # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
 
     # Get the name and payload(s) from the raw output
     def return_payload
       @value = @raw.map do |e|
-        { :name => e["Name"],
-          :payload => (Base64.decode64(e["Payload"]) unless e["Payload"].nil?) }
+        { name: e['Name'],
+          payload: (Base64.decode64(e['Payload']) unless e['Payload'].nil?) }
       end
     end
-
   end
 end

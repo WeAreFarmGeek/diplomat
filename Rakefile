@@ -36,4 +36,4 @@ task :consul do
   system('consul agent -server -bootstrap -data-dir=/tmp')
 end
 
-task :default => :spec
+task default: %w(style spec)

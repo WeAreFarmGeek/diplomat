@@ -1,27 +1,28 @@
-require 'base64'
-require 'faraday'
-
 module Diplomat
+  # Methods for interacting with the Consul serivce API endpoint.
   class Service < Diplomat::RestClient
-
     include ApiOptions
 
-    @access_methods = [ :get, :get_all, :register, :deregister, :register_external, :deregister_external ]
+    @access_methods = [:get, :get_all, :register, :deregister, :register_external, :deregister_external]
 
     # Get a service by it's key
     # @param key [String] the key
     # @param scope [Symbol] :first or :all results
-    # @param options [Hash] :wait string for wait time and :index for index of last query
+    # @param options [Hash] options parameter hash
+    # @option wait [Integer] :wait string for wait time
+    # @option index [String] :index for index of last query
+    # @option dc [String] :dc data center to make request for
+    # @option tag [String] :tag service tag to get
     # @param meta [Hash] output structure containing header information about the request (index)
     # @return [OpenStruct] all data associated with the service
-    def get key, scope=:first, options=nil, meta=nil
-
+    # rubocop:disable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
+    def get(key, scope = :first, options = nil, meta = nil)
       url = ["/v1/catalog/service/#{key}"]
       url += check_acl_token
-      url << use_named_parameter('wait', options[:wait]) if options and options[:wait]
-      url << use_named_parameter('index', options[:index]) if options and options[:index]
-      url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
-      url << use_named_parameter('tag', options[:tag]) if options and options[:tag]
+      url << use_named_parameter('wait', options[:wait]) if options && options[:wait]
+      url << use_named_parameter('index', options[:index]) if options && options[:index]
+      url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      url << use_named_parameter('tag', options[:tag]) if options && options[:tag]
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -31,42 +32,43 @@ module Diplomat
         raise Diplomat::PathNotFound, e
       end
 
-      if meta and ret.headers
-        meta[:index] = ret.headers["x-consul-index"]
-        meta[:knownleader] = ret.headers["x-consul-knownleader"]
-        meta[:lastcontact] = ret.headers["x-consul-lastcontact"]
+      if meta && ret.headers
+        meta[:index] = ret.headers['x-consul-index']
+        meta[:knownleader] = ret.headers['x-consul-knownleader']
+        meta[:lastcontact] = ret.headers['x-consul-lastcontact']
       end
 
       if scope == :all
-        return JSON.parse(ret.body).map { |service| OpenStruct.new service }
+        JSON.parse(ret.body).map { |service| OpenStruct.new service }
+      else
+        OpenStruct.new JSON.parse(ret.body).first
       end
-
-      return OpenStruct.new JSON.parse(ret.body).first
     end
+    # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
 
     # Get all the services
     # @param options [Hash] :dc Consul datacenter to query
     # @return [OpenStruct] the list of all services
-    def get_all options=nil
-      url = ["/v1/catalog/services"]
+    def get_all(options = nil)
+      url = ['/v1/catalog/services']
       url += check_acl_token
-      url << use_named_parameter('dc', options[:dc]) if options and options[:dc]
+      url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
       begin
         ret = @conn.get concat_url url
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end
 
-      return OpenStruct.new JSON.parse(ret.body)
+      OpenStruct.new JSON.parse(ret.body)
     end
 
     # Register a service
     # @param definition [Hash] Hash containing definition of service
     # @return [Boolean]
-    def register(definition, path='/v1/agent/service/register')
+    def register(definition, path = '/v1/agent/service/register')
       json_definition = JSON.dump(definition)
       register = @conn.put path, json_definition
-      return register.status == 200
+      register.status == 200
     end
 
     # De-register a service
@@ -74,7 +76,7 @@ module Diplomat
     # @return [Boolean]
     def deregister(service_name)
       deregister = @conn.get "/v1/agent/service/deregister/#{service_name}"
-      return deregister.status == 200
+      deregister.status == 200
     end
 
     # Register an external service
@@ -90,7 +92,7 @@ module Diplomat
     def deregister_external(definition)
       json_definition = JSON.dump(definition)
       deregister = @conn.put '/v1/catalog/deregister', json_definition
-      return deregister.status == 200
+      deregister.status == 200
     end
   end
 end

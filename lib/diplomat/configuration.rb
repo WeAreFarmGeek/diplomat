@@ -1,4 +1,5 @@
 module Diplomat
+  # Methods for configuring Diplomat
   class Configuration
     attr_accessor :middleware
     attr_accessor :url, :acl_token, :options
@@ -7,7 +8,7 @@ module Diplomat
     # @param url [String] consul's connection URL
     # @param acl_token [String] a connection token used when making requests to consul
     # @param options [Hash] extra options to configure Faraday::Connection
-    def initialize(url="http://localhost:8500", acl_token=nil, options = {})
+    def initialize(url = 'http://localhost:8500', acl_token = nil, options = {})
       @middleware = []
       @url = url
       @acl_token = acl_token
@@ -20,7 +21,5 @@ module Diplomat
       return @middleware = middleware if middleware.is_a? Array
       @middleware = [middleware]
     end
-
   end
 end
-

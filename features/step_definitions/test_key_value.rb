@@ -1,7 +1,7 @@
-Then /^I should be able to get and put keys$/ do
+Then 'I should be able to get and put keys' do
   # High-fructose Corn Syrup
   Diplomat.put('drink', 'Irn Bru')
-  expect(Diplomat.get('drink')).to eq("Irn Bru")
+  expect(Diplomat.get('drink')).to eq('Irn Bru')
 
   # Sugar
   Diplomat::Kv.put('cake', 'Sponge')
