@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+ - 2017-01-23 Trevor Wood <trevor.g.wood@gmail.com> Add key/value store transaction API endpoint
 
 ## 1.2.0
  - 2017-01-22 Trevor Wood <trevor.g.wood@gmail.com> RuboCop fixes and add RuboCop checks

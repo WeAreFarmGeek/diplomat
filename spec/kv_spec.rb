@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Diplomat::Kv do
   let(:faraday) { fake }
+  let(:req) { fake }
 
   context 'keys' do
     let(:key) { 'key' }
@@ -407,6 +408,173 @@ describe Diplomat::Kv do
           kv = Diplomat::Kv.new(faraday)
           expect(kv.delete(key).status).to eq(200)
         end
+      end
+    end
+
+    describe '#txn' do
+      before :each do
+        Diplomat.configuration.acl_token = nil
+      end
+      let(:invalid_transaction_format) do
+        {
+          'KV' => {
+            'Verb' => 'get',
+            'Key' => 'hello/world'
+          }
+        }
+      end
+      let(:invalid_transaction_verb) do
+        [
+          {
+            'KV' => {
+              'Verb' => 'invalid_verb'
+            }
+          }
+        ]
+      end
+      let(:invalid_top_level_key) do
+        [
+          {
+            'kv' => {
+              'Verb' => 'get',
+              'Key' => 'hello/world'
+            }
+          }
+        ]
+      end
+      let(:invalid_requirements) do
+        [
+          {
+            'KV' => {
+              'Verb' => 'set',
+              'Key' => 'hello/world'
+            }
+          }
+        ]
+      end
+      let(:valid_transaction) do
+        [
+          {
+            'KV' => {
+              'Verb' => 'set',
+              'Key' => 'test_key',
+              'Value' => 'test_value'
+            }
+          },
+          {
+            'KV' => {
+              'Verb' => 'get',
+              'Key' => 'hello/world'
+            }
+          }
+        ]
+      end
+      let(:valid_return) do
+        {
+          'Results' => [
+            {
+              'KV' => {
+                'LockIndex' => 0,
+                'Key' => 'test_key',
+                'Flags' => 0,
+                'Value' => nil,
+                'CreateIndex' => 2_278_133,
+                'ModifyIndex' => 2_278_133
+              }
+            },
+            {
+              'KV' => {
+                'LockIndex' => 0,
+                'Key' => 'hello/world',
+                'Flags' => 0,
+                'Value' => 'SGVsbG8sIHdvcmxkIQ==',
+                'CreateIndex' => 7_639_434,
+                'ModifyIndex' => 7_641_028
+              }
+            }
+          ],
+          'Errors' => [
+            {
+              'OpIndex' => 6_345_234,
+              'What' => 'Bad stuff happened'
+            }
+          ]
+        }.to_json
+      end
+      let(:kv) do
+        proc do |input, options|
+          faraday.stub(:put).and_return(OpenStruct.new(body: valid_return, status: 200))
+          kv = Diplomat::Kv.new(faraday)
+          kv.txn(input, options)
+        end
+      end
+
+      context 'transaction format verification' do
+        it 'verifies transaction format' do
+          expect { kv.call(invalid_transaction_format, nil) }.to raise_error(Diplomat::InvalidTransaction)
+        end
+
+        it 'verifies transaction verbs' do
+          expect { kv.call(invalid_transaction_verb, nil) }.to raise_error(Diplomat::InvalidTransaction)
+        end
+
+        it 'verifies top level transaction key' do
+          expect { kv.call(invalid_top_level_key, nil) }.to raise_error(Diplomat::InvalidTransaction)
+        end
+
+        it 'verifies required transaction parameters' do
+          expect { kv.call(invalid_requirements, nil) }.to raise_error(Diplomat::InvalidTransaction)
+        end
+      end
+
+      it 'returns a Hash' do
+        expect(kv.call(valid_transaction, nil)).to be_a_kind_of(OpenStruct)
+      end
+
+      it 'returns arrays as the values' do
+        return_values = kv.call(valid_transaction, nil)
+        return_values.each_pair do |_, values|
+          expect(values).to be_a_kind_of(Array)
+        end
+      end
+
+      it 'returns arrays of Hash objects' do
+        return_values = kv.call(valid_transaction, nil)
+        return_values.each_pair do |_, values|
+          values.each do |value|
+            expect(value).to be_a_kind_of(Hash)
+          end
+        end
+      end
+
+      it 'returns with the :dc option' do
+        dc = 'some-dc'
+        options = { dc: dc }
+        expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: valid_return, status: 200))
+        expect(req).to receive(:url).with("/v1/txn?dc=#{dc}")
+        kv.call(valid_transaction, options)
+      end
+
+      %w(consistent stale).each do |consistency|
+        it "returns with the :consistency #{consistency} option" do
+          options = { consistency: consistency }
+          expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: valid_return, status: 200))
+          expect(req).to receive(:url).with("/v1/txn?#{consistency}")
+          kv.call(valid_transaction, options)
+        end
+      end
+
+      it 'only responds to \'consistent\' or \'stale\' consistencies' do
+        options = { consistency: 'bad-value' }
+        expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: valid_return, status: 200))
+        expect(req).to receive(:url).with('/v1/txn')
+        kv.call(valid_transaction, options)
+      end
+
+      it 'returns undecoded options' do
+        options = { decode_values: false }
+        expected_return = kv.call(valid_transaction, options)['Results']
+        expect(expected_return.pop['KV']['Value']).to eq('SGVsbG8sIHdvcmxkIQ==')
       end
     end
 
