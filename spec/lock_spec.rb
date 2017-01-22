@@ -8,7 +8,7 @@ describe Diplomat::Lock do
   let(:req) { fake }
   let(:session) { "fc5ca01a-c317-39ea-05e8-221da00d3a12" }
   let(:acl_token) { "f45cbd0b-5022-47ab-8640-4eaa7c1f40f1" }
-    let(:dc) { 'some-dc' }
+  let(:dc) { 'some-dc' }
   let(:options) { {dc: dc} }
 
   context "lock" do
@@ -42,7 +42,7 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release("lock/key", session)).to eq(true)
+        expect(lock.release("lock/key", session)).to eq('true')
       end
 
       it 'acquires with dc option' do
@@ -66,7 +66,7 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release("lock/key", session, options)).to eq(true)
+        expect(lock.release("lock/key", session, options)).to eq('true')
       end
     end
 
@@ -99,7 +99,7 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release("lock/key", session)).to eq(true)
+        expect(lock.release("lock/key", session)).to eq('true')
       end
 
       it 'acquires with dc option' do
@@ -123,7 +123,7 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release("lock/key", session, options)).to eq(true)
+        expect(lock.release("lock/key", session, options)).to eq('true')
       end
     end
   end

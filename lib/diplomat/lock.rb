@@ -57,7 +57,7 @@ module Diplomat
 
         req.url concat_url url
       end
-      raw.body == 'true'
+      raw.body
     end
   end
 end
