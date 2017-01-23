@@ -3,7 +3,7 @@ module Diplomat
   class Kv < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:get, :put, :delete]
+    @access_methods = [:get, :put, :delete, :txn]
     attr_reader :key, :value, :raw
 
     # Get a value by its key, potentially blocking for the first or next value
@@ -137,6 +137,43 @@ module Diplomat
       @raw = @conn.delete concat_url url
     end
 
+    # Perform a key/value store transaction.
+    #
+    # @since 1.3.0
+    # @see https://www.consul.io/docs/agent/http/kv.html#txn Transaction key/value store API documentation
+    # @example Valid key/value store transaction format
+    #   [
+    #     {
+    #       'KV' => {
+    #         'Verb' => 'get',
+    #         'Key' => 'hello/world'
+    #       }
+    #     }
+    #   ]
+    # @raise [Diplomat::InvalidTransaction] if transaction format is invalid
+    # @param value [Array] an array of transaction hashes
+    # @param [Hash] options transaction params
+    # @option options [Boolean] :decode_values of any GET requests, default: true
+    # @option options [String] :dc Target datacenter
+    # @option options [String] :consistency the accepted staleness level of the transaction.
+    #   Can be 'stale' or 'consistent'
+    # @return [OpenStruct] result of the transaction
+    def txn(value, options = nil)
+      # Verify the given value for the transaction
+      transaction_verification(value)
+      # Will return 409 if transaction was rolled back
+      raw = @conn_no_err.put do |req|
+        url = ['/v1/txn']
+        url += check_acl_token
+        url += dc(options)
+        url += transaction_consistency(options)
+
+        req.url concat_url url
+        req.body = JSON.generate(value)
+      end
+      transaction_return JSON.parse(raw.body), options
+    end
+
     private
 
     def recurse_get(options)
@@ -153,6 +190,64 @@ module Diplomat
 
     def separator(options)
       options && options[:separator] ? use_named_parameter('separator', options[:separator]) : []
+    end
+
+    def transaction_consistency(options)
+      return [] unless options
+      if options[:consistency] && options[:consistency] == 'stale'
+        ['stale']
+      elsif options[:consistency] && options[:consistency] == 'consistent'
+        ['consistent']
+      else
+        []
+      end
+    end
+
+    def transaction_verification(transaction)
+      raise Diplomat::InvalidTransaction unless transaction.is_a?(Array)
+      transaction.each do |req|
+        raise Diplomat::InvalidTransaction unless transaction_type_verification(req)
+        raise Diplomat::InvalidTransaction unless transaction_verb_verification(req['KV'])
+      end
+      # Encode all value transacations if all checks pass
+      encode_transaction(transaction)
+    end
+
+    def transaction_type_verification(txn)
+      txn.is_a?(Hash) && txn.keys == %w(KV)
+    end
+
+    def transaction_verb_verification(txn)
+      transaction_verb = txn['Verb']
+      raise Diplomat::InvalidTransaction unless valid_transaction_verbs.include? transaction_verb
+      test_requirements = valid_transaction_verbs[transaction_verb] - txn.keys
+      test_requirements.empty?
+    end
+
+    def encode_transaction(transaction)
+      transaction.each do |txn|
+        next unless valid_value_transactions.include? txn['KV']['Verb']
+        value = txn['KV']['Value']
+        txn['KV']['Value'] = Base64.encode64(value).chomp
+      end
+    end
+
+    def transaction_return(raw_return, options)
+      decoded_return =
+        options && options[:decode_values] == false ? raw_return : decode_transaction(raw_return)
+      OpenStruct.new decoded_return
+    end
+
+    def decode_transaction(transaction)
+      return transaction if transaction['Results'].empty?
+
+      transaction.tap do |txn|
+        txn['Results'].each do |resp|
+          next unless resp['KV']['Value']
+          value = resp['KV']['Value']
+          resp['KV']['Value'] = Base64.decode64(value) rescue nil # rubocop:disable RescueModifier
+        end
+      end
     end
   end
 end

@@ -10,4 +10,5 @@ module Diplomat
   class QueryAlreadyExists < StandardError; end
   class UnknownStatus < StandardError; end
   class IdParameterRequired < StandardError; end
+  class InvalidTransaction < StandardError; end
 end
