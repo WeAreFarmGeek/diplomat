@@ -1,9 +1,12 @@
 # Changelog
 
 ## Unreleased
- - 2017-01-11 Dylan Vassallo <dylanvassallo@gmail.com> Include Consul errors in Diplomat::UnknownStatus messages
 
 ## 1.2.0
+ - 2017-01-22 Trevor Wood <trevor.g.wood@gmail.com> RuboCop fixes and add RuboCop checks
+ - 2017-01-17 Trevor Wood <trevor.g.wood@gmail.com> Add cross DC sessions and locking
+ - 2017-01-11 Dylan Vassallo <dylanvassallo@gmail.com> Include Consul errors in Diplomat::UnknownStatus messages
+ - 2017-01-04 Trevor Wood <trevor.g.wood@gmail.com> Add Diplomat::Query API endpoint
  - 2016-12-15 Trevor Wood <trevor.g.wood@gmail.com> Diplomat::Health returns hashes instead of OpenStructs
 
 ## 1.1.0
