@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+ - 2017-01-25 Thomas Maurice <t.maurice@criteo.com> Add the support of the /v1/agent endpoint
  - 2017-01-23 Trevor Wood <trevor.g.wood@gmail.com> Add key/value store transaction API endpoint
 
 ## 1.2.0
