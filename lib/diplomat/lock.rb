@@ -21,7 +21,7 @@ module Diplomat
         req.url concat_url url
         req.body = value unless value.nil?
       end
-      raw.body == 'true'
+      raw.body.strip == 'true'
     end
 
     # wait to aquire a lock
