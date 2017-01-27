@@ -28,7 +28,7 @@ module Diplomat
 
   require_libs 'configuration', 'rest_client', 'api_options', 'kv', 'datacenter',
                'service', 'members', 'node', 'nodes', 'check', 'health', 'session', 'lock',
-               'error', 'event', 'acl', 'maintenance', 'query'
+               'error', 'event', 'acl', 'maintenance', 'query', 'agent'
   self.configuration ||= Diplomat::Configuration.new
 
   class << self
