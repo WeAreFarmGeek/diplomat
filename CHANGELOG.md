@@ -2,6 +2,7 @@
 
 ## Unreleased
  - 2017-01-23 Trevor Wood <trevor.g.wood@gmail.com> Add key/value store transaction API endpoint
+ - 2017-02-15 Paul Thomas <paul+github@paulthomas.eu> Allow events to target another datacenter
 
 ## 1.2.0
  - 2017-01-22 Trevor Wood <trevor.g.wood@gmail.com> RuboCop fixes and add RuboCop checks
