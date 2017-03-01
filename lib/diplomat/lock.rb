@@ -11,6 +11,7 @@ module Diplomat
     # @param value [String] the value for the key
     # @param options [Hash] :dc string for dc specific query
     # @return [Boolean] If the lock was acquired
+    # rubocop:disable AbcSize
     def acquire(key, session, value = nil, options = nil)
       raw = @conn.put do |req|
         url = ["/v1/kv/#{key}"]
@@ -23,6 +24,7 @@ module Diplomat
       end
       raw.body.strip == 'true'
     end
+    # rubocop:enable AbcSize
 
     # wait to aquire a lock
     # @param key [String] the key

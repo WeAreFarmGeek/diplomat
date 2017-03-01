@@ -2,6 +2,7 @@ require 'base64'
 require 'faraday'
 
 module Diplomat
+  # See https://www.consul.io/docs/agent/http/agent.html
   class Agent < Diplomat::RestClient
     @access_methods = [:self, :checks, :services, :members]
 
