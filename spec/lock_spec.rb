@@ -13,7 +13,7 @@ describe Diplomat::Lock do
   context 'lock' do
     context 'without an ACL token configured' do
       before do
-        expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: 'true', status: 200))
+        expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: "true\n", status: 200))
         Diplomat.configure do |c|
           c.acl_token = nil
         end
@@ -40,7 +40,7 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release('lock/key', session)).to eq('true')
+        expect(lock.release('lock/key', session).chomp).to eq('true')
       end
 
       it 'acquires with dc option' do
@@ -64,13 +64,13 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release('lock/key', session, options)).to eq('true')
+        expect(lock.release('lock/key', session, options).chomp).to eq('true')
       end
     end
 
     context 'with an ACL token configured' do
       before do
-        expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: 'true', status: 200))
+        expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: "true\n", status: 200))
         Diplomat.configure do |c|
           c.acl_token = acl_token
         end
@@ -97,7 +97,7 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release('lock/key', session)).to eq('true')
+        expect(lock.release('lock/key', session).chomp).to eq('true')
       end
 
       it 'acquires with dc option' do
@@ -121,7 +121,7 @@ describe Diplomat::Lock do
 
         lock = Diplomat::Lock.new(faraday)
 
-        expect(lock.release('lock/key', session, options)).to eq('true')
+        expect(lock.release('lock/key', session, options).chomp).to eq('true')
       end
     end
   end

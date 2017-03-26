@@ -115,9 +115,11 @@ module Diplomat
         req.url concat_url url
         req.body = value
       end
-      @key = key if @raw.body == 'true'
-      @value = value if @raw.body == 'true'
-      @raw.body == 'true'
+      if @raw.body.chomp == 'true'
+        @key = key
+        @value = value
+      end
+      @raw.body.chomp == 'true'
     end
     # rubocop:enable MethodLength, AbcSize
 
