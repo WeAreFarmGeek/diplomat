@@ -241,7 +241,7 @@ module Diplomat
     end
 
     def decode_transaction(transaction)
-      return transaction if transaction['Results'].empty?
+      return transaction if transaction['Results'].nil? || transaction['Results'].empty?
 
       transaction.tap do |txn|
         txn['Results'].each do |resp|
