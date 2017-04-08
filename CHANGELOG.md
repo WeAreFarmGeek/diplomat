@@ -3,6 +3,7 @@
 ## Unreleased
  - 2017-01-23 Trevor Wood <trevor.g.wood@gmail.com> Add key/value store transaction API endpoint
  - 2017-01-23 Adam Wentz <adam@adamwentz.com> Defend against newlines added to responses in dev mode where pretty-printing is enabled by default.
+ - 2017-04-07 Zane Williamson <sepulworld@gmail.com> Add cluster status API endpoint
 
 ## 1.2.0
  - 2017-01-22 Trevor Wood <trevor.g.wood@gmail.com> RuboCop fixes and add RuboCop checks
