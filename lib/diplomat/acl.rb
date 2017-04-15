@@ -18,7 +18,7 @@ module Diplomat
       url << use_consistency(options)
 
       raw = @conn_no_err.get concat_url url
-      if raw.status == 200 && raw.body != 'null'
+      if raw.status == 200 && raw.body.chomp != 'null'
         case found
         when :reject
           raise Diplomat::AclAlreadyExists, id
@@ -26,7 +26,7 @@ module Diplomat
           @raw = raw
           return parse_body
         end
-      elsif raw.status == 200 && raw.body == 'null'
+      elsif raw.status == 200 && raw.body.chomp == 'null'
         case not_found
         when :reject
           raise Diplomat::AclNotFound, id
@@ -86,7 +86,7 @@ module Diplomat
       url = ["/v1/acl/destroy/#{@id}"]
       url << check_acl_token
       @raw = @conn.put concat_url url
-      @raw.body == 'true'
+      @raw.body.chomp == 'true'
     end
   end
 end

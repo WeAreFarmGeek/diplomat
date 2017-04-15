@@ -269,6 +269,22 @@ end
 events.each{ |e| puts e }
 ```
 
+### Status
+
+Returns information about the status of the Consul cluster.
+
+Get the raft leader for the datacenter in which the local consul agent is running
+
+```ruby
+Diplomat::Status.leader()
+```
+
+Get an array of Raft peers for the datacenter in which the agent is running
+
+```ruby
+Diplomat::Status.peers()
+```
+
 ### Maintenance mode
 
 Enable maintenance mode on a host, with optional reason and DC (requires access to local agent)
