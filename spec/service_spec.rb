@@ -27,7 +27,7 @@ describe Diplomat::Service do
           'Address'     => '10.1.10.13',
           'ServiceID'   => key,
           'ServiceName' => key,
-          'ServiceTags' => %w(sometag anothertag),
+          'ServiceTags' => %w[sometag anothertag],
           'ServicePort' => '70457'
         }
       ]

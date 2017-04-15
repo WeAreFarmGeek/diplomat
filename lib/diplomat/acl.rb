@@ -3,7 +3,7 @@ module Diplomat
   class Acl < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:list, :info, :create, :destroy, :update]
+    @access_methods = %i[list info create destroy update]
     attr_reader :id, :type, :acl
 
     # Get Acl info by ID

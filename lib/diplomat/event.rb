@@ -3,7 +3,7 @@ module Diplomat
   class Event < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:fire, :get_all, :get]
+    @access_methods = %i[fire get_all get]
 
     # Send an event
     # @param name [String] the event name
@@ -13,6 +13,7 @@ module Diplomat
     # @param tag [String] the target tag name, must only be used with service
     # @param dc [String] the dc to target
     # @return [nil]
+    # rubocop:disable Metrics/ParameterLists
     def fire(name, value = nil, service = nil, node = nil, tag = nil, dc = nil)
       url = ["/v1/event/fire/#{name}"]
       url += check_acl_token
@@ -24,6 +25,7 @@ module Diplomat
       @conn.put concat_url(url), value
       nil
     end
+    # rubocop:enable Metrics/ParameterLists
 
     # Get the list of events matching name
     # @param name [String] the name of the event (regex)

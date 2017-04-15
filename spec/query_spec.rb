@@ -17,7 +17,7 @@ describe Diplomat::Query do
             Service: 'redis',
             Failover: {
               NearestN: 3,
-              Datacenters: %w(dc1 dc2)
+              Datacenters: %w[dc1 dc2]
             },
             OnlyPassing: false,
             Tags: ['primary', '!experimental']
@@ -73,7 +73,7 @@ describe Diplomat::Query do
             Service: 'redis',
             Failover: {
               NearestN: 3,
-              Datacenters: %w(dc1 dc2)
+              Datacenters: %w[dc1 dc2]
             },
             OnlyPassing: false,
             Tags: ['primary', '!experimental']
@@ -120,7 +120,7 @@ describe Diplomat::Query do
           Service: 'redis',
           Failover: {
             NearestN: 3,
-            Datacenters: %w(dc1 dc2)
+            Datacenters: %w[dc1 dc2]
           },
           Near: 'node1',
           OnlyPassing: false,
@@ -196,7 +196,7 @@ describe Diplomat::Query do
           Service: 'redis',
           Failover: {
             NearestN: 3,
-            Datacenters: %w(dc1 dc2)
+            Datacenters: %w[dc1 dc2]
           },
           Near: 'node1',
           OnlyPassing: false,
@@ -329,7 +329,7 @@ describe Diplomat::Query do
             Service: 'mysql-customer',
             Failover: {
               NearestN: 3,
-              Datacenters: %w(dc1 dc2)
+              Datacenters: %w[dc1 dc2]
             },
             OnlyPassing: true,
             Tags: ['primary']
