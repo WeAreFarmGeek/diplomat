@@ -3,7 +3,7 @@ module Diplomat
   class Lock < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:acquire, :wait_to_acquire, :release]
+    @access_methods = %i[acquire wait_to_acquire release]
 
     # Acquire a lock
     # @param key [String] the key

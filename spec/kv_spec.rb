@@ -574,7 +574,7 @@ describe Diplomat::Kv do
         kv.call(valid_transaction, options)
       end
 
-      %w(consistent stale).each do |consistency|
+      %w[consistent stale].each do |consistency|
         it "returns with the :consistency #{consistency} option" do
           options = { consistency: consistency }
           expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: valid_return, status: 200))

@@ -1,8 +1,8 @@
 module Diplomat
   # Methods for interacting with the Consul health API endpoint
   class Health < Diplomat::RestClient
-    @access_methods = [:node, :checks, :service, :state,
-                       :any, :passing, :warning, :critical]
+    @access_methods = %i[node checks service state
+                         any passing warning critical]
 
     # Get node health
     # @param n [String] the node

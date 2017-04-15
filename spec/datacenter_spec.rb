@@ -7,7 +7,7 @@ describe Diplomat::Datacenter do
 
   context 'datacenters' do
     let(:key_url) { '/v1/catalog/datacenters' }
-    let(:body) { %w(dc1 dc2) }
+    let(:body) { %w[dc1 dc2] }
     let(:headers) do
       {
         'x-consul-index'        => '8',

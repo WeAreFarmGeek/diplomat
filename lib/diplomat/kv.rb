@@ -3,7 +3,7 @@ module Diplomat
   class Kv < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:get, :put, :delete, :txn]
+    @access_methods = %i[get put delete txn]
     attr_reader :key, :value, :raw
 
     # Get a value by its key, potentially blocking for the first or next value
@@ -216,7 +216,7 @@ module Diplomat
     end
 
     def transaction_type_verification(txn)
-      txn.is_a?(Hash) && txn.keys == %w(KV)
+      txn.is_a?(Hash) && txn.keys == %w[KV]
     end
 
     def transaction_verb_verification(txn)

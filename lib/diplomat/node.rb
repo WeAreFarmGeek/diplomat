@@ -3,7 +3,7 @@ module Diplomat
   class Node < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:get, :get_all, :register, :deregister]
+    @access_methods = %i[get get_all register deregister]
 
     # Get a node by it's key
     # @param key [String] the key

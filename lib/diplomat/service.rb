@@ -3,7 +3,7 @@ module Diplomat
   class Service < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:get, :get_all, :register, :deregister, :register_external, :deregister_external]
+    @access_methods = %i[get get_all register deregister register_external deregister_external]
 
     # Get a service by it's key
     # @param key [String] the key

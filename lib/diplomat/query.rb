@@ -3,7 +3,7 @@ module Diplomat
   class Query < Diplomat::RestClient
     include ApiOptions
 
-    @access_methods = [:get, :get_all, :create, :delete, :update, :execute, :explain]
+    @access_methods = %i[get get_all create delete update execute explain]
 
     # Get a prepared query by it's key
     # @param key [String] the prepared query ID
