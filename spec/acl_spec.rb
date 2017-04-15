@@ -124,7 +124,7 @@ describe Diplomat::Acl do
     describe 'destroy' do
       it 'return the ID' do
         url = key_url + '/destroy/' + id
-        expect(faraday).to receive(:put).with(/#{url}/).and_return(OpenStruct.new(body: 'true', status: 200))
+        expect(faraday).to receive(:put).with(/#{url}/).and_return(OpenStruct.new(body: "true\n", status: 200))
         acl = Diplomat::Acl.new(faraday)
         response = acl.destroy(id)
 

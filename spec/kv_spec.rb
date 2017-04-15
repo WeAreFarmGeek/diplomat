@@ -330,14 +330,14 @@ describe Diplomat::Kv do
     describe '#put' do
       context 'ACLs NOT enabled' do
         it 'PUT' do
-          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: 'true'))
+          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: "true\n"))
           kv = Diplomat::Kv.new(faraday)
           expect(kv.put(key, key_params)).to eq(true)
           expect(kv.value).to eq(key_params)
         end
         it 'PUT with CAS param' do
           options = { cas: modify_index }
-          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: 'true'))
+          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: "true\n"))
           kv = Diplomat::Kv.new(faraday)
           expect(kv.put(key, key_params, options)).to eq(true)
           expect(kv.value).to eq(key_params)
@@ -345,20 +345,20 @@ describe Diplomat::Kv do
       end
       context 'ACLs enabled, without valid_acl_token' do
         it 'PUT with ACLs enabled, no valid_acl_token' do
-          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: 'false'))
+          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: "false\n"))
           kv = Diplomat::Kv.new(faraday)
           expect(kv.put(key, key_params)).to eq(false)
         end
         it 'PUT with CAS param, without valid_acl_token' do
           options = { cas: modify_index }
-          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: 'false'))
+          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: "false\n"))
           kv = Diplomat::Kv.new(faraday)
           expect(kv.put(key, key_params, options)).to eq(false)
         end
       end
       context 'ACLs enabled, with valid_acl_token' do
         it 'PUT with ACLs enabled, valid_acl_token' do
-          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: 'true'))
+          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: "true\n"))
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
 
@@ -367,7 +367,7 @@ describe Diplomat::Kv do
         end
         it 'PUT with CAS param' do
           options = { cas: modify_index }
-          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: 'true'))
+          faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: "true\n"))
           Diplomat.configuration.acl_token = valid_acl_token
           kv = Diplomat::Kv.new(faraday)
           expect(kv.put(key, key_params, options)).to eq(true)
@@ -579,7 +579,7 @@ describe Diplomat::Kv do
     end
 
     it 'namespaces' do
-      faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: 'true'))
+      faraday.stub(:put).and_return(OpenStruct.new(status: 200, body: "true\n"))
       kv = Diplomat::Kv.new(faraday)
 
       expect(kv.put("toast/#{key}", key_params)).to eq(true)
