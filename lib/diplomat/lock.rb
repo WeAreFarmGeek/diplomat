@@ -24,6 +24,7 @@ module Diplomat
       end
       raw.body.chomp == 'true'
     end
+    # rubocop:enable AbcSize
 
     # wait to aquire a lock
     # @param key [String] the key
