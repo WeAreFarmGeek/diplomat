@@ -509,6 +509,25 @@ describe Diplomat::Kv do
         end
       end
 
+      let(:rollback_return) do
+        {
+          # Results is intentionally missing; this can happen in a rolled back transaction
+          'Errors' => [
+            {
+              'OpIndex' => 1,
+              'What' => 'failed index check for key "hello/world", current modify index 2 != 1'
+            }
+          ]
+        }
+      end
+      let(:rollback_kv) do
+        proc do |input, options|
+          faraday.stub(:put).and_return(OpenStruct.new(body: rollback_return.to_json, status: 409))
+          kv = Diplomat::Kv.new(faraday)
+          kv.txn(input, options)
+        end
+      end
+
       context 'transaction format verification' do
         it 'verifies transaction format' do
           expect { kv.call(invalid_transaction_format, nil) }.to raise_error(Diplomat::InvalidTransaction)
@@ -575,6 +594,10 @@ describe Diplomat::Kv do
         options = { decode_values: false }
         expected_return = kv.call(valid_transaction, options)['Results']
         expect(expected_return.pop['KV']['Value']).to eq('SGVsbG8sIHdvcmxkIQ==')
+      end
+
+      it 'handles a rollback with missing results section' do
+        expect(rollback_kv.call(valid_transaction, nil).Errors).to eq(rollback_return['Errors'])
       end
     end
 
