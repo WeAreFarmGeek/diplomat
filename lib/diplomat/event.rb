@@ -11,13 +11,15 @@ module Diplomat
     # @param service [String] the target service name
     # @param node [String] the target node name
     # @param tag [String] the target tag name, must only be used with service
+    # @param dc [String] the dc to target
     # @return [nil]
-    def fire(name, value = nil, service = nil, node = nil, tag = nil)
+    def fire(name, value = nil, service = nil, node = nil, tag = nil, dc = nil)
       url = ["/v1/event/fire/#{name}"]
       url += check_acl_token
       url += use_named_parameter('service', service) if service
       url += use_named_parameter('node', node) if node
       url += use_named_parameter('tag', tag) if tag
+      url += use_named_parameter('dc', dc) if dc
 
       @conn.put concat_url(url), value
       nil
