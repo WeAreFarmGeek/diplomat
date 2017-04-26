@@ -94,5 +94,25 @@ module Diplomat
       deregister = @conn.put '/v1/catalog/deregister', json_definition
       deregister.status == 200
     end
+
+    # Enable or disable maintenance for a service
+    # @param [Hash] opts the options for enabling or disabling maintenance for a service
+    # @options opts [Boolean] :enable (true) whether to enable or disable maintenance
+    # @options opts [String] :reason reason for the service maintenance
+    # @raise [Diplomat::PathNotFound] if the request fails
+    # @return [Boolean] if the request was successful or not
+    # rubocop:disable AbcSize
+    def maintenance(service_id, options = { enable: 'true' })
+      url = ["/v1/agent/service/maintenance/#{service_id}"]
+      url += check_acl_token
+      url << use_named_parameter('enable', options[:enable]) if options && options[:enable]
+      url << ["reason=#{options[:reason].split(' ').join('+')}"] if options && options[:reason]
+      begin
+        @conn.put(concat_url(url)).status == 200
+      rescue Faraday::ClientError
+        raise Diplomat::PathNotFound
+      end
+    end
+    # rubocop:enable AbcSize
   end
 end

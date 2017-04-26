@@ -286,6 +286,57 @@ describe Diplomat::Service do
         expect(s).to eq(true)
       end
     end
+
+    describe '#maintenance' do
+      let(:service_id) { 'TEST1' }
+      let(:enable_url) { '/v1/agent/service/maintenance/TEST1?enable=true' }
+      let(:disable_url) { '/v1/agent/service/maintenance/TEST1?enable=false' }
+      let(:message_url) { enable_url + '&reason=My+Maintenance+Reason' }
+
+      context 'when enabling maintenance' do
+        let(:s) do
+          proc do |reason|
+            expect(faraday).to receive(:put).with(enable_url).and_return(OpenStruct.new(body: '', status: 200))
+            service = Diplomat::Service.new(faraday)
+            service.maintenance(service_id, enable: 'true', reason: reason)
+          end
+        end
+
+        it 'enables maintenance for a service' do
+          expect(s.call).to eq(true)
+        end
+
+        it 'returns a boolean' do
+          expect(s.call).to be(true).or be(false)
+        end
+
+        it 'adds a reason' do
+          reason = 'My Maintenance Reason'
+          expect(faraday).to receive(:put).with(message_url).and_return(OpenStruct.new(body: '', status: 200))
+          service = Diplomat::Service.new(faraday)
+          s_message = service.maintenance(service_id, enable: 'true', reason: reason)
+          expect(s_message).to eq(true)
+        end
+      end
+
+      context 'when disabling maintenance' do
+        let(:s) do
+          proc do
+            expect(faraday).to receive(:put).with(disable_url).and_return(OpenStruct.new(body: '', status: 200))
+            service = Diplomat::Service.new(faraday)
+            service.maintenance(service_id, enable: 'false')
+          end
+        end
+
+        it 'disables maintenance for a service' do
+          expect(s.call).to eq(true)
+        end
+
+        it 'returns a boolean' do
+          expect(s.call).to be(true).or be(false)
+        end
+      end
+    end
   end
 
   context 'acl' do
