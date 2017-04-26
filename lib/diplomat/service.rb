@@ -102,16 +102,17 @@ module Diplomat
     # @raise [Diplomat::PathNotFound] if the request fails
     # @return [Boolean] if the request was successful or not
     # rubocop:disable AbcSize
-    def maintenance(service_id, options = { enable: 'true' })
+    def maintenance(service_id, options = { enable: true })
       url = ["/v1/agent/service/maintenance/#{service_id}"]
       url += check_acl_token
-      url << use_named_parameter('enable', options[:enable]) if options && options[:enable]
+      url << ["enable=#{options[:enable]}"]
       url << ["reason=#{options[:reason].split(' ').join('+')}"] if options && options[:reason]
       begin
-        @conn.put(concat_url(url)).status == 200
+        maintenance = @conn.put concat_url(url)
       rescue Faraday::ClientError
         raise Diplomat::PathNotFound
       end
+      maintenance.status == 200
     end
     # rubocop:enable AbcSize
   end
