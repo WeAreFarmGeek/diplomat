@@ -338,4 +338,4 @@ This is traditionally kept inside the `config/initializers` directory if you're 
 
 ## Enjoy!
 
-![Photo Copyright "merlinmann". All rights reserved.](http://i.imgur.com/3mBwzR9.jpg Photo Copyright "merlinmann" https://www.flickr.com/photos/merlin/. All rights reserved.)
+![Photo Copyright "merlinmann" https://www.flickr.com/photos/merlin/. All rights reserved.](http://i.imgur.com/3mBwzR9.jpg)
