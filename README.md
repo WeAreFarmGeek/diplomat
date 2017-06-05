@@ -22,7 +22,7 @@ Here's what a production database.yml file might look like:
 production:
   adapter:            postgresql
   encoding:           unicode
-  host:               <%= Diplomat::Service.get('postgres').Address %>
+  host:               <%= Diplomat::Service.get('postgres').ServiceAddress %>
   database:           <%= Diplomat::Kv.get('project/db/name') %>
   pool:               5
   username:           <%= Diplomat::Kv.get('project/db/user') %>
