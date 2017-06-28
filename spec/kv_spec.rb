@@ -159,6 +159,29 @@ describe Diplomat::Kv do
           answer[key]['iamnil'] = nil
           expect(kv.get(key, recurse: true, convert_to_hash: true, nil_values: true)).to eql(answer)
         end
+
+        context 'single key value' do
+          let(:json) do
+            JSON.generate(
+              [
+                {
+                  'Key'   => key + '/dewfr',
+                  'Value' => Base64.encode64(key_params),
+                  'Flags' => 0
+                }
+              ]
+              )
+          end
+
+          it 'GET' do
+            faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
+            kv = Diplomat::Kv.new(faraday)
+            answer = {}
+            answer[key] = {}
+            answer[key]['dewfr'] = 'toast'
+            expect(kv.get(key, recurse: true, convert_to_hash: true)).to eql(answer)
+          end
+        end
       end
 
       context 'ACLs NOT enabled, keys option ON' do
