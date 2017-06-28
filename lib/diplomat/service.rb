@@ -101,7 +101,6 @@ module Diplomat
     # @options opts [String] :reason reason for the service maintenance
     # @raise [Diplomat::PathNotFound] if the request fails
     # @return [Boolean] if the request was successful or not
-    # rubocop:disable AbcSize
     def maintenance(service_id, options = { enable: true })
       url = ["/v1/agent/service/maintenance/#{service_id}"]
       url += check_acl_token

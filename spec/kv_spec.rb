@@ -17,7 +17,7 @@ describe Diplomat::Kv do
           faraday.double
           kv = Diplomat::Kv.new(faraday)
           expect(faraday).to receive(:get).with(/dc=bar/)
-          .and_return(OpenStruct.new(status: 200, body: JSON.generate([])))
+                                          .and_return(OpenStruct.new(status: 200, body: JSON.generate([])))
           kv.get('foo', dc: 'bar')
         end
       end
