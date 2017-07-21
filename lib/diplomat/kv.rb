@@ -77,7 +77,7 @@ module Diplomat
           @raw = parse_body
           return @raw.first['ModifyIndex'] if @options && @options[:modify_index]
           return decode_values if @options && @options[:decode_values]
-          return convert_to_hash(return_value(return_nil_values, transformation)) if @options && @options[:convert_to_hash]
+          return convert_to_hash(return_value(return_nil_values, transformation, true)) if @options && @options[:convert_to_hash]
           return return_value(return_nil_values, transformation)
         when :wait
           index = raw.headers['x-consul-index']

@@ -148,10 +148,10 @@ module Diplomat
 
     # Get the key/value(s) from the raw output
     # rubocop:disable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
-    def return_value(nil_values = false, transformation = nil)
+    def return_value(nil_values = false, transformation = nil, return_hash = false)
       @value = decode_values
       return @value if @value.first.is_a? String
-      if @value.count == 1
+      if @value.count == 1 && !return_hash
         @value = @value.first['Value']
         @value = transformation.call(@value) if transformation && !@value.nil?
         return @value
