@@ -81,8 +81,8 @@ module Diplomat
 
     def build_connection(api_connection, raise_error = false)
       api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
-        faraday.adapter  Faraday.default_adapter
         faraday.request  :url_encoded
+        faraday.adapter  Faraday.default_adapter
         faraday.response :raise_error unless raise_error
 
         Diplomat.configuration.middleware.each do |middleware|
