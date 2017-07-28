@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 2.0.0
+- 2017-07-28 Eugen Mayer [eugen.mayer@kontextwork.de][35] Do not set the adapter on faraday prior the request (#149)
+- 2017-07-21 Ben Wu [wucheokman@gmail.com][34] fix single key/value in Diplomat::Kv.get with convert_to_hash option ON (#147)
 - 2017-04-26 Trevor Wood [trevor.g.wood@gmail.com][1] Add service maintenance API call
 
 ## 1.3.0
@@ -94,3 +96,6 @@
 [30]:	mailto:michael.setiawan@rakuten.com
 [31]:	mailto:g.seux@criteo.com
 [32]:	mailto:r.hanna@criteo.com
+[33]: mailto:miguel.parramon@kantox.com
+[34]: mailto:wucheokman@gmail.com
+[35]: mailto:eugen.mayer@kontextwork.de
