@@ -148,7 +148,7 @@ module Diplomat
     end
 
     # Get the key/value(s) from the raw output
-    def return_value(nil_values = false, transformation = nil, _return_hash = false)
+    def return_value(nil_values = false, transformation = nil)
       @value = decode_values
       return @value if @value.first.is_a? String
 

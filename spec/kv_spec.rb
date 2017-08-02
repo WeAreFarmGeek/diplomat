@@ -334,7 +334,7 @@ describe Diplomat::Kv do
           options = { consistency: 'consistent' }
           json = JSON.generate([{
                                  'Key'   => key,
-                                 'Value' => Base64.encode64(key_params),
+                                 'Value' => encoded_value,
                                  'Flags' => 0
                                }])
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
