@@ -105,6 +105,7 @@ module Diplomat
     # @param options [Hash] the query params
     # @option options [Integer] :cas The modify index
     # @option options [String] :dc Target datacenter
+    # @option options [String] :acquire Session to attach to key
     # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
     # rubocop:disable MethodLength, AbcSize
     def put(key, value, options = nil)
