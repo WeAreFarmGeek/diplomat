@@ -14,6 +14,7 @@ module Diplomat
     # @option options [String] :dc Target datacenter
     # @option options [Boolean] :keys Only return key names.
     # @option options [Boolean] :modify_index Only return ModifyIndex value.
+    # @option options [Boolean] :session Only return Session value.
     # @option options [Boolean] :decode_values Return consul response with decoded values.
     # @option options [String] :separator List only up to a given separator.
     #   Only applies when combined with :keys option.
@@ -76,6 +77,7 @@ module Diplomat
           @raw = raw
           @raw = parse_body
           return @raw.first['ModifyIndex'] if @options && @options[:modify_index]
+          return @raw.first['Session'] if @options && @options[:session]
           return decode_values if @options && @options[:decode_values]
           return convert_to_hash(return_value(return_nil_values, transformation)) if @options && @options[:convert_to_hash]
           return return_value(return_nil_values, transformation)
@@ -103,6 +105,7 @@ module Diplomat
     # @param options [Hash] the query params
     # @option options [Integer] :cas The modify index
     # @option options [String] :dc Target datacenter
+    # @option options [String] :acquire Session to attach to key
     # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
     # rubocop:disable MethodLength, AbcSize
     def put(key, value, options = nil)
@@ -112,6 +115,7 @@ module Diplomat
         url += check_acl_token
         url += use_cas(@options)
         url += dc(@options)
+        url += acquire(@options)
         req.url concat_url url
         req.body = value
       end
@@ -184,6 +188,10 @@ module Diplomat
 
     def dc(options)
       options && options[:dc] ? use_named_parameter('dc', options[:dc]) : []
+    end
+
+    def acquire(options)
+      options && options[:acquire] ? use_named_parameter('acquire', options[:acquire]) : []
     end
 
     def keys(options)
