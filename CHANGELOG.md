@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2
+
+- 2017-08-23 Trevor Wood [trevor.g.wood@gmail.com][1] Revert the change to single values
+
 ## BREAKING CHANGES
 
 - Single values now consistently return an Openstruct instead of just the value
