@@ -11,7 +11,26 @@ module Diplomat
       JSON.parse(ret.body)
     end
 
-    # Register a check
+    # Register a HTTP check
+    # @param check_id [String] the unique id of the check
+    # @param name [String] the name
+    # @param notes [String] notes about the check
+    # @param script [String] command to be run for check
+    # @param interval [String] frequency (with units) of the check execution
+    # @param ttl [String] time (with units) to mark a check down
+    # @return [Integer] Status code
+    #
+    def register_http(check_id, name, notes, url, method, header, interval)
+      ret = @conn.put do |req|
+        req.url '/v1/agent/check/register'
+        req.body = JSON.generate(
+          'ID' => check_id, 'Name' => name, 'Notes' => notes, 'HTTP' => url, 'Method' => method, 'Header' => header, 'Interval' => interval
+        )
+      end
+      ret.status == 200
+    end
+    
+    # Register a script check
     # @param check_id [String] the unique id of the check
     # @param name [String] the name
     # @param notes [String] notes about the check
