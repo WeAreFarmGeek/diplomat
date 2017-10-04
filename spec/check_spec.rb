@@ -32,6 +32,14 @@ describe Diplomat::Check do
       expect(check.register_script('foobar-1', 'Foobar', 'Foobar test', ['/script/test'], '10s')).to eq(true)
     end
 
+    it 'register_http' do
+      faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
+      check = Diplomat::Check.new(faraday)
+      expect(check.register_http('localhost', '10s', id: 'foobar-1', name: 'Foobar', notes: 'Foobar test' , method: 'GET', headers: {}, timeout: '1s')).to eq(true)
+
+      expect(check.register_http('localhost', '10x', id: 'foobar-1', name: 'Foobar', notes: 'Foobar test' , method: 'GET', headers: {}, timeout: '1s')).to eq(false)
+    end
+
     it 'register_ttl' do
       faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
       check = Diplomat::Check.new(faraday)

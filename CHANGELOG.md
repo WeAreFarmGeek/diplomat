@@ -2,6 +2,10 @@
 
 ## Next
 
+## 2.1.3
+
+- 2019-03-20 Lars Remes [lars.remes@ramboll.fi][1] Support HTTP service checks
+
 ## 2.1.2
 
 Bugfix relase: fix #188
