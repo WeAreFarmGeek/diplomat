@@ -24,12 +24,13 @@ module Diplomat
       ret = @conn.put do |req|
         req.url '/v1/agent/check/register'
         req.body = JSON.generate(
-          'ID' => check_id, 'Name' => name, 'Notes' => notes, 'HTTP' => url, 'Method' => method, 'Header' => header, 'Interval' => interval
+          'ID' => check_id, 'Name' => name, 'Notes' => notes, 'HTTP' => url, 'Method' => method,
+          'Header' => header, 'Interval' => interval
         )
       end
       ret.status == 200
     end
-    
+
     # Register a script check
     # @param check_id [String] the unique id of the check
     # @param name [String] the name
