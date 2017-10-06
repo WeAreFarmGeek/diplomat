@@ -180,6 +180,14 @@ services = Diplomat::Service.get_all({ :dc => 'My_Datacenter' })
 # => #<OpenStruct consul=[], foo=[], bar=[]>
 ```
 
+#### Checks
+
+Register a check:
+```ruby
+headers = { "Authorization" => [ "Basic ZGlwbG9tYXQ6cGFzc3dvcmQ=" ] }
+Diplomat::Check.register_http('health-check-1', 'Health check', 'Node level HTTP health check', "http://#{addr}:#{port}/health_check", 'GET', headers, '10s')
+```
+
 ### Datacenters
 
 Getting a list of datacenters is quite simple and gives you the option to extract all services out of

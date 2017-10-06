@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.3
+
+- 2017-10-06 Lars Remes [lars.remes@lawly.fi][1] Support HTTP service checks
+
 ## 2.0.2
 
 - 2017-08-23 Trevor Wood [trevor.g.wood@gmail.com][1] Revert the change to single values
