@@ -231,7 +231,7 @@ describe Diplomat::Service do
 
       it 'can deregister a service' do
         url = "#{deregister_service_url}/#{service_definition[:name]}"
-        expect(faraday).to receive(:get).with(url) do
+        expect(faraday).to receive(:put).with(url) do
           OpenStruct.new(body: '', status: 200)
         end
         service = Diplomat::Service.new(faraday)

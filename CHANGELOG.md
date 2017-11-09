@@ -1,5 +1,10 @@
 # Changelog
 
+# Next
+
+- 2017-11-09 Josep M. Blanquer (@blanquer) Fix service deregister to use the proper verb (`PUT` instead of `GET`). Consul 1.x seems to
+have started enforcing [it](https://www.consul.io/docs/upgrade-specific.html#http-verbs-are-enforced-in-many-http-apis).
+
 ## 2.0.2
 
 - 2017-08-23 Trevor Wood [trevor.g.wood@gmail.com][1] Revert the change to single values
