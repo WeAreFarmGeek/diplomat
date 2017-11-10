@@ -248,14 +248,17 @@ module Diplomat
       OpenStruct.new decoded_return
     end
 
-    def decode_transaction(transaction)
+    def decode_transaction(transaction) # rubocop:disable Metrics/MethodLength
       return transaction if transaction['Results'].nil? || transaction['Results'].empty?
 
       transaction.tap do |txn|
         txn['Results'].each do |resp|
           next unless resp['KV']['Value']
-          value = resp['KV']['Value']
-          resp['KV']['Value'] = Base64.decode64(value) rescue nil # rubocop:disable RescueModifier
+          begin
+            resp['KV']['Value'] = Base64.decode64(resp['KV']['Value'])
+          rescue # rubocop:disable RescueWithoutErrorClass
+            nil
+          end
         end
       end
     end
