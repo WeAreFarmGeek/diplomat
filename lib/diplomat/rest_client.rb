@@ -141,7 +141,11 @@ module Diplomat
     def decode_values
       return @raw if @raw.first.is_a? String
       @raw.each_with_object([]) do |acc, el|
-        acc['Value'] = Base64.decode64(acc['Value']) rescue nil # rubocop:disable RescueModifier
+        begin
+          acc['Value'] = Base64.decode64(acc['Value'])
+        rescue # rubocop:disable RescueWithoutErrorClass
+          nil
+        end
         el << acc
         el
       end

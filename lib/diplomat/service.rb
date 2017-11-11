@@ -75,7 +75,7 @@ module Diplomat
     # @param service_name [String] Service name to de-register
     # @return [Boolean]
     def deregister(service_name)
-      deregister = @conn.get "/v1/agent/service/deregister/#{service_name}"
+      deregister = @conn.put "/v1/agent/service/deregister/#{service_name}"
       deregister.status == 200
     end
 

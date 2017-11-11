@@ -1,7 +1,7 @@
 module Diplomat
   # Methods for configuring Diplomat
   class Configuration
-    attr_accessor :middleware
+    attr_reader :middleware
     attr_accessor :url, :acl_token, :options
 
     # Override defaults for configuration
@@ -18,7 +18,10 @@ module Diplomat
     # Define a middleware for Faraday
     # @param middleware [Class] Faraday Middleware class
     def middleware=(middleware)
-      return @middleware = middleware if middleware.is_a? Array
+      if middleware.is_a? Array
+        @middleware = middleware
+        return
+      end
       @middleware = [middleware]
     end
   end
