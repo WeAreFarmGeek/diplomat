@@ -11,6 +11,7 @@ Gem::Specification.new('diplomat', Diplomat::VERSION) do |spec|
   spec.files         = `git ls-files lib README.md LICENSE features`.split("\n")
 
   spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'fakes-rspec', '~> 2.1'
   spec.add_development_dependency 'fivemat', '~> 1.3'
   spec.add_development_dependency 'gem-release', '~> 1.0'
   spec.add_development_dependency 'pry', '~> 0.11'
