@@ -310,10 +310,8 @@ Diplomat.configure do |config|
   config.url = "http://localhost:8888"
   # Set up a custom Faraday Middleware
   config.middleware = MyCustomMiddleware
-  # Connect into consul with custom access token (ACL)
-  config.acl_token =  "xxxxxxxx-yyyy-zzzz-1111-222222222222"
-  # Set extra Faraday configuration options
-  config.options = {ssl: { version: :TLSv1_2 }}
+  # Set extra Faraday configuration options and custom access token (ACL)
+  config.options = {ssl: {version: :TLSv1_2}, headers: {"X-Consul-Token" => "xxxxxxxx-yyyy-zzzz-1111-222222222222"}}
 end
 ```
 
