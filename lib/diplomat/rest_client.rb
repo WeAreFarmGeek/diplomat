@@ -3,7 +3,7 @@ module Diplomat
   class RestClient
     @access_methods = []
 
-    # Initialize the fadaray connection
+    # Initialize the faraday connection
     # @param api_connection [Faraday::Connection,nil] supply mock API Connection
     def initialize(api_connection = nil)
       start_connection api_connection
@@ -143,7 +143,7 @@ module Diplomat
       @raw.each_with_object([]) do |acc, el|
         begin
           acc['Value'] = Base64.decode64(acc['Value'])
-        rescue # rubocop:disable RescueWithoutErrorClass
+        rescue StandardError
           nil
         end
         el << acc

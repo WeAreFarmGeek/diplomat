@@ -2,6 +2,9 @@
 
 # Next
 
+- 2018-01-26 Nate St. Germain (@rockpapergoat) Add option to search all nodes by metadata
+  Pass a `:meta` hash as an option to `Diplomat::Node.get_all` to filter on metadata.
+
 - 2017-11-09 Josep M. Blanquer (@blanquer) Fix service deregister to use the proper verb (`PUT` instead of `GET`). Consul 1.x seems to
 have started enforcing [it](https://www.consul.io/docs/upgrade-specific.html#http-verbs-are-enforced-in-many-http-apis).
 

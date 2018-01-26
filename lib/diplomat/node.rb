@@ -23,11 +23,14 @@ module Diplomat
     end
 
     # Get all the nodes
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash]
+    #   :dc string for dc specific query
+    #   :meta hash for metadata query
     # @return [OpenStruct] the list of all nodes
-    def get_all(options = nil)
+    def get_all(options = nil) # rubocop:disable Metrics/AbcSize
       url = ['/v1/catalog/nodes']
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      url << options[:meta].map { |m| use_named_parameter('node-meta', m.join(':')) } if options && options[:meta]
 
       ret = @conn.get concat_url url
       JSON.parse(ret.body).map { |service| OpenStruct.new service }
