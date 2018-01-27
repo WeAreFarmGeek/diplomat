@@ -127,6 +127,14 @@ Get all nodes for a particular datacenter
 nodes = Diplomat::Node.get_all({ :dc => 'My_Datacenter' })
 # => [#<OpenStruct Address="10.1.10.12", Node="foo">, #<OpenStruct Address="10.1.10.13", Node="bar">]
 ```
+Get all nodes with specified metadata
+
+NOTE: This requires adding metadata to nodes, either as part of the agent config or via the catalog. Adding multiple metadata attributes effectively is an `AND` operation here.
+
+```ruby
+nodes = Diplomat::Node.get_all({ :meta => {'role' => 'server', 'availability_zone' => 'us-east-1d'})
+# => [#<OpenStruct Node="i-003b17883f403eda5", Address="10.10.10.210", Datacenter="dev", TaggedAddresses={"lan"=>"10.10.10.210", "wan"=>"10.10.10.210"}, Meta={"availability_zone"=>"us-east-1d", "consul-network-segment"=>"", "environment"=>"dev", "instance_type"=>"t2.small", "ip"=>"10.10.10.210", "lsb_release"=>"16.04", "role"=>"server", "tags"=>""}>]
+```
 
 Register a node:
 
