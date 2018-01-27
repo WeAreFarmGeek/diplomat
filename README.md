@@ -188,6 +188,14 @@ services = Diplomat::Service.get_all({ :dc => 'My_Datacenter' })
 # => #<OpenStruct consul=[], foo=[], bar=[]>
 ```
 
+To list all the services associated with specific node metadata:
+
+```ruby
+services = Diplomat::Service.get_all({ :meta => {'lsb_release' => '16.04', 'availability_zone' => 'us-east-1a'} })
+# => #<OpenStruct consul=[], web=["dev", "testing", "nginx"]>
+```
+
+
 ### Datacenters
 
 Getting a list of datacenters is quite simple and gives you the option to extract all services out of
