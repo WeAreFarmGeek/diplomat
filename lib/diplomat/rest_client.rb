@@ -2,11 +2,20 @@ module Diplomat
   # Base class for interacting with the Consul RESTful API
   class RestClient
     @access_methods = []
+    @configuration = nil
 
     # Initialize the fadaray connection
     # @param api_connection [Faraday::Connection,nil] supply mock API Connection
-    def initialize(api_connection = nil)
+    # @param configuration [Diplomat::Configuration] a dedicated config to use
+    def initialize(api_connection = nil, configuration: nil)
+      @configuration = configuration
       start_connection api_connection
+    end
+
+    # Get client configuration or global one if not specified via initialize.
+    # @return [Diplomat::Configuration] used by this client
+    def configuration
+      @configuration || ::Diplomat.configuration
     end
 
     # Format url parameters into strings correctly
@@ -80,8 +89,8 @@ module Diplomat
     end
 
     def build_connection(api_connection, raise_error = false)
-      api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
-        Diplomat.configuration.middleware.each do |middleware|
+      api_connection || Faraday.new(configuration.url, configuration.options) do |faraday|
+        configuration.middleware.each do |middleware|
           faraday.use middleware
         end
 
@@ -178,7 +187,7 @@ module Diplomat
     end
 
     def check_acl_token
-      use_named_parameter('token', Diplomat.configuration.acl_token)
+      use_named_parameter('token', configuration.acl_token)
     end
 
     def use_cas(options)
