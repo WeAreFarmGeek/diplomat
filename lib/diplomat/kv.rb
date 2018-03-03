@@ -254,7 +254,7 @@ module Diplomat
           next unless resp['KV']['Value']
           begin
             resp['KV']['Value'] = Base64.decode64(resp['KV']['Value'])
-          rescue # rubocop:disable RescueWithoutErrorClass
+          rescue StandardError
             nil
           end
         end
