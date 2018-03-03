@@ -1,8 +1,6 @@
 module Diplomat
   # Methods for interacting with the Consul event API endpoint
   class Event < Diplomat::RestClient
-    include ApiOptions
-
     @access_methods = %i[fire get_all get]
 
     # Send an event
