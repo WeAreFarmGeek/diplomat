@@ -13,6 +13,7 @@ module Diplomat
       url = ["/v1/query/#{key}"]
       url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      url << use_consistency(options) if use_consistency(options, nil)
 
       ret = @conn.get concat_url url
       JSON.parse(ret.body).map { |query| OpenStruct.new query }
@@ -27,7 +28,7 @@ module Diplomat
       url = ['/v1/query']
       url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-
+      url << use_consistency(options) if use_consistency(options, nil)
       ret = @conn.get concat_url url
       JSON.parse(ret.body).map { |query| OpenStruct.new query }
     rescue Faraday::ClientError

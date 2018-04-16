@@ -11,6 +11,7 @@ module Diplomat
     def node(n, options = nil)
       url = ["/v1/health/node/#{n}"]
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      url << use_consistency(options) if use_consistency(options, nil)
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -27,6 +28,7 @@ module Diplomat
     def checks(s, options = nil)
       url = ["/v1/health/checks/#{s}"]
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      url << use_consistency(options) if use_consistency(options, nil)
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -49,6 +51,7 @@ module Diplomat
       url << 'passing' if options && options[:passing]
       url << use_named_parameter('tag', options[:tag]) if options && options[:tag]
       url << use_named_parameter('near', options[:near]) if options && options[:near]
+      url << use_consistency(options) if use_consistency(options, nil)
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -68,6 +71,7 @@ module Diplomat
       url = ["/v1/health/state/#{s}"]
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
       url << use_named_parameter('near', options[:near]) if options && options[:near]
+      url << use_consistency(options) if use_consistency(options, nil)
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.

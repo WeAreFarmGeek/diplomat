@@ -9,10 +9,6 @@ module Diplomat
       options ? use_named_parameter('cas', options[:cas]) : []
     end
 
-    def use_consistency(options)
-      options && options[:consistency] ? [options[:consistency].to_s] : []
-    end
-
     # Mapping for valid key/value store transaction verbs and required parameters
     #
     # @return [Hash] valid key/store transaction verbs and required parameters

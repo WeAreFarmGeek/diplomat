@@ -17,6 +17,19 @@ module Diplomat
       value ? ["#{name}=#{value}"] : []
     end
 
+    def use_consistency(options, default_value = [])
+      return default_value unless options
+      case options[:consistency]
+      when 'consistent'
+        return use_named_parameter('consistent', 'consistent')
+      when 'stale'
+        return use_named_parameter('stale', 'stale')
+      when 'leader'
+        return use_named_parameter('leader', 'leader')
+      end
+      default_value
+    end
+
     # Assemble a url from an array of parts.
     # @param parts [Array] the url chunks to be assembled
     # @return [String] the resultant url string

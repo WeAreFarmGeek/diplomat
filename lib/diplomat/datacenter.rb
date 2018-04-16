@@ -6,8 +6,9 @@ module Diplomat
     # Get an array of all avaliable datacenters accessible by the local consul agent
     # @param meta [Hash] output structure containing header information about the request (index)
     # @return [OpenStruct] all datacenters avaliable to this consul agent
-    def get(meta = nil)
+    def get(meta = nil, options = nil)
       url = ['/v1/catalog/datacenters']
+      url << use_consistency(options) if use_consistency(options, nil)
 
       ret = @conn.get concat_url url
 

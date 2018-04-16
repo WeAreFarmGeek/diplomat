@@ -23,6 +23,7 @@ module Diplomat
       url << use_named_parameter('index', options[:index]) if options && options[:index]
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
       url << use_named_parameter('tag', options[:tag]) if options && options[:tag]
+      url << use_consistency(options) if use_consistency(options, nil)
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -53,6 +54,7 @@ module Diplomat
       url = ['/v1/catalog/services']
       url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      url << use_consistency(options) if use_consistency(options, nil)
       begin
         ret = @conn.get concat_url url
       rescue Faraday::ClientError
