@@ -2,6 +2,12 @@
 AllCops:
   DisplayCopNames: true
 
+Metrics/AbcSize:
+  Max: 17
+
+Metrics/CyclomaticComplexity:
+  Max: 7
+
 Metrics/LineLength:
   # This will disable the rule completely, regardless what other options you put
   Enabled: true
@@ -11,3 +17,6 @@ Metrics/LineLength:
 # Allow classes longer than 100 lines of code
 ClassLength:
   Max: 250
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false

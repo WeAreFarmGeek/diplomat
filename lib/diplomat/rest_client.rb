@@ -156,7 +156,7 @@ module Diplomat
       @raw.each_with_object([]) do |acc, el|
         begin
           acc['Value'] = Base64.decode64(acc['Value'])
-        rescue # rubocop:disable RescueWithoutErrorClass
+        rescue StandardError
           nil
         end
         el << acc
