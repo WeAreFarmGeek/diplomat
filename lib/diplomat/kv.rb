@@ -50,7 +50,7 @@ module Diplomat
       url = ["/v1/kv/#{@key}"]
       url += recurse_get(@options)
       url += check_acl_token
-      url += use_consistency(@options)
+      url += use_consistency(@options, [])
       url += dc(@options)
       url += keys(@options)
       url += separator(@options)

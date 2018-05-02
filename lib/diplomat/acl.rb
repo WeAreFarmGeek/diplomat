@@ -15,7 +15,7 @@ module Diplomat
       @options = options
       url = ["/v1/acl/info/#{id}"]
       url << check_acl_token
-      url << use_consistency(options) if use_consistency(options, nil)
+      url << use_consistency(options) if use_consistency(options)
 
       raw = @conn_no_err.get concat_url url
       if raw.status == 200 && raw.body.chomp != 'null'

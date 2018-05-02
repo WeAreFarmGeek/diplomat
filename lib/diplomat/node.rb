@@ -7,13 +7,15 @@ module Diplomat
 
     # Get a node by it's key
     # @param key [String] the key
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash] Options to use when performing request
+    # @option options [String] :dc string for dc specific query
+    # @option options [String] :consistency The read consistency type
     # @return [OpenStruct] all data associated with the node
     def get(key, options = nil)
       url = ["/v1/catalog/node/#{key}"]
       url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-      url << use_consistency(options) if use_consistency(options, nil)
+      url << use_consistency(options) if use_consistency(options)
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -24,7 +26,9 @@ module Diplomat
     end
 
     # Get all the nodes
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash] Options to use when performing request
+    # @option options [String] :dc string for dc specific query
+    # @option options [String] :consistency The read consistency type
     # @return [OpenStruct] the list of all nodes
     def get_all(options = nil)
       url = ['/v1/catalog/nodes']

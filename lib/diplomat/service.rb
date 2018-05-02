@@ -12,6 +12,7 @@ module Diplomat
     # @option wait [Integer] :wait string for wait time
     # @option index [String] :index for index of last query
     # @option dc [String] :dc data center to make request for
+    # @option options [String] :consistency The read consistency type
     # @option tag [String] :tag service tag to get
     # @param meta [Hash] output structure containing header information about the request (index)
     # @return [OpenStruct] all data associated with the service
@@ -23,7 +24,7 @@ module Diplomat
       url << use_named_parameter('index', options[:index]) if options && options[:index]
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
       url << use_named_parameter('tag', options[:tag]) if options && options[:tag]
-      url << use_consistency(options) if use_consistency(options, nil)
+      url << use_consistency(options) if use_consistency(options)
 
       # If the request fails, it's probably due to a bad path
       # so return a PathNotFound error.
@@ -48,13 +49,15 @@ module Diplomat
     # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
 
     # Get all the services
-    # @param options [Hash] :dc Consul datacenter to query
+    # @param options [Hash] Options to use when performing request
+    # @option options [String] :dc string for dc specific query
+    # @option options [String] :consistency The read consistency type
     # @return [OpenStruct] the list of all services
     def get_all(options = nil)
       url = ['/v1/catalog/services']
       url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-      url << use_consistency(options) if use_consistency(options, nil)
+      url << use_consistency(options) if use_consistency(options)
       begin
         ret = @conn.get concat_url url
       rescue Faraday::ClientError

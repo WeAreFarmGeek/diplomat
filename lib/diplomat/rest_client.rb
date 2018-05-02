@@ -17,7 +17,9 @@ module Diplomat
       value ? ["#{name}=#{value}"] : []
     end
 
-    def use_consistency(options, default_value = [])
+    # Parse options and return consistency.
+    # If consistency is not found, will return default_value
+    def use_consistency(options, default_value = nil)
       return default_value unless options
       case options[:consistency]
       when 'consistent'
