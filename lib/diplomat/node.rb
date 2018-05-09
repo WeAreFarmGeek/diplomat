@@ -27,7 +27,7 @@ module Diplomat
 
     # Get all the nodes
     # @param options [Hash] Options to use when performing request
-    # @option options [String] :dc string for dc specific query
+    # @option options [String] :dc string for dc specific query
     # @option options [String] :consistency The read consistency type
     # @return [OpenStruct] the list of all nodes
     def get_all(options = nil)
