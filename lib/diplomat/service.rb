@@ -5,7 +5,7 @@ module Diplomat
 
     @access_methods = %i[get get_all register deregister register_external deregister_external maintenance]
 
-    # Get a service by it's key
+    # Get a service by its key
     # @param key [String] the key
     # @param scope [Symbol] :first or :all results
     # @param options [Hash] options parameter hash
@@ -47,12 +47,18 @@ module Diplomat
     # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
 
     # Get all the services
-    # @param options [Hash] :dc Consul datacenter to query
+    # @param options [Hash]
+    #   :dc Consul datacenter to query
+    #   :meta hash for metadata query
     # @return [OpenStruct] the list of all services
-    def get_all(options = nil)
+    def get_all(options = nil) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       url = ['/v1/catalog/services']
       url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      if options && options[:meta]
+        url << options[:meta].map { |m| use_named_parameter('node-meta', m.join(':')) }
+        Diplomat.configure { |c| c.options = { request: { params_encoder: Faraday::FlatParamsEncoder } } }
+      end
       begin
         ret = @conn.get concat_url url
       rescue Faraday::ClientError

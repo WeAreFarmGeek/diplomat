@@ -58,6 +58,26 @@ describe Diplomat::Node do
         }
       ]
     end
+    let(:body_all_with_meta) do
+      [
+        {
+          'Address' => '10.1.10.12',
+          'Node' => 'foo',
+          'Meta' => {
+            'role' => 'redis',
+            'az' => 'us-east-1a'
+          }
+        },
+        {
+          'Address' => '10.1.10.13',
+          'Node' => 'bar',
+          'Meta' => {
+            'role' => 'redis',
+            'az' => 'us-east-1a'
+          }
+        }
+      ]
+    end
     let(:body) do
       {
         'Node' => {
@@ -83,6 +103,7 @@ describe Diplomat::Node do
       }
     end
     let(:all_with_dc_url) { '/v1/catalog/nodes?dc=dc1' }
+    let(:all_with_meta_url) { '/v1/catalog/nodes?node-meta=az:us-east-1a&node-meta=role:redis' }
     let(:body_all_with_dc) do
       [
         {
@@ -112,6 +133,25 @@ describe Diplomat::Node do
       end
     end
 
+    describe 'GET ALL WITH METADATA' do
+      it 'lists all the nodes with specified metadata' do
+        json = JSON.generate(body_all_with_meta)
+
+        faraday.stub(:get).with(all_with_meta_url).and_return(OpenStruct.new(body: json))
+
+        node = Diplomat::Node.new(faraday)
+        expect(node.get_all(meta: { az: 'us-east-1a', role: 'redis' }).size).to eq(2)
+      end
+
+      it 'lists all the nodes' do
+        json = JSON.generate(body_all_with_dc)
+
+        faraday.stub(:get).with(all_with_dc_url).and_return(OpenStruct.new(body: json))
+
+        node = Diplomat::Node.new(faraday)
+        expect(node.get_all(dc: 'dc1').size).to eq(1)
+      end
+    end
     describe 'GET' do
       let(:cn) do
         json = JSON.generate(body)

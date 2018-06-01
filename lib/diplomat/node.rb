@@ -5,7 +5,7 @@ module Diplomat
 
     @access_methods = %i[get get_all register deregister]
 
-    # Get a node by it's key
+    # Get a node by its key
     # @param key [String] the key
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the node
@@ -23,11 +23,17 @@ module Diplomat
     end
 
     # Get all the nodes
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash]
+    #   :dc string for dc specific query
+    #   :meta hash for metadata query
     # @return [OpenStruct] the list of all nodes
-    def get_all(options = nil)
+    def get_all(options = nil) # rubocop:disable Metrics/AbcSize
       url = ['/v1/catalog/nodes']
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
+      if options && options[:meta]
+        url << options[:meta].map { |m| use_named_parameter('node-meta', m.join(':')) }.flatten
+        Diplomat.configure { |c| c.options = { request: { params_encoder: Faraday::FlatParamsEncoder } } }
+      end
 
       ret = @conn.get concat_url url
       JSON.parse(ret.body).map { |service| OpenStruct.new service }

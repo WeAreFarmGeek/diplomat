@@ -12,11 +12,16 @@ describe Diplomat::Service do
     let(:key_url_with_datacenteroption) { "/v1/catalog/service/#{key}?dc=somedc" }
     let(:key_url_with_tagoption) { "/v1/catalog/service/#{key}?tag=sometag" }
     let(:services_url_with_datacenteroption) { '/v1/catalog/services?dc=somedc' }
+    let(:services_url_with_metadata_option) { '/v1/catalog/services?node-meta=lsb_release:16.04&node-meta=availability_zone:us-east-1a' } # rubocop:disable Metrics/LineLength
     let(:body) do
       [
         {
           'Node'        => 'foo',
           'Address'     => '10.1.10.12',
+          'NodeMeta'    => {
+            'lsb_release'       => '16.04',
+            'availability_zone' => 'us-east-1a'
+          },
           'ServiceID'   => key,
           'ServiceName' => key,
           'ServiceTags' => ['sometag'],
@@ -25,6 +30,10 @@ describe Diplomat::Service do
         {
           'Node'        => 'bar',
           'Address'     => '10.1.10.13',
+          'NodeMeta'    => {
+            'lsb_release'       => '16.04',
+            'availability_zone' => 'us-east-1a'
+          },
           'ServiceID'   => key,
           'ServiceName' => key,
           'ServiceTags' => %w[sometag anothertag],
@@ -196,6 +205,18 @@ describe Diplomat::Service do
         faraday.stub(:get).with(services_url_with_datacenteroption).and_return(OpenStruct.new(body: json))
 
         options = { dc: 'somedc' }
+        service = Diplomat::Service.new(faraday)
+        expect(service.get_all(options).service1).to be_an(Array)
+        expect(service.get_all(options).service2).to be_an(Array)
+        expect(service.get_all(options).service1.first).to eq(service_one_tag)
+        expect(service.get_all(options).service2.first).to eq(service_two_tag)
+      end
+      it 'lists all the services for the specified metadata' do
+        json = JSON.generate(body_all)
+
+        faraday.stub(:get).with(services_url_with_metadata_option).and_return(OpenStruct.new(body: json))
+
+        options = { meta: { lsb_release: '16.04', availability_zone: 'us-east-1a' } }
         service = Diplomat::Service.new(faraday)
         expect(service.get_all(options).service1).to be_an(Array)
         expect(service.get_all(options).service2).to be_an(Array)
