@@ -51,11 +51,14 @@ module Diplomat
     #   :dc Consul datacenter to query
     #   :meta hash for metadata query
     # @return [OpenStruct] the list of all services
-    def get_all(options = nil) # rubocop:disable Metrics/AbcSize
+    def get_all(options = nil) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       url = ['/v1/catalog/services']
       url += check_acl_token
       url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-      url << options[:meta].map { |m| use_named_parameter('node-meta', m.join(':')) } if options && options[:meta]
+      if options && options[:meta]
+        url << options[:meta].map { |m| use_named_parameter('node-meta', m.join(':')) }
+        Diplomat.configure { |c| c.options = { request: { params_encoder: Faraday::FlatParamsEncoder } } }
+      end
       begin
         ret = @conn.get concat_url url
       rescue Faraday::ClientError

@@ -140,7 +140,7 @@ describe Diplomat::Node do
         faraday.stub(:get).with(all_with_meta_url).and_return(OpenStruct.new(body: json))
 
         node = Diplomat::Node.new(faraday)
-        expect(node.get_all(:meta => {'az' => 'us-east-1a','role' => 'redis'}).size).to eq(2)
+        expect(node.get_all(meta: { az: 'us-east-1a', role: 'redis' }).size).to eq(2)
       end
 
       it 'lists all the nodes' do
