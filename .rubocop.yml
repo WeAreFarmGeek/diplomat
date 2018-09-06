@@ -11,3 +11,9 @@ Metrics/LineLength:
 # Allow classes longer than 100 lines of code
 ClassLength:
   Max: 250
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
+
+Lint/UnneededCopDisableDirective:
+  Enabled: false

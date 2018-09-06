@@ -23,8 +23,8 @@ module Diplomat
 
   raise 'Diplomat only supports ruby >= 2.0.0' unless RUBY_VERSION.to_f >= 2.0
 
-  self.root_path = File.expand_path '..', __FILE__
-  self.lib_path = File.expand_path '../diplomat', __FILE__
+  self.root_path = File.expand_path __dir__
+  self.lib_path = File.expand_path 'diplomat', __dir__
 
   require_libs 'configuration', 'rest_client', 'api_options', 'kv', 'datacenter',
                'service', 'members', 'node', 'nodes', 'check', 'health', 'session', 'lock',
