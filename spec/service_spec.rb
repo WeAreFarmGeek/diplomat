@@ -207,6 +207,7 @@ describe Diplomat::Service do
     describe 'Register service' do
       let(:register_service_url) { '/v1/agent/service/register' }
       let(:deregister_service_url) { '/v1/agent/service/deregister' }
+      let(:token) { '80a6200c-6ec9-42e1-816a-e40007e732a6' }
       let(:service_definition) do
         {
           name: 'test_service_definition',
@@ -224,6 +225,20 @@ describe Diplomat::Service do
           OpenStruct.new(body: '', status: 200)
         end
 
+        service = Diplomat::Service.new(faraday)
+        s = service.register(service_definition)
+        expect(s).to eq(true)
+      end
+
+      it 'can register a service with a token' do
+        json_request = JSON.dump(service_definition)
+
+        expect(faraday).to receive(:put).with("#{register_service_url}?token=#{token}", json_request) do
+          OpenStruct.new(body: '', status: 200)
+        end
+        Diplomat.configure do |config|
+          config.acl_token = token
+        end
         service = Diplomat::Service.new(faraday)
         s = service.register(service_definition)
         expect(s).to eq(true)
