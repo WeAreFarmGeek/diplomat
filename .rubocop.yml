@@ -17,6 +17,3 @@ Naming/UncommunicativeMethodParamName:
 
 Lint/UnneededCopDisableDirective:
   Enabled: false
-
-Layout/ClosingHeredocIndentation:
-  Enabled: false
