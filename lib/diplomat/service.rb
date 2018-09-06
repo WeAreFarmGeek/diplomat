@@ -66,8 +66,10 @@ module Diplomat
     # @param definition [Hash] Hash containing definition of service
     # @return [Boolean]
     def register(definition, path = '/v1/agent/service/register')
+      url = [path]
+      url += check_acl_token
       json_definition = JSON.dump(definition)
-      register = @conn.put path, json_definition
+      register = @conn.put concat_url(url), json_definition
       register.status == 200
     end
 
@@ -75,7 +77,9 @@ module Diplomat
     # @param service_name [String] Service name to de-register
     # @return [Boolean]
     def deregister(service_name)
-      deregister = @conn.put "/v1/agent/service/deregister/#{service_name}"
+      url = ["/v1/agent/service/deregister/#{service_name}"]
+      url += check_acl_token
+      deregister = @conn.put concat_url(url)
       deregister.status == 200
     end
 
