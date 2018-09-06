@@ -18,7 +18,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.add_development_dependency 'pry', '~> 0.9'
   spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.2'
-  spec.add_development_dependency 'rubocop', '~> 0.47', '>= 0.47.1'
+  spec.add_development_dependency 'rubocop', '~> 0.49'
 
   spec.add_runtime_dependency 'faraday', '~> 0.9'
   spec.add_runtime_dependency 'json' if RUBY_VERSION < '1.9.3'

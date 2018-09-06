@@ -117,6 +117,5 @@ module Diplomat
       end
       maintenance.status == 200
     end
-    # rubocop:enable AbcSize
   end
 end

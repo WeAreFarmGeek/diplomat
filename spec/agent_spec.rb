@@ -1,13 +1,14 @@
 require 'spec_helper'
 require 'json'
 require 'base64'
-
+# rubocop:disable
 describe Diplomat::Agent do
   let(:faraday) { fake }
 
   context 'agent' do
     it 'self' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: <<-JSON))
+      faraday.stub(:get)
+             .and_return(OpenStruct.new(body: <<-JSON))
 		{
 		  "Config": {
 			"Bootstrap": true,
@@ -73,7 +74,7 @@ describe Diplomat::Agent do
 			"DelegateCur": 4
 		  }
 		}
-      JSON
+             JSON
 
       agent = Diplomat::Agent.new(faraday)
 
@@ -81,7 +82,8 @@ describe Diplomat::Agent do
     end
 
     it 'checks' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: <<-JSON))
+      faraday.stub(:get)
+             .and_return(OpenStruct.new(body: <<-JSON))
 		{
 		  "service:redis": {
 			"Node": "foobar",
@@ -94,7 +96,7 @@ describe Diplomat::Agent do
 			"ServiceName": "redis"
 		  }
 		}
-      JSON
+             JSON
 
       agent = Diplomat::Agent.new(faraday)
 
@@ -102,7 +104,8 @@ describe Diplomat::Agent do
     end
 
     it 'services' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: <<-JSON))
+      faraday.stub(:get)
+             .and_return(OpenStruct.new(body: <<-JSON))
 		{
 		  "redis": {
 			"ID": "redis",
@@ -112,7 +115,7 @@ describe Diplomat::Agent do
 			"Port": 8000
 		  }
 		}
-      JSON
+             JSON
 
       agent = Diplomat::Agent.new(faraday)
 
@@ -120,7 +123,8 @@ describe Diplomat::Agent do
     end
 
     it 'members' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: <<-JSON))
+      faraday.stub(:get)
+             .and_return(OpenStruct.new(body: <<-JSON))
 		[
 		  {
 			"Name": "foobar",
@@ -141,7 +145,7 @@ describe Diplomat::Agent do
 			"DelegateCur": 3
 		  }
 		]
-      JSON
+             JSON
 
       agent = Diplomat::Agent.new(faraday)
 
@@ -150,3 +154,4 @@ describe Diplomat::Agent do
     end
   end
 end
+# rubocop:enable
