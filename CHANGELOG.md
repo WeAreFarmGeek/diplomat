@@ -2,6 +2,11 @@
 
 # Next
 
+Resume development
+
+# 2.0.3
+
+- 2018-09-06 Allow to register/deregister entities using tokens
 - 2017-11-09 Josep M. Blanquer (@blanquer) Fix service deregister to use the proper verb (`PUT` instead of `GET`). Consul 1.x seems to
 have started enforcing [it](https://www.consul.io/docs/upgrade-specific.html#http-verbs-are-enforced-in-many-http-apis).
 
