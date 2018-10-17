@@ -1,8 +1,6 @@
 module Diplomat
   # Methods for interacting with the Consul lock API endpoint
   class Lock < Diplomat::RestClient
-    include ApiOptions
-
     @access_methods = %i[acquire wait_to_acquire release]
 
     # Acquire a lock

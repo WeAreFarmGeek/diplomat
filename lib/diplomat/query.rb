@@ -1,8 +1,6 @@
 module Diplomat
   # Methods for interacting with the Consul query API endpoint
   class Query < Diplomat::RestClient
-    include ApiOptions
-
     @access_methods = %i[get get_all create delete update execute explain]
 
     # Get a prepared query by it's key

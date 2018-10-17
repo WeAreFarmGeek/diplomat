@@ -1,8 +1,6 @@
 module Diplomat
   # Methods for interacting with the Consul ACL API endpoint
   class Acl < Diplomat::RestClient
-    include ApiOptions
-
     @access_methods = %i[list info create destroy update]
     attr_reader :id, :type, :acl
 

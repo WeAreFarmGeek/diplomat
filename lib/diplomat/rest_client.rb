@@ -2,11 +2,20 @@ module Diplomat
   # Base class for interacting with the Consul RESTful API
   class RestClient
     @access_methods = []
+    @configuration = nil
 
     # Initialize the fadaray connection
     # @param api_connection [Faraday::Connection,nil] supply mock API Connection
-    def initialize(api_connection = nil)
+    # @param configuration [Diplomat::Configuration] a dedicated config to use
+    def initialize(api_connection = nil, configuration: nil)
+      @configuration = configuration
       start_connection api_connection
+    end
+
+    # Get client configuration or global one if not specified via initialize.
+    # @return [Diplomat::Configuration] used by this client
+    def configuration
+      @configuration || ::Diplomat.configuration
     end
 
     # Format url parameters into strings correctly
@@ -80,8 +89,8 @@ module Diplomat
     end
 
     def build_connection(api_connection, raise_error = false)
-      api_connection || Faraday.new(Diplomat.configuration.url, Diplomat.configuration.options) do |faraday|
-        Diplomat.configuration.middleware.each do |middleware|
+      api_connection || Faraday.new(configuration.url, configuration.options) do |faraday|
+        configuration.middleware.each do |middleware|
           faraday.use middleware
         end
 
@@ -174,6 +183,48 @@ module Diplomat
       @value = @raw.map do |e|
         { name: e['Name'],
           payload: (Base64.decode64(e['Payload']) unless e['Payload'].nil?) }
+      end
+    end
+
+    def check_acl_token
+      use_named_parameter('token', configuration.acl_token)
+    end
+
+    def use_cas(options)
+      options ? use_named_parameter('cas', options[:cas]) : []
+    end
+
+    def use_consistency(options)
+      options && options[:consistency] ? [options[:consistency].to_s] : []
+    end
+
+    # Mapping for valid key/value store transaction verbs and required parameters
+    #
+    # @return [Hash] valid key/store transaction verbs and required parameters
+    # rubocop:disable MethodLength
+    def valid_transaction_verbs
+      {
+        'set' => %w[Key Value],
+        'cas' => %w[Key Value Index],
+        'lock' => %w[Key Value Session],
+        'unlock' => %w[Key Value Session],
+        'get' => %w[Key],
+        'get-tree' => %w[Key],
+        'check-index' => %w[Key Index],
+        'check-session' => %w[Key Session],
+        'delete' => %w[Key],
+        'delete-tree' => %w[Key],
+        'delete-cas' => %w[Key Index]
+      }
+    end
+    # rubocop:enable MethodLength
+
+    # Key/value store transactions that require that a value be set
+    #
+    # @return [Array<String>] verbs that require a value be set
+    def valid_value_transactions
+      @valid_value_transactions ||= valid_transaction_verbs.select do |verb, requires|
+        verb if requires.include? 'Value'
       end
     end
   end

@@ -1,8 +1,6 @@
 module Diplomat
   # Methods for interacting with the Consul node API endpoint
   class Node < Diplomat::RestClient
-    include ApiOptions
-
     @access_methods = %i[get get_all register deregister]
 
     # Get a node by it's key
