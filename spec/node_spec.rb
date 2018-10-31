@@ -86,8 +86,8 @@ describe Diplomat::Node do
     let(:body_all_with_dc) do
       [
         {
-          'Address'     => '10.1.10.14',
-          'Node'        => 'foo'
+          'Address' => '10.1.10.14',
+          'Node' => 'foo'
         }
       ]
     end

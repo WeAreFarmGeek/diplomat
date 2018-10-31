@@ -143,12 +143,14 @@ module Diplomat
     # Parse the body, apply it to the raw attribute
     def parse_body
       return JSON.parse(@raw.body) if @raw.status == 200
+
       raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
     end
 
     # Return @raw with Value fields decoded
     def decode_values
       return @raw if @raw.first.is_a? String
+
       @raw.each_with_object([]) do |acc, el|
         begin
           acc['Value'] = Base64.decode64(acc['Value'])
@@ -165,6 +167,7 @@ module Diplomat
     def return_value(nil_values = false, transformation = nil, return_hash = false)
       @value = decode_values
       return @value if @value.first.is_a? String
+
       if @value.count == 1 && !return_hash
         @value = @value.first['Value']
         @value = transformation.call(@value) if transformation && !@value.nil?

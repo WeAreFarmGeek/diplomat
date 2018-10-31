@@ -27,17 +27,17 @@ describe Diplomat::Kv do
           JSON.generate(
             [
               {
-                'Key'   => key + 'dewfr',
+                'Key' => key + 'dewfr',
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               },
               {
-                'Key'   => key,
+                'Key' => key,
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               },
               {
-                'Key'   => key + 'iamnil',
+                'Key' => key + 'iamnil',
                 'Value' => nil,
                 'Flags' => 0
               }
@@ -74,17 +74,17 @@ describe Diplomat::Kv do
           JSON.generate(
             [
               {
-                'Key'   => key + 'dewfr',
+                'Key' => key + 'dewfr',
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               },
               {
-                'Key'   => key,
+                'Key' => key,
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               },
               {
-                'Key'   => key + 'iamnil',
+                'Key' => key + 'iamnil',
                 'Value' => nil,
                 'Flags' => 0
               }
@@ -124,17 +124,17 @@ describe Diplomat::Kv do
           JSON.generate(
             [
               {
-                'Key'   => key + '/dewfr',
+                'Key' => key + '/dewfr',
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               },
               {
-                'Key'   => key,
+                'Key' => key,
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               },
               {
-                'Key'   => key + '/iamnil',
+                'Key' => key + '/iamnil',
                 'Value' => nil,
                 'Flags' => 0
               }
@@ -165,7 +165,7 @@ describe Diplomat::Kv do
             JSON.generate(
               [
                 {
-                  'Key'   => key + '/dewfr',
+                  'Key' => key + '/dewfr',
                   'Value' => Base64.encode64(key_params),
                   'Flags' => 0
                 }
@@ -267,7 +267,7 @@ describe Diplomat::Kv do
           JSON.generate(
             [
               {
-                'Key'   => key,
+                'Key' => key,
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               }
@@ -294,7 +294,7 @@ describe Diplomat::Kv do
           JSON.generate(
             [
               {
-                'Key'   => key,
+                'Key' => key,
                 'Value' => Base64.encode64('Faraday::ResourceNotFound: the server responded with status 404'),
                 'Flags' => 0
               }
@@ -323,7 +323,7 @@ describe Diplomat::Kv do
           JSON.generate(
             [
               {
-                'Key'   => key,
+                'Key' => key,
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
               }

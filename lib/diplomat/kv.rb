@@ -78,6 +78,7 @@ module Diplomat
           return @raw.first['Session'] if @options && @options[:session]
           return decode_values if @options && @options[:decode_values]
           return convert_to_hash(return_value(return_nil_values, transformation, true)) if @options && @options[:convert_to_hash]
+
           return return_value(return_nil_values, transformation)
         when :wait
           index = raw.headers['x-consul-index']
@@ -202,6 +203,7 @@ module Diplomat
 
     def transaction_consistency(options)
       return [] unless options
+
       if options[:consistency] && options[:consistency] == 'stale'
         ['stale']
       elsif options[:consistency] && options[:consistency] == 'consistent'
@@ -213,6 +215,7 @@ module Diplomat
 
     def transaction_verification(transaction)
       raise Diplomat::InvalidTransaction unless transaction.is_a?(Array)
+
       transaction.each do |req|
         raise Diplomat::InvalidTransaction unless transaction_type_verification(req)
         raise Diplomat::InvalidTransaction unless transaction_verb_verification(req['KV'])
@@ -228,6 +231,7 @@ module Diplomat
     def transaction_verb_verification(txn)
       transaction_verb = txn['Verb']
       raise Diplomat::InvalidTransaction unless valid_transaction_verbs.include? transaction_verb
+
       test_requirements = valid_transaction_verbs[transaction_verb] - txn.keys
       test_requirements.empty?
     end
@@ -235,6 +239,7 @@ module Diplomat
     def encode_transaction(transaction)
       transaction.each do |txn|
         next unless valid_value_transactions.include? txn['KV']['Verb']
+
         value = txn['KV']['Value']
         txn['KV']['Value'] = Base64.encode64(value).chomp
       end
@@ -252,6 +257,7 @@ module Diplomat
       transaction.tap do |txn|
         txn['Results'].each do |resp|
           next unless resp['KV']['Value']
+
           begin
             resp['KV']['Value'] = Base64.decode64(resp['KV']['Value'])
           rescue StandardError

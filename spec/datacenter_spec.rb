@@ -10,9 +10,9 @@ describe Diplomat::Datacenter do
     let(:body) { %w[dc1 dc2] }
     let(:headers) do
       {
-        'x-consul-index'        => '8',
-        'x-consul-knownleader'  => 'true',
-        'x-consul-lastcontact'  => '0'
+        'x-consul-index' => '8',
+        'x-consul-knownleader' => 'true',
+        'x-consul-lastcontact' => '0'
       }
     end
 

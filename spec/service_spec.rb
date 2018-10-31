@@ -15,17 +15,17 @@ describe Diplomat::Service do
     let(:body) do
       [
         {
-          'Node'        => 'foo',
-          'Address'     => '10.1.10.12',
-          'ServiceID'   => key,
+          'Node' => 'foo',
+          'Address' => '10.1.10.12',
+          'ServiceID' => key,
           'ServiceName' => key,
           'ServiceTags' => ['sometag'],
           'ServicePort' => '70457'
         },
         {
-          'Node'        => 'bar',
-          'Address'     => '10.1.10.13',
-          'ServiceID'   => key,
+          'Node' => 'bar',
+          'Address' => '10.1.10.13',
+          'ServiceID' => key,
           'ServiceName' => key,
           'ServiceTags' => %w[sometag anothertag],
           'ServicePort' => '70457'
@@ -40,9 +40,9 @@ describe Diplomat::Service do
     end
     let(:headers) do
       {
-        'x-consul-index'        => '8',
-        'x-consul-knownleader'  => 'true',
-        'x-consul-lastcontact'  => '0'
+        'x-consul-index' => '8',
+        'x-consul-knownleader' => 'true',
+        'x-consul-lastcontact' => '0'
       }
     end
 

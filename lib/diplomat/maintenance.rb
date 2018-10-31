@@ -37,6 +37,7 @@ module Diplomat
 
       return_status = raw.status == 200
       raise Diplomat::UnknownStatus, "status #{raw.status}: #{raw.body}" unless return_status
+
       return_status
     end
     # rubocop:enable AbcSize
