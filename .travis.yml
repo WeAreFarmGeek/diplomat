@@ -2,14 +2,11 @@ language: ruby
 before_install: 
   - gem install bundler
 rvm:
-    - "2.2.10"
-    - "2.3.8"
-    - "2.4.5"
-    - "2.5.3"
-    - "2.6.0-rc2"
-matrix:
-  allow_failures:
-    - rvm: 2.6.0-rc2
+    - 2.2.10
+    - 2.3.8
+    - 2.4.5
+    - 2.5.3
+    - 2.6.0-rc2
 addons:
     code_climate:
         repo_token: 0c910d8f8af55cc2d2f38170d5362be4e16be8ce232df9c565057985af264b7b
