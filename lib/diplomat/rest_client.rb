@@ -109,14 +109,10 @@ module Diplomat
       data.each do |item|
         split_up = item[:key].split('/')
         sub_hash = {}
-        temp = nil
+        temp = {}
         real_size = split_up.size - 1
-        (0..real_size).each do |i|
-          if i.zero?
-            temp = {}
-            sub_hash[split_up[i]] = temp
-            next
-          end
+	sub_hash[split_up[0]] = real_size.zero? ? item[:value] : temp
+        (1..real_size).each do |i|
           if i == real_size
             temp[split_up[i]] = item[:value]
           else
