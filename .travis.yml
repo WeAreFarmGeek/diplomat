@@ -1,12 +1,18 @@
 language: ruby
-before_install: 
-  - gem install bundler
+before_install:
+- gem install bundler
 rvm:
-    - 2.2.10
-    - 2.3.8
-    - 2.4.5
-    - 2.5.3
-    - 2.6.0-rc2
+- 2.2.10
+- 2.3.8
+- 2.4.5
+- 2.5.3
+- 2.6.0-rc2
 addons:
-    code_climate:
-        repo_token: 0c910d8f8af55cc2d2f38170d5362be4e16be8ce232df9c565057985af264b7b
+  code_climate:
+    repo_token: 0c910d8f8af55cc2d2f38170d5362be4e16be8ce232df9c565057985af264b7b
+deploy:
+  provider: rubygems
+  api_key:
+    secure: RbB9Va0vmEY3hyCDuvDxj6G/cmgD8ZQ3Wwg2Xx+oi64AWOckmTa4e4nVR6231kkgF63fG2swpkRhyHU+pfRSy+m/Ng8qAK4IIDgce6FTMPbzY45TlzPDq9OKsLyChYtkCnRTjXI16cS9+t1OBAXtwEDgQnXG7VDU4cRi3NMyFCk=
+  on:
+    tags: true
