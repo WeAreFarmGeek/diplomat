@@ -1,10 +1,17 @@
 # Changelog
 
-# Next
+## Next
 
-Resume development
+- Fix incorrect verbs for checks Fix https://github.com/WeAreFarmGeek/diplomat/issues/173
 
-# 2.0.3
+
+## 2.0.4
+
+- automatic GEM publication from Travis when a tag is pushed
+- Depreciate old Ruby version 2.2.x
+- Bump bundler to version 2.0.x
+
+## 2.0.3
 
 - 2018-09-06 Allow to register/deregister entities using tokens
 - 2017-11-09 Josep M. Blanquer (@blanquer) Fix service deregister to use the proper verb (`PUT` instead of `GET`). Consul 1.x seems to
