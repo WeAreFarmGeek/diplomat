@@ -3,7 +3,7 @@
 ## Next
 
 - Fix incorrect verbs for checks Fix https://github.com/WeAreFarmGeek/diplomat/issues/173
-
+- Use json_pure to avoid the need for installing a compiler. Fix https://github.com/WeAreFarmGeek/diplomat/issues/177
 
 ## 2.0.4
 
