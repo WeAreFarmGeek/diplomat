@@ -39,25 +39,25 @@ describe Diplomat::Check do
     end
 
     it 'deregister' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: '', status: 200))
+      faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
       check = Diplomat::Check.new(faraday)
       expect(check.deregister('foobar-1')).to eq(true)
     end
 
     it 'pass' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: '', status: 200))
+      faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
       check = Diplomat::Check.new(faraday)
       expect(check.pass('foobar-1')).to eq(true)
     end
 
     it 'warn' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: '', status: 200))
+      faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
       check = Diplomat::Check.new(faraday)
       expect(check.warn('foobar-1')).to eq(true)
     end
 
     it 'fail' do
-      faraday.stub(:get).and_return(OpenStruct.new(body: '', status: 200))
+      faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
       check = Diplomat::Check.new(faraday)
       expect(check.fail('foobar-1')).to eq(true)
     end

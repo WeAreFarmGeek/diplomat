@@ -50,7 +50,7 @@ module Diplomat
     # @param check_id [String] the unique id of the check
     # @return [Integer] Status code
     def deregister(check_id)
-      ret = @conn.get "/v1/agent/check/deregister/#{check_id}"
+      ret = @conn.put "/v1/agent/check/deregister/#{check_id}"
       ret.status == 200
     end
 
@@ -58,7 +58,7 @@ module Diplomat
     # @param check_id [String] the unique id of the check
     # @return [Integer] Status code
     def pass(check_id)
-      ret = @conn.get "/v1/agent/check/pass/#{check_id}"
+      ret = @conn.put "/v1/agent/check/pass/#{check_id}"
       ret.status == 200
     end
 
@@ -66,7 +66,7 @@ module Diplomat
     # @param check_id [String] the unique id of the check
     # @return [Integer] Status code
     def warn(check_id)
-      ret = @conn.get "/v1/agent/check/warn/#{check_id}"
+      ret = @conn.put "/v1/agent/check/warn/#{check_id}"
       ret.status == 200
     end
 
@@ -74,7 +74,7 @@ module Diplomat
     # @param check_id [String] the unique id of the check
     # @return [Integer] Status code
     def fail(check_id)
-      ret = @conn.get "/v1/agent/check/fail/#{check_id}"
+      ret = @conn.put "/v1/agent/check/fail/#{check_id}"
       ret.status == 200
     end
   end
