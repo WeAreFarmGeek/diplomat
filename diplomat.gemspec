@@ -9,7 +9,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
 
   spec.files         = `git ls-files lib README.md LICENSE features`.split("\n")
 
-  spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.1'
   spec.add_development_dependency 'codeclimate-test-reporter', '~> 0.4.0'
   spec.add_development_dependency 'cucumber', '~> 2.0'
   spec.add_development_dependency 'fakes-rspec', '~> 2.1'
