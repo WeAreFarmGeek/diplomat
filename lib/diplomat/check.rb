@@ -54,28 +54,41 @@ module Diplomat
       ret.status == 200
     end
 
+    # Update a TTL check
+    # @param check_id [String] the unique id of the check
+    # @param status [String] status of the check. Valid values are "passing", "warning", and "critical"
+    # @param output [String] human-readable message will be passed through to the check's Output field
+    # @return [Integer] Status code
+    def update_ttl(check_id, status, output = nil)
+      ret = @conn.put do |req|
+        req.url "/v1/agent/check/update/#{check_id}"
+        req.body = JSON.generate('Status' => status, 'Output' => output)
+      end
+      ret.status == 200
+    end
+
     # Pass a check
     # @param check_id [String] the unique id of the check
+    # @param output [String] human-readable message will be passed through to the check's Output field
     # @return [Integer] Status code
-    def pass(check_id)
-      ret = @conn.put "/v1/agent/check/pass/#{check_id}"
-      ret.status == 200
+    def pass(check_id, output = nil)
+      update_ttl(check_id, 'passing', output)
     end
 
     # Warn a check
     # @param check_id [String] the unique id of the check
+    # @param output [String] human-readable message will be passed through to the check's Output field
     # @return [Integer] Status code
-    def warn(check_id)
-      ret = @conn.put "/v1/agent/check/warn/#{check_id}"
-      ret.status == 200
+    def warn(check_id, output = nil)
+      update_ttl(check_id, 'warning', output)
     end
 
-    # Warn a check
+    # Fail a check
     # @param check_id [String] the unique id of the check
+    # @param output [String] human-readable message will be passed through to the check's Output field
     # @return [Integer] Status code
-    def fail(check_id)
-      ret = @conn.put "/v1/agent/check/fail/#{check_id}"
-      ret.status == 200
+    def fail(check_id, output = nil)
+      update_ttl(check_id, 'critical', output)
     end
   end
 end
