@@ -2,8 +2,11 @@
 
 ## Next
 
+## 2.0.5
+
 - Fix incorrect verbs for checks Fix https://github.com/WeAreFarmGeek/diplomat/issues/173
 - Use json_pure to avoid the need for installing a compiler. Fix https://github.com/WeAreFarmGeek/diplomat/issues/177
+- Allow updating Output with TTL checks https://github.com/WeAreFarmGeek/diplomat/pull/178
 
 ## 2.0.4
 
