@@ -40,24 +40,21 @@ module Diplomat
     #   - W R - get the first or current value; always return something, but
     #           block only when necessary
     #   - W W - get the first or next value; wait until there is an update
-    # rubocop:disable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize, LineLength
-    def get(key, options = nil, not_found = :reject, found = :return)
+    # rubocop:disable PerceivedComplexity, LineLength, CyclomaticComplexity
+    def get(key, options = {}, not_found = :reject, found = :return)
       @key = key
       @options = options
-
-      url = ["/v1/kv/#{@key}"]
-      url += recurse_get(@options)
-      url += check_acl_token
-      url += use_consistency(@options)
-      url += dc(@options)
-      url += keys(@options)
-      url += separator(@options)
+      custom_params = []
+      custom_params << recurse_get(@options)
+      custom_params << use_consistency(options)
+      custom_params << dc(@options)
+      custom_params << keys(@options)
+      custom_params << separator(@options)
 
       return_nil_values = @options && @options[:nil_values]
       transformation = @options && @options[:transformation] && @options[:transformation].methods.find_index(:call) ? @options[:transformation] : nil
 
-      # 404s OK using this connection
-      raw = @conn_no_err.get concat_url url
+      raw = send_get_request(@conn_no_err, ["/v1/kv/#{@key}"], options, custom_params)
       if raw.status == 404
         case not_found
         when :reject
@@ -88,15 +85,17 @@ module Diplomat
       end
 
       # Wait for first/next value
-      url += use_named_parameter('index', index)
-      @raw = @conn.get do |req|
-        req.url concat_url url
-        req.options.timeout = 86_400
+      custom_params << use_named_parameter('index', index)
+      if options.nil?
+        options = { timeout: 86_400 }
+      else
+        options[:timeout] = 86_400
       end
+      @raw = send_get_request(@conn, ["/v1/kv/#{@key}"], options, custom_params)
       @raw = parse_body
       return_value(return_nil_values, transformation)
     end
-    # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize, LineLength
+    # rubocop:enable PerceivedComplexity, LineLength, CyclomaticComplexity
 
     # Associate a value with a key
     # @param key [String] the key
@@ -106,25 +105,19 @@ module Diplomat
     # @option options [String] :dc Target datacenter
     # @option options [String] :acquire Session to attach to key
     # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
-    # rubocop:disable MethodLength, AbcSize
-    def put(key, value, options = nil)
+    def put(key, value, options = {})
       @options = options
-      @raw = @conn.put do |req|
-        url = ["/v1/kv/#{key}"]
-        url += check_acl_token
-        url += use_cas(@options)
-        url += dc(@options)
-        url += acquire(@options)
-        req.url concat_url url
-        req.body = value
-      end
+      custom_params = []
+      custom_params << use_cas(@options)
+      custom_params << dc(@options)
+      custom_params << acquire(@options)
+      @raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, value, custom_params)
       if @raw.body.chomp == 'true'
         @key = key
         @value = value
       end
       @raw.body.chomp == 'true'
     end
-    # rubocop:enable MethodLength, AbcSize
 
     # Delete a value by its key
     # @param key [String] the key
@@ -132,14 +125,13 @@ module Diplomat
     # @option options [String] :dc Target datacenter
     # @option options [Boolean] :recurse If to make recursive get or not
     # @return [OpenStruct]
-    def delete(key, options = nil)
+    def delete(key, options = {})
       @key = key
       @options = options
-      url = ["/v1/kv/#{@key}"]
-      url += recurse_get(@options)
-      url += check_acl_token
-      url += dc(@options)
-      @raw = @conn.delete concat_url url
+      custom_params = []
+      custom_params << recurse_get(@options)
+      custom_params << dc(@options)
+      @raw = send_delete_request(@conn, ["/v1/kv/#{@key}"], options, custom_params)
     end
 
     # Perform a key/value store transaction.
@@ -163,42 +155,37 @@ module Diplomat
     # @option options [String] :consistency the accepted staleness level of the transaction.
     #   Can be 'stale' or 'consistent'
     # @return [OpenStruct] result of the transaction
-    def txn(value, options = nil)
+    def txn(value, options = {})
       # Verify the given value for the transaction
       transaction_verification(value)
       # Will return 409 if transaction was rolled back
-      raw = @conn_no_err.put do |req|
-        url = ['/v1/txn']
-        url += check_acl_token
-        url += dc(options)
-        url += transaction_consistency(options)
-
-        req.url concat_url url
-        req.body = JSON.generate(value)
-      end
+      custom_params = []
+      custom_params << dc(options)
+      custom_params << transaction_consistency(options)
+      raw = send_put_request(@conn_no_err, ['/v1/txn'], options, value, custom_params)
       transaction_return JSON.parse(raw.body), options
     end
 
     private
 
     def recurse_get(options)
-      options && options[:recurse] ? ['recurse'] : []
+      options[:recurse] ? ['recurse'] : []
     end
 
     def dc(options)
-      options && options[:dc] ? use_named_parameter('dc', options[:dc]) : []
+      options[:dc] ? use_named_parameter('dc', options[:dc]) : []
     end
 
     def acquire(options)
-      options && options[:acquire] ? use_named_parameter('acquire', options[:acquire]) : []
+      options[:acquire] ? use_named_parameter('acquire', options[:acquire]) : []
     end
 
     def keys(options)
-      options && options[:keys] ? ['keys'] : []
+      options[:keys] ? ['keys'] : []
     end
 
     def separator(options)
-      options && options[:separator] ? use_named_parameter('separator', options[:separator]) : []
+      options[:separator] ? use_named_parameter('separator', options[:separator]) : []
     end
 
     def transaction_consistency(options)
@@ -247,11 +234,11 @@ module Diplomat
 
     def transaction_return(raw_return, options)
       decoded_return =
-        options && options[:decode_values] == false ? raw_return : decode_transaction(raw_return)
+        options[:decode_values] == false ? raw_return : decode_transaction(raw_return)
       OpenStruct.new decoded_return
     end
 
-    def decode_transaction(transaction) # rubocop:disable Metrics/MethodLength
+    def decode_transaction(transaction)
       return transaction if transaction['Results'].nil? || transaction['Results'].empty?
 
       transaction.tap do |txn|

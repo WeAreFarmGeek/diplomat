@@ -61,41 +61,32 @@ describe Diplomat::Maintenance do
   end
 
   context 'enable' do
-    before do
-      expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: '', status: 200))
-    end
-
     it 'enables' do
-      maintenance = Diplomat::Maintenance.new(faraday)
-      expect(req).to receive(:url).with('/v1/agent/maintenance?enable=true')
+      maintenance = Diplomat::Maintenance.new
+      stub_request(:put, 'http://localhost:8500/v1/agent/maintenance?enable=true')
+        .to_return(OpenStruct.new(body: '', status: 200))
       expect(maintenance.enable(true)).to eq(true)
     end
 
     it 'disables' do
-      maintenance = Diplomat::Maintenance.new(faraday)
-      expect(req).to receive(:url).with('/v1/agent/maintenance?enable=false')
+      maintenance = Diplomat::Maintenance.new
+      stub_request(:put, 'http://localhost:8500/v1/agent/maintenance?enable=false')
+        .to_return(OpenStruct.new(body: '', status: 200))
       expect(maintenance.enable(false)).to eq(true)
     end
 
     it 'with reason' do
-      maintenance = Diplomat::Maintenance.new(faraday)
-      expect(req).to receive(:url).with('/v1/agent/maintenance?enable=true&reason=foobar')
+      maintenance = Diplomat::Maintenance.new
+      stub_request(:put, 'http://localhost:8500/v1/agent/maintenance?enable=true&reason=foobar')
+        .to_return(OpenStruct.new(body: '', status: 200))
       expect(maintenance.enable(true, 'foobar')).to eq(true)
     end
 
     it 'with dc' do
-      maintenance = Diplomat::Maintenance.new(faraday)
-      expect(req).to receive(:url).with('/v1/agent/maintenance?enable=true&reason=foobar&dc=abc')
+      maintenance = Diplomat::Maintenance.new
+      stub_request(:put, 'http://localhost:8500/v1/agent/maintenance?enable=true&reason=foobar&dc=abc')
+        .to_return(OpenStruct.new(body: '', status: 200))
       expect(maintenance.enable(true, 'foobar', dc: 'abc')).to eq(true)
-    end
-  end
-
-  context 'enable raises errors' do
-    it 'throw error unless 200' do
-      expect(faraday).to receive(:put).and_yield(req).and_return(OpenStruct.new(body: '', status: 500))
-      maintenance = Diplomat::Maintenance.new(faraday)
-      expect(req).to receive(:url).with('/v1/agent/maintenance?enable=true')
-      expect { maintenance.enable(true) }.to raise_error(Diplomat::UnknownStatus, 'status 500: ')
     end
   end
 end

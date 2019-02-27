@@ -1,3 +1,3 @@
 module Diplomat
-  VERSION = '2.0.5'.freeze
+  VERSION = '2.1.0'.freeze
 end

@@ -29,7 +29,7 @@ describe Diplomat::Check do
     it 'register_script' do
       faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
       check = Diplomat::Check.new(faraday)
-      expect(check.register_script('foobar-1', 'Foobar', 'Foobar test', '/script/test', '10s')).to eq(true)
+      expect(check.register_script('foobar-1', 'Foobar', 'Foobar test', ['/script/test'], '10s')).to eq(true)
     end
 
     it 'register_ttl' do

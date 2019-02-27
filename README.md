@@ -2,7 +2,7 @@
 [![Gem Version](https://badge.fury.io/rb/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Gem](https://img.shields.io/gem/dt/diplomat.svg)](https://rubygems.org/gems/diplomat/versions/2.0.0) [![Build Status](https://travis-ci.org/WeAreFarmGeek/diplomat.svg?branch=master)](https://travis-ci.org/WeAreFarmGeek/diplomat) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.svg)](https://codeclimate.com/github/WeAreFarmGeek/diplomat) [![Inline docs](http://inch-ci.org/github/wearefarmgeek/diplomat.svg?branch=master)](http://inch-ci.org/github/wearefarmgeek/diplomat)
 ### A HTTP Ruby API for [Consul](http://www.consul.io/)
 
-![Diplomacy Boad Game](http://i.imgur.com/Nkuy4b7.jpg)
+![Diplomacy Board Game](http://i.imgur.com/Nkuy4b7.jpg)
 
 
 ## FAQ
@@ -316,6 +316,14 @@ end
 ```
 
 This is traditionally kept inside the `config/initializers` directory if you're using rails. The middleware allows you to customise what happens when faraday sends and receives data. This can be useful if you want to instrument your use of diplomat, for example. You can read more about Faraday's custom middleware [here](http://stackoverflow.com/a/20973008).
+
+Alternatively, configuration settings can be overriden at each method call allowing for instance to address different consul agents, with some other token.
+
+```ruby
+Diplomat::Service.get('foo', { http_addr: 'http://consu01:8500' })
+Diplomat::Service.get('foo', { http_addr: 'http://consu02:8500' })
+Diplomat::Kv.put('key/path', 'value', { http_addr: 'http://localhost:8500', dc: 'dc1', token: '111-222-333-444-555' })
+```
 
 ### Todo
 

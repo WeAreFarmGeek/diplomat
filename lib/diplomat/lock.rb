@@ -7,31 +7,25 @@ module Diplomat
     # @param key [String] the key
     # @param session [String] the session, generated from Diplomat::Session.create
     # @param value [String] the value for the key
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash] options parameter hash
     # @return [Boolean] If the lock was acquired
-    # rubocop:disable AbcSize
-    def acquire(key, session, value = nil, options = nil)
-      raw = @conn.put do |req|
-        url = ["/v1/kv/#{key}"]
-        url += use_named_parameter('acquire', session)
-        url += check_acl_token
-        url += use_named_parameter('dc', options[:dc]) if options && options[:dc]
-
-        req.url concat_url url
-        req.body = value unless value.nil?
-      end
+    def acquire(key, session, value = nil, options = {})
+      custom_params = []
+      custom_params << use_named_parameter('acquire', session)
+      custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      data = value unless value.nil?
+      raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, data, custom_params)
       raw.body.chomp == 'true'
     end
-    # rubocop:enable AbcSize
 
     # wait to aquire a lock
     # @param key [String] the key
     # @param session [String] the session, generated from Diplomat::Session.create
     # @param value [String] the value for the key
     # @param check_interval [Integer] number of seconds to wait between retries
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash] options parameter hash
     # @return [Boolean] If the lock was acquired
-    def wait_to_acquire(key, session, value = nil, check_interval = 10, options = nil)
+    def wait_to_acquire(key, session, value = nil, check_interval = 10, options = {})
       acquired = false
       until acquired
         acquired = acquire(key, session, value, options)
@@ -45,15 +39,11 @@ module Diplomat
     # @param session [String] the session, generated from Diplomat::Session.create
     # @param options [Hash] :dc string for dc specific query
     # @return [nil]
-    def release(key, session, options = nil)
-      raw = @conn.put do |req|
-        url = ["/v1/kv/#{key}"]
-        url += use_named_parameter('release', session)
-        url += check_acl_token
-        url += use_named_parameter('dc', options[:dc]) if options && options[:dc]
-
-        req.url concat_url url
-      end
+    def release(key, session, options = {})
+      custom_params = []
+      custom_params << use_named_parameter('release', session)
+      custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, nil, custom_params)
       raw.body
     end
   end

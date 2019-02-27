@@ -7,47 +7,36 @@ module Diplomat
     # @param key [String] the key
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the node
-    def get(key, options = nil)
-      url = ["/v1/catalog/node/#{key}"]
-      url += check_acl_token
-      url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-
-      # If the request fails, it's probably due to a bad path
-      # so return a PathNotFound error.
-      ret = @conn.get concat_url url
+    def get(key, options = {})
+      custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
+      ret = send_get_request(@conn, ["/v1/catalog/node/#{key}"], options, custom_params)
       OpenStruct.new JSON.parse(ret.body)
-    rescue Faraday::ClientError
-      raise Diplomat::PathNotFound
     end
 
     # Get all the nodes
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] the list of all nodes
-    def get_all(options = nil)
-      url = ['/v1/catalog/nodes']
-      url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-
-      ret = @conn.get concat_url url
+    def get_all(options = {})
+      custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
+      ret = send_get_request(@conn, ['/v1/catalog/nodes'], options, custom_params)
       JSON.parse(ret.body).map { |service| OpenStruct.new service }
-    rescue Faraday::ClientError
-      raise Diplomat::PathNotFound
     end
 
     # Register a node
     # @param definition [Hash] Hash containing definition of a node to register
+    # @param options [Hash] options parameter hash
     # @return [Boolean]
-    def register(definition, path = '/v1/catalog/register')
-      register = @conn.put path, JSON.dump(definition)
-
+    def register(definition, options = {})
+      register = send_put_request(@conn, ['/v1/catalog/register'], options, definition)
       register.status == 200
     end
 
     # De-register a node (and all associated services and checks)
     # @param definition [Hash] Hash containing definition of a node to de-register
+    # @param options [Hash] options parameter hash
     # @return [Boolean]
-    def deregister(definition, path = '/v1/catalog/deregister')
-      deregister = @conn.put path, JSON.dump(definition)
-
+    def deregister(definition, options = {})
+      deregister = send_put_request(@conn, ['/v1/catalog/deregister'], options, definition)
       deregister.status == 200
     end
   end

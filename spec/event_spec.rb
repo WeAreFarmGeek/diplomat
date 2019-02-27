@@ -196,61 +196,69 @@ describe Diplomat::Event do
 
     describe 'FIRE' do
       it 'token empty' do
-        expect(faraday).to receive(:put).with("/v1/event/fire/#{event_name}", nil)
+        stub_request(:put, "http://localhost:8500/v1/event/fire/#{event_name}")
         Diplomat.configuration.acl_token = nil
-        ev = Diplomat::Event.new(faraday)
+        ev = Diplomat::Event.new
 
         ev.fire(event_name)
       end
 
       it 'token specified' do
-        expect(faraday).to receive(:put).with("/v1/event/fire/#{event_name}?token=#{acl_token}", nil)
+        stub_request(:put, "http://localhost:8500/v1/event/fire/#{event_name}")
+          .with(headers: { 'X-Consul-Token' => acl_token })
         Diplomat.configuration.acl_token = acl_token
-        ev = Diplomat::Event.new(faraday)
+        ev = Diplomat::Event.new
 
         ev.fire(event_name)
       end
     end
 
     describe 'GET_ALL' do
-      before do
-        allow(faraday).to receive(:get).and_return(OpenStruct.new(body: events_json))
-      end
-
       it 'token empty' do
-        expect(faraday).to receive(:get).with('/v1/event/list')
+        stub_without_token = stub_request(:get, 'http://localhost:8500/v1/event/list')
+                             .to_return(OpenStruct.new(body: events_json))
+        stub_with_token = stub_request(:get, 'http://localhost:8500/v1/event/list')
+                          .with(headers: { 'X-Consul-Token' => acl_token })
+                          .to_return(OpenStruct.new(body: events_json))
+
         Diplomat.configuration.acl_token = nil
-        ev = Diplomat::Event.new(faraday)
+        ev = Diplomat::Event.new
 
         ev.get_all
+        expect(stub_without_token).to have_been_requested
+        expect(stub_with_token).not_to have_been_requested
       end
 
       it 'token specified' do
-        expect(faraday).to receive(:get).with("/v1/event/list?token=#{acl_token}")
+        stub_request(:get, 'http://localhost:8500/v1/event/list')
+          .with(headers: { 'X-Consul-Token' => acl_token }).to_return(OpenStruct.new(body: events_json))
         Diplomat.configuration.acl_token = acl_token
-        ev = Diplomat::Event.new(faraday)
+        ev = Diplomat::Event.new
 
         ev.get_all
       end
     end
 
     describe 'GET' do
-      before do
-        allow(faraday).to receive(:get).and_return(OpenStruct.new(body: events_json))
-      end
-
       it 'token empty' do
-        expect(faraday).to receive(:get).with('/v1/event/list')
+        stub_without_token = stub_request(:get, 'http://localhost:8500/v1/event/list')
+                             .to_return(OpenStruct.new(body: events_json))
+        stub_with_token = stub_request(:get, 'http://localhost:8500/v1/event/list')
+                          .with(headers: { 'X-Consul-Token' => acl_token })
+                          .to_return(OpenStruct.new(body: events_json))
         Diplomat.configuration.acl_token = nil
-        ev = Diplomat::Event.new(faraday)
+        ev = Diplomat::Event.new
 
         ev.get
+        expect(stub_without_token).to have_been_requested
+        expect(stub_with_token).not_to have_been_requested
       end
 
       it 'token specified' do
-        expect(faraday).to receive(:get).with("/v1/event/list?token=#{acl_token}")
+        stub_request(:get, 'http://localhost:8500/v1/event/list')
+          .with(headers: { 'X-Consul-Token' => acl_token }).to_return(OpenStruct.new(body: events_json))
         Diplomat.configuration.acl_token = acl_token
-        ev = Diplomat::Event.new(faraday)
+        ev = Diplomat::Event.new
 
         ev.get
       end

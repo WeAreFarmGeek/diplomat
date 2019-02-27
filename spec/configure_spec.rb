@@ -49,13 +49,13 @@ describe Diplomat do
 
       it 'Sets the correct configuration' do
         Diplomat.configure do |config|
-          config.url = 'http://google.com'
+          config.url = 'http://localhost:8500'
           config.acl_token = 'f45cbd0b-5022-47ab-8640-4eaa7c1f40f1'
           config.middleware = StubMiddleware
           config.options = { ssl: { verify: true } }
         end
 
-        expect(Diplomat.configuration.url).to eq('http://google.com')
+        expect(Diplomat.configuration.url).to eq('http://localhost:8500')
         expect(Diplomat.configuration.acl_token).to eq('f45cbd0b-5022-47ab-8640-4eaa7c1f40f1')
         expect(Diplomat.configuration.middleware).to be_a(Array)
         expect(Diplomat.configuration.middleware.first).to eq(StubMiddleware)
