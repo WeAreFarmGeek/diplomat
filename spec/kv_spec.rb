@@ -137,6 +137,11 @@ describe Diplomat::Kv do
                 'Key' => key + '/iamnil',
                 'Value' => nil,
                 'Flags' => 0
+              },
+              {
+                'Key' => 'foo',
+                'Value' => Base64.encode64('bar'),
+                'Flags' => 0
               }
             ]
           )
@@ -148,6 +153,7 @@ describe Diplomat::Kv do
           answer = {}
           answer[key] = {}
           answer[key]['dewfr'] = 'toast'
+          answer['foo'] = 'bar'
           expect(kv.get(key, recurse: true, convert_to_hash: true)).to eql(answer)
         end
         it 'GET with nil values' do
@@ -157,6 +163,7 @@ describe Diplomat::Kv do
           answer[key] = {}
           answer[key]['dewfr'] = 'toast'
           answer[key]['iamnil'] = nil
+          answer['foo'] = 'bar'
           expect(kv.get(key, recurse: true, convert_to_hash: true, nil_values: true)).to eql(answer)
         end
 

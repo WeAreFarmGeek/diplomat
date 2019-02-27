@@ -1,3 +1,5 @@
+require 'deep_merge'
+
 module Diplomat
   # Base class for interacting with the Consul RESTful API
   class RestClient
@@ -104,41 +106,11 @@ module Diplomat
     # Converts k/v data into ruby hash
     # rubocop:disable MethodLength, AbcSize
     def convert_to_hash(data)
-      collection = []
-      master     = {}
-      data.each do |item|
-        split_up = item[:key].split('/')
-        sub_hash = {}
-        temp = nil
-        real_size = split_up.size - 1
-        (0..real_size).each do |i|
-          if i.zero?
-            temp = {}
-            sub_hash[split_up[i]] = temp
-            next
-          end
-          if i == real_size
-            temp[split_up[i]] = item[:value]
-          else
-            new_h = {}
-            temp[split_up[i]] = new_h
-            temp = new_h
-          end
-        end
-        collection << sub_hash
-      end
-
-      collection.each do |h|
-        master = deep_merge(master, h)
-      end
-      master
+      data.map do |item|
+        item[:key].split('/').reverse.reduce(item[:value]) { |h, v| { v => h } }
+      end.reduce(:deep_merge)
     end
     # rubocop:enable MethodLength, AbcSize
-
-    def deep_merge(first, second)
-      merger = proc { |_key, v1, v2| v1.is_a?(Hash) && v2.is_a?(Hash) ? v1.merge(v2, &merger) : v2 }
-      first.merge(second, &merger)
-    end
 
     # Parse the body, apply it to the raw attribute
     def parse_body
