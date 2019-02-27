@@ -2,6 +2,8 @@
 
 ## Next
 
+- use dedup for safer/simpler conversion of results to hash https://github.com/WeAreFarmGeek/diplomat/pull/176
+
 ## 2.0.5
 
 - Fix incorrect verbs for checks Fix https://github.com/WeAreFarmGeek/diplomat/issues/173
