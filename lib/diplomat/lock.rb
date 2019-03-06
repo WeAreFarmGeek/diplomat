@@ -13,6 +13,7 @@ module Diplomat
       custom_params = []
       custom_params << use_named_parameter('acquire', session)
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      custom_params << use_named_parameter('flags', options[:flags]) if options && options[:flags]
       data = value unless value.nil?
       raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, data, custom_params)
       raw.body.chomp == 'true'
@@ -39,12 +40,15 @@ module Diplomat
     # @param session [String] the session, generated from Diplomat::Session.create
     # @param options [Hash] :dc string for dc specific query
     # @return [nil]
+    # rubocop:disable AbcSize
     def release(key, session, options = {})
       custom_params = []
       custom_params << use_named_parameter('release', session)
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      custom_params << use_named_parameter('flags', options[:flags]) if options && options[:flags]
       raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, nil, custom_params)
       raw.body
     end
+    # rubocop:enable AbcSize
   end
 end

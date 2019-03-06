@@ -8,7 +8,9 @@ describe Diplomat::Lock do
   let(:session) { 'fc5ca01a-c317-39ea-05e8-221da00d3a12' }
   let(:acl_token) { 'f45cbd0b-5022-47ab-8640-4eaa7c1f40f1' }
   let(:dc) { 'some-dc' }
+  let(:flags) { 123 }
   let(:options) { { dc: dc } }
+  let(:options_flags) { { flags: 123 } }
 
   context 'lock' do
     context 'without an ACL token configured' do
@@ -65,6 +67,30 @@ describe Diplomat::Lock do
         lock = Diplomat::Lock.new(faraday)
 
         expect(lock.release('lock/key', session, options).chomp).to eq('true')
+      end
+
+      it 'acquires with flags option' do
+        expect(req).to receive(:url).with("/v1/kv/lock/key?acquire=#{session}&flags=#{flags}")
+
+        lock = Diplomat::Lock.new(faraday)
+
+        expect(lock.acquire('lock/key', session, nil, options_flags)).to eq(true)
+      end
+
+      it 'waits to acquire with flags option' do
+        expect(req).to receive(:url).with("/v1/kv/lock/key?acquire=#{session}&flags=#{flags}")
+
+        lock = Diplomat::Lock.new(faraday)
+
+        expect(lock.wait_to_acquire('lock/key', session, nil, 2, options_flags)).to eq(true)
+      end
+
+      it 'releases with flags option' do
+        expect(req).to receive(:url).with("/v1/kv/lock/key?release=#{session}&flags=#{flags}")
+
+        lock = Diplomat::Lock.new(faraday)
+
+        expect(lock.release('lock/key', session, options_flags).chomp).to eq('true')
       end
     end
 
@@ -127,6 +153,34 @@ describe Diplomat::Lock do
         lock = Diplomat::Lock.new
 
         expect(lock.release('lock/key', session, options).chomp).to eq('true')
+      end
+
+      it 'acquires with flags option' do
+        stub_request(:put, "http://localhost:8500/v1/kv/lock/key?acquire=#{session}&flags=#{flags}")
+          .with(headers: { 'X-Consul-Token' => acl_token }).and_return(OpenStruct.new(body: "true\n", status: 200))
+        puts "/v1/kv/lock/key?acquire=#{session}&flags=#{flags}"
+
+        lock = Diplomat::Lock.new
+
+        expect(lock.acquire('lock/key', session, nil, options_flags)).to eq(true)
+      end
+
+      it 'waits to acquire with flags option' do
+        stub_request(:put, "http://localhost:8500/v1/kv/lock/key?acquire=#{session}&flags=#{flags}")
+          .with(headers: { 'X-Consul-Token' => acl_token }).and_return(OpenStruct.new(body: "true\n", status: 200))
+
+        lock = Diplomat::Lock.new
+
+        expect(lock.wait_to_acquire('lock/key', session, nil, 2, options_flags)).to eq(true)
+      end
+
+      it 'releases with flags option' do
+        stub_request(:put, "http://localhost:8500/v1/kv/lock/key?release=#{session}&flags=#{flags}")
+          .with(headers: { 'X-Consul-Token' => acl_token }).and_return(OpenStruct.new(body: "true\n", status: 200))
+
+        lock = Diplomat::Lock.new
+
+        expect(lock.release('lock/key', session, options_flags).chomp).to eq('true')
       end
     end
   end
