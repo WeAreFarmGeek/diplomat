@@ -40,9 +40,14 @@ module Diplomat
     #   - W R - get the first or current value; always return something, but
     #           block only when necessary
     #   - W W - get the first or next value; wait until there is an update
-    # rubocop:disable PerceivedComplexity, LineLength, CyclomaticComplexity
+    # rubocop:disable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
     def get(key, options = {}, not_found = :reject, found = :return)
-      @key = key
+      key_subst = if key.start_with? '/'
+                    key[1..-1]
+                  else
+                    key.freeze
+                  end
+      @key = key_subst
       @options = options
       custom_params = []
       custom_params << recurse_get(@options)
