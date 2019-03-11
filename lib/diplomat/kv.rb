@@ -100,7 +100,7 @@ module Diplomat
       @raw = parse_body
       return_value(return_nil_values, transformation)
     end
-    # rubocop:enable PerceivedComplexity, LineLength, CyclomaticComplexity
+    # rubocop:enable PerceivedComplexity, LineLength, MethodLength, CyclomaticComplexity
 
     # Associate a value with a key
     # @param key [String] the key
