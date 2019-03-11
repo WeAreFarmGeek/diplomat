@@ -1,5 +1,5 @@
 module Diplomat
-  # Methods for interacting with the Consul serivce API endpoint.
+  # Methods for interacting with the Consul service API endpoint.
   class Service < Diplomat::RestClient
     @access_methods = %i[get get_all register deregister register_external deregister_external maintenance]
 
@@ -7,33 +7,21 @@ module Diplomat
     # @param key [String] the key
     # @param scope [Symbol] :first or :all results
     # @param options [Hash] options parameter hash
-    # @option wait [Integer] :wait string for wait time
-    # @option index [String] :index for index of last query
-    # @option dc [String] :dc data center to make request for
-    # @option tag [String] :tag service tag to get
     # @param meta [Hash] output structure containing header information about the request (index)
     # @return [OpenStruct] all data associated with the service
-    # rubocop:disable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
-    def get(key, scope = :first, options = nil, meta = nil)
-      url = ["/v1/catalog/service/#{key}"]
-      url += check_acl_token
-      url << use_named_parameter('wait', options[:wait]) if options && options[:wait]
-      url << use_named_parameter('index', options[:index]) if options && options[:index]
-      url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-      url << use_named_parameter('tag', options[:tag]) if options && options[:tag]
+    # rubocop:disable PerceivedComplexity
+    def get(key, scope = :first, options = {}, meta = nil)
+      custom_params = []
+      custom_params << use_named_parameter('wait', options[:wait]) if options[:wait]
+      custom_params << use_named_parameter('index', options[:index]) if options[:index]
+      custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      custom_params << use_named_parameter('tag', options[:tag]) if options[:tag]
 
-      # If the request fails, it's probably due to a bad path
-      # so return a PathNotFound error.
-      begin
-        ret = @conn.get concat_url url
-      rescue Faraday::ClientError => e
-        raise Diplomat::PathNotFound, e
-      end
-
+      ret = send_get_request(@conn, ["/v1/catalog/service/#{key}"], options, custom_params)
       if meta && ret.headers
-        meta[:index] = ret.headers['x-consul-index']
-        meta[:knownleader] = ret.headers['x-consul-knownleader']
-        meta[:lastcontact] = ret.headers['x-consul-lastcontact']
+        meta[:index] = ret.headers['x-consul-index'] if ret.headers['x-consul-index']
+        meta[:knownleader] = ret.headers['x-consul-knownleader'] if ret.headers['x-consul-knownleader']
+        meta[:lastcontact] = ret.headers['x-consul-lastcontact'] if ret.headers['x-consul-lastcontact']
       end
 
       if scope == :all
@@ -42,77 +30,67 @@ module Diplomat
         OpenStruct.new JSON.parse(ret.body).first
       end
     end
-    # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
+    # rubocop:enable PerceivedComplexity
 
     # Get all the services
     # @param options [Hash] :dc Consul datacenter to query
     # @return [OpenStruct] the list of all services
-    def get_all(options = nil)
-      url = ['/v1/catalog/services']
-      url += check_acl_token
-      url << use_named_parameter('dc', options[:dc]) if options && options[:dc]
-      begin
-        ret = @conn.get concat_url url
-      rescue Faraday::ClientError
-        raise Diplomat::PathNotFound
-      end
-
+    def get_all(options = {})
+      custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
+      ret = send_get_request(@conn, ['/v1/catalog/services'], options, custom_params)
       OpenStruct.new JSON.parse(ret.body)
     end
 
     # Register a service
     # @param definition [Hash] Hash containing definition of service
+    # @param options [Hash] options parameter hash
     # @return [Boolean]
-    def register(definition, path = '/v1/agent/service/register')
-      url = [path]
-      url += check_acl_token
-      json_definition = JSON.dump(definition)
-      register = @conn.put concat_url(url), json_definition
+    def register(definition, options = {})
+      url = options[:path] || ['/v1/agent/service/register']
+      register = send_put_request(@conn, url, options, definition)
       register.status == 200
     end
 
     # De-register a service
     # @param service_name [String] Service name to de-register
+    # @param options [Hash] options parameter hash
     # @return [Boolean]
-    def deregister(service_name)
-      url = ["/v1/agent/service/deregister/#{service_name}"]
-      url += check_acl_token
-      deregister = @conn.put concat_url(url)
+    def deregister(service_name, options = {})
+      deregister = send_put_request(@conn, ["/v1/agent/service/deregister/#{service_name}"], options, nil)
       deregister.status == 200
     end
 
     # Register an external service
     # @param definition [Hash] Hash containing definition of service
+    # @param options [Hash] options parameter hash
     # @return [Boolean]
-    def register_external(definition)
-      register(definition, '/v1/catalog/register')
+    def register_external(definition, options = {})
+      register = send_put_request(@conn, ['/v1/catalog/register'], options, definition)
+      register.status == 200
     end
 
     # Deregister an external service
     # @param definition [Hash] Hash containing definition of service
+    # @param options [Hash] options parameter hash
     # @return [Boolean]
-    def deregister_external(definition)
-      json_definition = JSON.dump(definition)
-      deregister = @conn.put '/v1/catalog/deregister', json_definition
+    def deregister_external(definition, options = {})
+      deregister = send_put_request(@conn, ['/v1/catalog/deregister'], options, definition)
       deregister.status == 200
     end
 
     # Enable or disable maintenance for a service
-    # @param [Hash] opts the options for enabling or disabling maintenance for a service
+    # @param service_id [String] id of the service
+    # @param options [Hash] opts the options for enabling or disabling maintenance for a service
     # @options opts [Boolean] :enable (true) whether to enable or disable maintenance
     # @options opts [String] :reason reason for the service maintenance
     # @raise [Diplomat::PathNotFound] if the request fails
     # @return [Boolean] if the request was successful or not
     def maintenance(service_id, options = { enable: true })
-      url = ["/v1/agent/service/maintenance/#{service_id}"]
-      url += check_acl_token
-      url << ["enable=#{options[:enable]}"]
-      url << ["reason=#{options[:reason].split(' ').join('+')}"] if options && options[:reason]
-      begin
-        maintenance = @conn.put concat_url(url)
-      rescue Faraday::ClientError
-        raise Diplomat::PathNotFound
-      end
+      custom_params = []
+      custom_params << ["enable=#{options[:enable]}"]
+      custom_params << ["reason=#{options[:reason].split(' ').join('+')}"] if options[:reason]
+      maintenance = send_put_request(@conn, ["/v1/agent/service/maintenance/#{service_id}"],
+                                     options, nil, custom_params)
       maintenance.status == 200
     end
   end

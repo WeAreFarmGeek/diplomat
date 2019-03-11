@@ -3,10 +3,8 @@ require 'json'
 require 'base64'
 
 describe Diplomat::Datacenter do
-  let(:faraday) { fake }
-
   context 'datacenters' do
-    let(:key_url) { '/v1/catalog/datacenters' }
+    let(:key_url) { 'http://localhost:8500/v1/catalog/datacenters' }
     let(:body) { %w[dc1 dc2] }
     let(:headers) do
       {
@@ -20,9 +18,9 @@ describe Diplomat::Datacenter do
       it 'returns dcs' do
         json = JSON.generate(body)
 
-        faraday.stub(:get).with(key_url).and_return(OpenStruct.new(body: json))
+        stub_request(:get, key_url).to_return(OpenStruct.new(body: json))
 
-        datacenters = Diplomat::Datacenter.new(faraday)
+        datacenters = Diplomat::Datacenter
 
         expect(datacenters.get.size).to eq(2)
         expect(datacenters.get.first).to eq('dc1')
@@ -33,9 +31,9 @@ describe Diplomat::Datacenter do
       it 'empty headers' do
         json = JSON.generate(body)
 
-        faraday.stub(:get).with(key_url).and_return(OpenStruct.new(body: json, headers: nil))
+        stub_request(:get, key_url).to_return(OpenStruct.new(body: json, headers: nil))
 
-        datacenters = Diplomat::Datacenter.new(faraday)
+        datacenters = Diplomat::Datacenter.new
 
         meta = {}
         expect(datacenters.get(meta).size).to eq(2)
@@ -46,9 +44,10 @@ describe Diplomat::Datacenter do
       it 'filled headers' do
         json = JSON.generate(body)
 
-        faraday.stub(:get).with(key_url).and_return(OpenStruct.new(body: json, headers: headers))
+        stub_request(:get, key_url)
+          .to_return(OpenStruct.new(body: json, headers: headers))
 
-        datacenters = Diplomat::Datacenter.new(faraday)
+        datacenters = Diplomat::Datacenter.new
 
         meta = {}
         s = datacenters.get(meta)

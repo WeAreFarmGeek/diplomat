@@ -14,10 +14,9 @@ describe Diplomat::Kv do
     describe '#get' do
       context 'Datacenter filter' do
         it 'GET' do
-          faraday.double
-          kv = Diplomat::Kv.new(faraday)
-          expect(faraday).to receive(:get).with(/dc=bar/)
-                                          .and_return(OpenStruct.new(status: 200, body: JSON.generate([])))
+          kv = Diplomat::Kv.new
+          stub_request(:get, 'http://localhost:8500/v1/kv/foo?dc=bar')
+            .to_return(OpenStruct.new(status: 200, body: JSON.generate([])))
           kv.get('foo', dc: 'bar')
         end
       end
@@ -417,10 +416,9 @@ describe Diplomat::Kv do
 
       context 'ACLs NOT enabled, recurse option ON' do
         it 'DELETE' do
-          faraday.double
-          expect(faraday).to receive(:delete).with(/recurse/).and_return(OpenStruct.new(status: 200))
-
-          kv = Diplomat::Kv.new(faraday)
+          stub_request(:delete, 'http://localhost:8500/v1/kv/key?recurse')
+            .to_return(OpenStruct.new(status: 200))
+          kv = Diplomat::Kv.new
           expect(kv.delete(key, recurse: true).status).to eq(200)
         end
       end
@@ -577,18 +575,18 @@ describe Diplomat::Kv do
       end
 
       it 'returns a Hash' do
-        expect(kv.call(valid_transaction, nil)).to be_a_kind_of(OpenStruct)
+        expect(kv.call(valid_transaction, {})).to be_a_kind_of(OpenStruct)
       end
 
       it 'returns arrays as the values' do
-        return_values = kv.call(valid_transaction, nil)
+        return_values = kv.call(valid_transaction, {})
         return_values.each_pair do |_, values|
           expect(values).to be_a_kind_of(Array)
         end
       end
 
       it 'returns arrays of Hash objects' do
-        return_values = kv.call(valid_transaction, nil)
+        return_values = kv.call(valid_transaction, {})
         return_values.each_pair do |_, values|
           values.each do |value|
             expect(value).to be_a_kind_of(Hash)
@@ -627,7 +625,7 @@ describe Diplomat::Kv do
       end
 
       it 'handles a rollback with missing results section' do
-        expect(rollback_kv.call(valid_transaction, nil).Errors).to eq(rollback_return['Errors'])
+        expect(rollback_kv.call(valid_transaction, {}).Errors).to eq(rollback_return['Errors'])
       end
     end
 

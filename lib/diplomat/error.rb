@@ -11,4 +11,5 @@ module Diplomat
   class UnknownStatus < StandardError; end
   class IdParameterRequired < StandardError; end
   class InvalidTransaction < StandardError; end
+  class DeprecatedArgument < StandardError; end
 end

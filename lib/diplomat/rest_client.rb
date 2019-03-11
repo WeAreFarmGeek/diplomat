@@ -32,6 +32,7 @@ module Diplomat
     # @param parts [Array] the url chunks to be assembled
     # @return [String] the resultant url string
     def concat_url(parts)
+      parts.reject!(&:empty?)
       if parts.length > 1
         parts.first + '?' + parts.drop(1).join('&')
       else
@@ -104,13 +105,11 @@ module Diplomat
     end
 
     # Converts k/v data into ruby hash
-    # rubocop:disable MethodLength, AbcSize
     def convert_to_hash(data)
       data.map do |item|
         item[:key].split('/').reverse.reduce(item[:value]) { |h, v| { v => h } }
       end.reduce(:deep_merge)
     end
-    # rubocop:enable MethodLength, AbcSize
 
     # Parse the body, apply it to the raw attribute
     def parse_body
@@ -135,7 +134,7 @@ module Diplomat
     end
 
     # Get the key/value(s) from the raw output
-    # rubocop:disable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
+    # rubocop:disable PerceivedComplexity
     def return_value(nil_values = false, transformation = nil, return_hash = false)
       @value = decode_values
       return @value if @value.first.is_a? String
@@ -151,7 +150,7 @@ module Diplomat
         end.compact
       end
     end
-    # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
+    # rubocop:enable PerceivedComplexity
 
     # Get the name and payload(s) from the raw output
     def return_payload
@@ -161,22 +160,88 @@ module Diplomat
       end
     end
 
-    def check_acl_token
-      use_named_parameter('token', configuration.acl_token)
-    end
-
     def use_cas(options)
       options ? use_named_parameter('cas', options[:cas]) : []
     end
 
     def use_consistency(options)
-      options && options[:consistency] ? [options[:consistency].to_s] : []
+      options[:consistency] ? [options[:consistency].to_s] : []
+    end
+
+    # rubocop:disable PerceivedComplexity
+    # TODO: Migrate all custom params in options
+    def parse_options(options)
+      headers = nil
+      query_params = []
+      url_prefix = nil
+      consistency = []
+
+      # Parse options used as header
+      headers = { 'X-Consul-Token': configuration.acl_token } if configuration.acl_token
+      headers = { 'X-Consul-Token': options[:token] } if options[:token]
+
+      # Parse options used as query params
+      consistency = 'stale' if options[:stale]
+      consistency = 'leader' if options[:leader]
+      consistency = 'consistent' if options[:consistent]
+      query_params << consistency
+
+      # Parse url host
+      url_prefix = options[:http_addr] if options[:http_addr]
+      { query_params: query_params, headers: headers, url_prefix: url_prefix }
+    end
+    # rubocop:enable PerceivedComplexity
+
+    def send_get_request(connection, url, options, custom_params = nil)
+      rest_options = parse_options(options)
+      url += rest_options[:query_params]
+      url += custom_params unless custom_params.nil?
+      begin
+        connection.get do |req|
+          req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
+          rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+          req.options.timeout = options[:timeout] if options[:timeout]
+        end
+      rescue Faraday::ClientError => e
+        raise Diplomat::PathNotFound, e
+      end
+    end
+
+    def send_put_request(connection, url, options, data, custom_params = nil)
+      rest_options = parse_options(options)
+      url += rest_options[:query_params]
+      url += custom_params unless custom_params.nil?
+      connection.put do |req|
+        req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
+        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+        req.body = JSON.dump(data) unless data.nil?
+      end
+    end
+
+    def send_post_request(connection, url, options, data, custom_params = nil)
+      rest_options = parse_options(options)
+      url += rest_options[:query_params]
+      url += custom_params unless custom_params.nil?
+      connection.post do |req|
+        req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
+        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+        req.body = JSON.dump(data) unless data.nil?
+      end
+    end
+
+    def send_delete_request(connection, url, options, custom_params = nil)
+      rest_options = parse_options(options)
+      url += rest_options[:query_params]
+      url += custom_params unless custom_params.nil?
+      connection.delete do |req|
+        req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
+        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+      end
     end
 
     # Mapping for valid key/value store transaction verbs and required parameters
     #
     # @return [Hash] valid key/store transaction verbs and required parameters
-    # rubocop:disable MethodLength
     def valid_transaction_verbs
       {
         'set' => %w[Key Value],
@@ -192,7 +257,6 @@ module Diplomat
         'delete-cas' => %w[Key Index]
       }
     end
-    # rubocop:enable MethodLength
 
     # Key/value store transactions that require that a value be set
     #

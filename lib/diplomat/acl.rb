@@ -6,16 +6,17 @@ module Diplomat
 
     # Get Acl info by ID
     # @param id [String] ID of the Acl to get
+    # @param options [Hash] options parameter hash
     # @return [Hash]
-    # rubocop:disable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
-    def info(id, options = nil, not_found = :reject, found = :return)
+    # rubocop:disable PerceivedComplexity
+    def info(id, options = {}, not_found = :reject, found = :return)
       @id = id
       @options = options
-      url = ["/v1/acl/info/#{id}"]
-      url << check_acl_token
-      url << use_consistency(options)
+      custom_params = []
+      custom_params << use_consistency(options)
 
-      raw = @conn_no_err.get concat_url url
+      raw = send_get_request(@conn_no_err, ["/v1/acl/info/#{id}"], options, custom_params)
+
       if raw.status == 200 && raw.body.chomp != 'null'
         case found
         when :reject
@@ -35,55 +36,45 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{raw.status}: #{raw.body}"
       end
     end
-    # rubocop:enable PerceivedComplexity, MethodLength, CyclomaticComplexity, AbcSize
+    # rubocop:enable PerceivedComplexity
 
     # List all Acls
+    # @param options [Hash] options parameter hash
     # @return [List] list of [Hash] of Acls
-    def list
-      url = ['/v1/acl/list']
-      url += check_acl_token
-      @raw = @conn_no_err.get concat_url url
+    def list(options = {})
+      @raw = send_get_request(@conn_no_err, ['/v1/acl/list'], options)
       parse_body
     end
 
     # Update an Acl definition, create if not present
     # @param value [Hash] Acl definition, ID field is mandatory
+    # @param options [Hash] options parameter hash
     # @return [Hash] The result Acl
-    def update(value)
-      raise Diplomat::IdParameterRequired unless value['ID']
+    def update(value, options = {})
+      raise Diplomat::IdParameterRequired unless value['ID'] || value[:ID]
 
-      @raw = @conn.put do |req|
-        url = ['/v1/acl/update']
-        url += check_acl_token
-        url += use_cas(@options)
-        req.url concat_url url
-        req.body = value.to_json
-      end
+      custom_params = use_cas(@options)
+      @raw = send_put_request(@conn, ['/v1/acl/update'], options, value, custom_params)
       parse_body
     end
 
     # Create an Acl definition
     # @param value [Hash] Acl definition, ID field is mandatory
+    # @param options [Hash] options parameter hash
     # @return [Hash] The result Acl
-    def create(value)
-      @raw = @conn.put do |req|
-        url = ['/v1/acl/create']
-        url += check_acl_token
-        url += use_cas(@options)
-        req.url concat_url url
-        req.body = value.to_json
-      end
+    def create(value, options = {})
+      custom_params = use_cas(@options)
+      @raw = send_put_request(@conn, ['/v1/acl/create'], options, value, custom_params)
       parse_body
     end
 
     # Destroy an ACl token by its id
     # @param ID [String] the Acl ID
+    # @param options [Hash] options parameter hash
     # @return [Bool]
-    def destroy(id)
+    def destroy(id, options = {})
       @id = id
-      url = ["/v1/acl/destroy/#{@id}"]
-      url << check_acl_token
-      @raw = @conn.put concat_url url
+      @raw = send_put_request(@conn, ["/v1/acl/destroy/#{@id}"], options, nil)
       @raw.body.chomp == 'true'
     end
   end

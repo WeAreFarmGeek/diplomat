@@ -4,9 +4,10 @@ module Diplomat
     @access_methods = [:get]
 
     # Get all members
+    # @param options [Hash] options parameter hash
     # @return [OpenStruct] all data associated with the service
-    def get
-      ret = @conn.get '/v1/agent/members'
+    def get(options = {})
+      ret = send_get_request(@conn, ['/v1/agent/members'], options)
       JSON.parse(ret.body)
     end
   end
