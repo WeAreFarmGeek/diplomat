@@ -356,6 +356,32 @@ describe Diplomat::Kv do
       end
     end
 
+    describe '#get attributes' do
+      context 'of a key' do
+        let(:json) do
+          JSON.generate(
+            [
+              {
+                "LockIndex": 1,
+                "Key": 'foo',
+                "Flags": 0,
+                "Value": 'InRvdG8i',
+                "CreateIndex": 630,
+                "ModifyIndex": 630
+              }
+            ]
+          )
+        end
+
+        it 'return attributes' do
+          kv = Diplomat::Kv.new
+          stub_request(:get, 'http://localhost:8500/v1/kv/foo')
+            .to_return(OpenStruct.new(status: 200, body: json))
+          kv.get_attributes('foo')
+        end
+      end
+    end
+
     describe '#put' do
       context 'ACLs NOT enabled' do
         it 'PUT' do
