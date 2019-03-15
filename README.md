@@ -72,12 +72,14 @@ foo = Diplomat::Kv.get('foo')
 ```
 
 Or retrieve a value from another datacenter:
+
 ```ruby
 foo = Diplomat::Kv.get('foo', :dc => 'dc-west')
 # => "baz"
 ```
 
 You can also retrieve values recursively:
+
 ```ruby
 Diplomat::Kv.put('foo/a', 'lorem')
 Diplomat::Kv.put('foo/b', 'ipsum')
@@ -94,6 +96,7 @@ Or list all available keys:
 Diplomat::Kv.get('/', :keys => true) # => ['foo/a', 'foo/b']
 ```
 You can convert the consul data to a ruby hash
+
 ```ruby
 Diplomat::Kv.put('foo/a', 'lorem')
 Diplomat::Kv.put('foo/b', 'ipsum')
@@ -324,6 +327,12 @@ Diplomat::Service.get('foo', { http_addr: 'http://consu01:8500' })
 Diplomat::Service.get('foo', { http_addr: 'http://consu02:8500' })
 Diplomat::Kv.put('key/path', 'value', { http_addr: 'http://localhost:8500', dc: 'dc1', token: '111-222-333-444-555' })
 ```
+
+Most common options are:
+* dc: target datacenter
+* token: identity used to perform the corresponding action
+* http_addr: to target a remote consul node
+* stale: use consistency mode that allows any server to service the read regardless of whether it is the leader
 
 ### Todo
 
