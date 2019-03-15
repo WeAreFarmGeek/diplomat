@@ -58,8 +58,8 @@ module Diplomat
           # See https://bugs.ruby-lang.org/issues/10969
           begin
             super
-          rescue NameError => err
-            raise NoMethodError, err
+          rescue NameError => e
+            raise NoMethodError, e
           end
         end
       end
