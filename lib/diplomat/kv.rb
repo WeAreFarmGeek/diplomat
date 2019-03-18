@@ -1,7 +1,7 @@
 module Diplomat
   # Methods for interacting with the Consul KV API endpoint
   class Kv < Diplomat::RestClient
-    @access_methods = %i[get put delete txn]
+    @access_methods = %i[get get_attributes put delete txn]
     attr_reader :key, :value, :raw
 
     # Get a value by its key, potentially blocking for the first or next value
@@ -55,6 +55,7 @@ module Diplomat
       custom_params << dc(@options)
       custom_params << keys(@options)
       custom_params << separator(@options)
+      custom_params << session(@options)
 
       return_nil_values = @options && @options[:nil_values]
       transformation = @options && @options[:transformation] && @options[:transformation].methods.find_index(:call) ? @options[:transformation] : nil
@@ -102,6 +103,20 @@ module Diplomat
     end
     # rubocop:enable PerceivedComplexity, LineLength, MethodLength, CyclomaticComplexity
 
+    # Get key attributes
+    # @param key [String] the key
+    # @param options [Hash] the query params
+    # @return [OpenStruct]
+    def get_attributes(key, options = {})
+      @options = options
+      custom_params = []
+      custom_params << use_cas(@options)
+      custom_params << dc(@options)
+      custom_params << session(@options)
+      @raw = send_get_request(@conn, ["/v1/kv/#{key}"], options, custom_params)
+      OpenStruct.new JSON.parse(@raw.body).first
+    end
+
     # Associate a value with a key
     # @param key [String] the key
     # @param value [String] the value
@@ -116,6 +131,7 @@ module Diplomat
       custom_params << use_cas(@options)
       custom_params << dc(@options)
       custom_params << acquire(@options)
+      custom_params << session(@options)
       @raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, value, custom_params)
       if @raw.body.chomp == 'true'
         @key = key
@@ -136,6 +152,7 @@ module Diplomat
       custom_params = []
       custom_params << recurse_get(@options)
       custom_params << dc(@options)
+      custom_params << session(@options)
       @raw = send_delete_request(@conn, ["/v1/kv/#{@key}"], options, custom_params)
     end
 
@@ -167,6 +184,7 @@ module Diplomat
       custom_params = []
       custom_params << dc(options)
       custom_params << transaction_consistency(options)
+      custom_params << session(options)
       raw = send_put_request(@conn_no_err, ['/v1/txn'], options, value, custom_params)
       transaction_return JSON.parse(raw.body), options
     end
@@ -191,6 +209,10 @@ module Diplomat
 
     def separator(options)
       options[:separator] ? use_named_parameter('separator', options[:separator]) : []
+    end
+
+    def session(options)
+      options[:session] ? use_named_parameter('session', options[:session]) : []
     end
 
     def transaction_consistency(options)
