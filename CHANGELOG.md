@@ -2,7 +2,20 @@
 
 ## Next
 
-- use dedup for safer/simpler conversion of results to hash https://github.com/WeAreFarmGeek/diplomat/pull/176
+## 2.1.0
+
+This release cleanup a lot the existing APIs while preserving ascending compatibility.
+It will avoid relying on side effects to configure diplomat and allow to override most
+configuration options per API call as implemented in https://github.com/WeAreFarmGeek/diplomat/pull/179.
+It is now easy to use one instance of the lib and to perform several calls with different tokens and/or
+consistency options for instance.
+
+Full changelog:
+
+- Fix behavior of HTTP 302 on some 2.5 ruby releases (#181 fix #171)
+- Set flags attribute on KVPair during lock acquisition and release (#180)
+- Now allow to override most parameters per request (#179)
+- use dedup for safer/simpler conversion of results to hash #176
 
 ## 2.0.5
 
