@@ -51,7 +51,7 @@ module Diplomat
     # @return [Boolean]
     def update(key, definition, options = {})
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
-      ret = send_put_request(@conn, ["/v1/query/#{key}"], options, definition, custom_params)
+      ret = send_put_request(@conn, ["/v1/query/#{key}"], options, JSON.dump(definition), custom_params)
       ret.status == 200
     end
 

@@ -247,7 +247,7 @@ describe Diplomat::Service do
         stub_request(:put, register_service_url)
           .with(body: json_request).to_return(OpenStruct.new(body: '', status: 200))
         service = Diplomat::Service.new
-        s = service.register_external(service_definition)
+        s = service.register_external(json_request)
         expect(s).to eq(true)
       end
 

@@ -112,11 +112,14 @@ describe Diplomat::Lock do
 
       it 'wait_to_acquire' do
         stub_request(:put, "http://localhost:8500/v1/kv/lock/key?acquire=#{session}")
-          .with(headers: { 'X-Consul-Token' => acl_token }).and_return(OpenStruct.new(body: "true\n", status: 200))
+          .with(
+            headers: { 'X-Consul-Token' => acl_token },
+            body: '2'
+          ).and_return(OpenStruct.new(body: "true\n", status: 200))
 
         lock = Diplomat::Lock.new
 
-        expect(lock.wait_to_acquire('lock/key', session, 2)).to eq(true)
+        expect(lock.wait_to_acquire('lock/key', session, '2')).to eq(true)
       end
 
       it 'release' do

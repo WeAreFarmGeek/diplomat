@@ -167,7 +167,7 @@ module Diplomat
       custom_params = []
       custom_params << dc(options)
       custom_params << transaction_consistency(options)
-      raw = send_put_request(@conn_no_err, ['/v1/txn'], options, value, custom_params)
+      raw = send_put_request(@conn_no_err, ['/v1/txn'], options, JSON.generate(value), custom_params)
       transaction_return JSON.parse(raw.body), options
     end
 
