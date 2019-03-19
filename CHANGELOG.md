@@ -2,6 +2,12 @@
 
 ## Next
 
+## 2.1.2
+
+Bugfix relase: fix #188
+
+Release 2.1.0 did break a few things. Ensure more compatibility with 2.0.x
+
 ## 2.1.1
 
 Bugfix release.
