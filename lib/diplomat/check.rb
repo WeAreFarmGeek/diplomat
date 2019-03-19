@@ -25,13 +25,13 @@ module Diplomat
         raise(Diplomat::DeprecatedArgument, 'Script usage is deprecated, replace by an array of args')
       end
 
-      definition = {
+      definition = JSON.generate(
         'ID' => check_id,
         'Name' => name,
         'Notes' => notes,
         'Args' => args,
         'Interval' => interval
-      }
+      )
       ret = send_put_request(@conn, ['/v1/agent/check/register'], options, definition)
       ret.status == 200
     end
@@ -45,12 +45,12 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [Boolean] Success
     def register_ttl(check_id, name, notes, ttl, options = {})
-      definition = {
+      definition = JSON.generate(
         'ID' => check_id,
         'Name' => name,
         'Notes' => notes,
         'TTL' => ttl
-      }
+      )
       ret = send_put_request(@conn, ['/v1/agent/check/register'], options, definition)
       ret.status == 200
     end
@@ -71,10 +71,10 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [Integer] Status code
     def update_ttl(check_id, status, output = nil, options = {})
-      definition = {
+      definition = JSON.generate(
         'Status' => status,
         'Output' => output
-      }
+      )
       ret = send_put_request(@conn, ["/v1/agent/check/update/#{check_id}"], options, definition)
       ret.status == 200
     end

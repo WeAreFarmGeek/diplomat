@@ -214,7 +214,7 @@ module Diplomat
       connection.put do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
         rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
-        req.body = JSON.dump(data) unless data.nil?
+        req.body = data unless data.nil?
       end
     end
 
