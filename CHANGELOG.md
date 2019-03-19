@@ -2,6 +2,12 @@
 
 ## Next
 
+## 2.1.1
+
+Bugfix release.
+
+- Fix for #186
+
 ## 2.1.0
 
 This release cleanup a lot the existing APIs while preserving ascending compatibility.
