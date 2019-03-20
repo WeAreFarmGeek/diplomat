@@ -207,14 +207,21 @@ module Diplomat
       end
     end
 
-    def send_put_request(connection, url, options, data, custom_params = nil)
+    def send_put_request(connection, url, options, data, custom_params = nil, mime = 'application/json')
       rest_options = parse_options(options)
       url += rest_options[:query_params]
       url += custom_params unless custom_params.nil?
       connection.put do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
         rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
-        req.body = data unless data.nil?
+        unless data.nil?
+          (req.headers || {})['Content-Type'] = mime
+          req.body = if mime == 'application/json' && !data.is_a?(String)
+                       data.to_json
+                     else
+                       data
+                     end
+        end
       end
     end
 

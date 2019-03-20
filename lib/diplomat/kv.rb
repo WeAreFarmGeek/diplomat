@@ -116,7 +116,8 @@ module Diplomat
       custom_params << use_cas(@options)
       custom_params << dc(@options)
       custom_params << acquire(@options)
-      @raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, value, custom_params)
+      @raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, value, custom_params,
+                              'application/x-www-form-urlencoded')
       if @raw.body.chomp == 'true'
         @key = key
         @value = value
@@ -167,7 +168,7 @@ module Diplomat
       custom_params = []
       custom_params << dc(options)
       custom_params << transaction_consistency(options)
-      raw = send_put_request(@conn_no_err, ['/v1/txn'], options, JSON.generate(value), custom_params)
+      raw = send_put_request(@conn_no_err, ['/v1/txn'], options, value, custom_params)
       transaction_return JSON.parse(raw.body), options
     end
 

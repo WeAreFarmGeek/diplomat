@@ -47,7 +47,7 @@ module Diplomat
     # @return [Boolean]
     def register(definition, options = {})
       url = options[:path] || ['/v1/agent/service/register']
-      register = send_put_request(@conn, url, options, JSON.dump(definition))
+      register = send_put_request(@conn, url, options, definition)
       register.status == 200
     end
 
@@ -74,7 +74,7 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [Boolean]
     def deregister_external(definition, options = {})
-      deregister = send_put_request(@conn, ['/v1/catalog/deregister'], options, JSON.dump(definition))
+      deregister = send_put_request(@conn, ['/v1/catalog/deregister'], options, definition)
       deregister.status == 200
     end
 

@@ -29,3 +29,9 @@ Naming/UncommunicativeMethodParamName:
 
 Lint/UnneededCopDisableDirective:
   Enabled: false
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/ParameterLists:
+  Max: 6

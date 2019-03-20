@@ -54,7 +54,7 @@ module Diplomat
       raise Diplomat::IdParameterRequired unless value['ID'] || value[:ID]
 
       custom_params = use_cas(@options)
-      @raw = send_put_request(@conn, ['/v1/acl/update'], options, value.to_json, custom_params)
+      @raw = send_put_request(@conn, ['/v1/acl/update'], options, value, custom_params)
       parse_body
     end
 
@@ -64,7 +64,7 @@ module Diplomat
     # @return [Hash] The result Acl
     def create(value, options = {})
       custom_params = use_cas(@options)
-      @raw = send_put_request(@conn, ['/v1/acl/create'], options, value.to_json, custom_params)
+      @raw = send_put_request(@conn, ['/v1/acl/create'], options, value, custom_params)
       parse_body
     end
 
