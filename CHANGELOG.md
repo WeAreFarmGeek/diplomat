@@ -2,6 +2,12 @@
 
 ## Next
 
+## 2.1.3
+
+Bugfix release 3. Ensure to keep existing JSON serialization from 2.0.x
+
+Will fix https://github.com/WeAreFarmGeek/diplomat/issues/189
+
 ## 2.1.2
 
 Bugfix relase: fix #188
