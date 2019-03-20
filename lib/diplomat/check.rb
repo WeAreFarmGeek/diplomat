@@ -12,17 +12,17 @@ module Diplomat
     end
 
     # Register a HTTP check
+    # @param name [String] the name of the check
     # @param url [string] URL to check
     # @param interval [String] frequency (with units) of the check execution, for example, "10s"
     # @param id [String] the unique id of the check
-    # @param name [String] the name
     # @param notes [String] notes about the check
     # @param method [String] HTTP method to use when checking the url. Default is GET.
     # @param headers [Hash] HTTP headers to add to the check call
     # @param timeout [String] Timeout for check as string, for example, "1s"
     # @return [Integer] Status code
     #
-    def register_http(url, interval, id: nil, name: nil, notes: nil, method: 'GET', headers: nil, timeout: nil)
+    def register_http(name, url, interval, id: nil, notes: nil, method: 'GET', headers: nil, timeout: nil)
       ret = @conn.put do |req|
         req.url '/v1/agent/check/register'
         req.body = JSON.generate(

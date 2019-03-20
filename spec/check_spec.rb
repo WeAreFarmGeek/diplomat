@@ -35,9 +35,13 @@ describe Diplomat::Check do
     it 'register_http' do
       faraday.stub(:put).and_return(OpenStruct.new(body: '', status: 200))
       check = Diplomat::Check.new(faraday)
-      expect(check.register_http('localhost', '10s', id: 'foobar-1', name: 'Foobar', notes: 'Foobar test' , method: 'GET', headers: {}, timeout: '1s')).to eq(true)
+      expect(check.register_http('Foobar', 'localhost', '10s', id: 'foobar-1', notes: 'Foobar test' , method: 'GET', headers: {}, timeout: '1s')).to eq(true)
+    end
 
-      expect(check.register_http('localhost', '10x', id: 'foobar-1', name: 'Foobar', notes: 'Foobar test' , method: 'GET', headers: {}, timeout: '1s')).to eq(false)
+    it 'register_http_invalid_params' do
+      faraday.stub(:put).and_return(OpenStruct.new(body: 'Request decode failed: invalid "interval": time: unknown unit x in duration 10x', status: 400))
+      check = Diplomat::Check.new(faraday)
+      expect(check.register_http('Foobar', 'localhost', '10x', id: 'foobar-1', notes: 'Foobar test' , method: 'GET', headers: {}, timeout: '1s')).to eq(false)
     end
 
     it 'register_ttl' do
