@@ -225,11 +225,11 @@ describe Diplomat::Service do
 
       let(:service_definition) do
         {
-          Datacenter: :dc1,
-          Node: :google,
+          Datacenter: 'dc1',
+          Node: 'google',
           Address: 'www.google.com',
           Service: {
-            Service: :search,
+            Service: 'search',
             Port: 80
           }
         }
@@ -237,13 +237,24 @@ describe Diplomat::Service do
 
       let(:deregister_definition) do
         {
-          Datacenter: :dc1,
-          Node: :google
+          Datacenter: 'dc1',
+          Node: 'google'
         }
       end
 
       it 'can register a service' do
-        json_request = JSON.dump(service_definition)
+        expected_result = service_definition.to_json
+        [service_definition, service_definition.to_json].each do |registration|
+          stub_request(:put, register_service_url)
+            .with(body: expected_result).to_return(OpenStruct.new(body: '', status: 200))
+          service = Diplomat::Service.new
+          s = service.register_external(registration)
+          expect(s).to eq(true)
+        end
+      end
+
+      it 'can register a service in already serialized for' do
+        json_request = service_definition
         stub_request(:put, register_service_url)
           .with(body: json_request).to_return(OpenStruct.new(body: '', status: 200))
         service = Diplomat::Service.new
