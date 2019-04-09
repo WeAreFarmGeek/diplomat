@@ -23,6 +23,14 @@ module Diplomat
         end
       end
 
+      # We have to provide a custom params encoder here because Faraday - by default - assumes that
+      # list keys have [] as part of their name. This is however not the case for consul tags, which
+      # just use repeated occurences of the same key.
+      #
+      # So faraday reduces this: http://localhost:8500?a=1&a=2 to http://localhost:8500?a=2 unless you
+      # explicitly tell it not to.
+      options[:params_encoder] = Faraday::FlatParamsEncoder
+
       ret = send_get_request(@conn, ["/v1/catalog/service/#{key}"], options, custom_params)
       if meta && ret.headers
         meta[:index] = ret.headers['x-consul-index'] if ret.headers['x-consul-index']
