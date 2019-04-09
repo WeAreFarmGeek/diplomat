@@ -18,7 +18,7 @@ module Diplomat
       if options[:tag]
         # tag can be either a String, or an array of strings
         # by splatting it is guaranteed to be an array of strings
-        tag_params = [*options[:tag]].each do |value|
+        [*options[:tag]].each do |value|
           custom_params << use_named_parameter('tag', value)
         end
       end
