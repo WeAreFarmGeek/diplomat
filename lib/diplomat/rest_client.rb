@@ -198,6 +198,7 @@ module Diplomat
       url += custom_params unless custom_params.nil?
       begin
         connection.get do |req|
+          req.options[:params_encoder] = options[:params_encoder] if options[:params_encoder]
           req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
           rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
           req.options.timeout = options[:timeout] if options[:timeout]
