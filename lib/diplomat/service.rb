@@ -15,7 +15,13 @@ module Diplomat
       custom_params << use_named_parameter('wait', options[:wait]) if options[:wait]
       custom_params << use_named_parameter('index', options[:index]) if options[:index]
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
-      custom_params << use_named_parameter('tag', options[:tag]) if options[:tag]
+      if options[:tag]
+        # tag can be either a String, or an array of strings
+        # by splatting it is guaranteed to be an array of strings
+        tag_params = [*options[:tag]].each do |value|
+          custom_params << use_named_parameter('tag', value)
+        end
+      end
 
       ret = send_get_request(@conn, ["/v1/catalog/service/#{key}"], options, custom_params)
       if meta && ret.headers
