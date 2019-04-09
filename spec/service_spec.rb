@@ -9,6 +9,7 @@ describe Diplomat::Service do
     let(:key_url_with_alloptions) { "http://localhost:8500/v1/catalog/service/#{key}?wait=5m&index=3&dc=somedc" }
     let(:key_url_with_datacenteroption) { "http://localhost:8500/v1/catalog/service/#{key}?dc=somedc" }
     let(:key_url_with_tagoption) { "http://localhost:8500/v1/catalog/service/#{key}?tag=sometag" }
+    let(:key_url_with_multiple_tagoption) { "http://localhost:8500/v1/catalog/service/#{key}?tag=sometag&tag=anothertag" }
     let(:services_url_with_datacenteroption) { 'http://localhost:8500/v1/catalog/services?dc=somedc' }
     let(:body) do
       [
@@ -24,6 +25,18 @@ describe Diplomat::Service do
           'Node' => 'bar',
           'Address' => '10.1.10.13',
           'ServiceID' => key,
+          'ServiceName' => key,
+          'ServiceTags' => %w[sometag anothertag],
+          'ServicePort' => '70457'
+        }
+      ]
+    end
+    let(:body_one) do
+      [
+        {
+          'Node'        => 'bar',
+          'Address'     => '10.1.10.13',
+          'ServiceID'   => key,
           'ServiceName' => key,
           'ServiceTags' => %w[sometag anothertag],
           'ServicePort' => '70457'
@@ -133,6 +146,16 @@ describe Diplomat::Service do
         options = { tag: 'sometag' }
         s = service.get('toast', :first, options)
         expect(s.Node).to eq('foo')
+      end
+
+      it 'tag options, multiple tags' do
+        json = JSON.generate(body_one)
+        stub_request(:get, key_url_with_multiple_tagoption)
+          .to_return(OpenStruct.new(body: json, headers: headers))
+        service = Diplomat::Service.new
+        options = { tag: ['sometag', 'anothertag'] }
+        s = service.get('toast', :first, options)
+        expect(s.Node).to eq('bar')
       end
 
       it 'all options' do
