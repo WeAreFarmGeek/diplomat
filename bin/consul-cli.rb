@@ -65,7 +65,7 @@ def parse_as_text(input, indent)
   end
 end
 
-options = {}
+options = {http_addr: ENV['CONSUL_HTTP_ADDR'] || 'localhost:8500'}
 params = {}
 output = {}
 
@@ -92,6 +92,8 @@ OptionParser.new do |opts|
     options[:token] = token
   end
 end.parse!
+
+options[:http_addr] = "http://#{options[:http_addr]}" unless options[:http_addr].start_with? 'http'
 
 if params[:dcs]
   dcs = DiplomaticBag.get_datacenters_list(params[:dcs].split(','), options)
