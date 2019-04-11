@@ -2,6 +2,10 @@
 
 ## Next
 
+## 2.2.3
+
+Cleaner packaging of `diplomatic_bag`
+
 ## 2.2.2
 
 Fixed dependencies of `diplomatic_bag`.

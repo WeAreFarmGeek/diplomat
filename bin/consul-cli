@@ -9,7 +9,8 @@ def syntax
           "\t#{$PROGRAM_NAME} services list [options]\n" \
           "\t#{$PROGRAM_NAME} service status <service-name> [options]\n" \
           "\t#{$PROGRAM_NAME} info [options]\n" \
-          "\t#{$PROGRAM_NAME} nodes list-duplicate-id [options]\n\n" \
+          "\t#{$PROGRAM_NAME} nodes list-duplicate-id [options]\n" \
+          "\t#{$PROGRAM_NAME} version\n\n" \
           "Options:\n" \
           "\t-a, --http-addr\t\tThe `address` and port of the Consul HTTP agent\n" \
           "\t-d, --datacenter\tName of the datacenter to query\n" \
@@ -43,6 +44,9 @@ def launch_query(arguments, options)
       syntax
       exit 0
     end
+  when 'version'
+    puts Diplomat::VERSION
+    exit 0
   else
     syntax
     exit 0
