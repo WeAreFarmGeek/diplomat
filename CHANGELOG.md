@@ -2,6 +2,11 @@
 
 ## Next
 
+## 2.2.2
+
+Fixed dependencies of `diplomatic_bag`.
+Install properly binaries for `diplomatic_bag`.
+
 ## 2.2.1
 
 First release of `diplomatic_bag` published on rubygems.org (fixed travis)
