@@ -2,6 +2,15 @@
 
 ## Next
 
+## 2.2.0
+
+This release includes a new gem called `diplomatic_bag` that provides some small
+command line utilities to inspect Consul thanks to @tionebsalocin.
+
+Other changes:
+
+* `Diplomat::Service.get(service_name)` now supports lookup with more than 1 tag #191
+
 ## 2.1.3
 
 Bugfix release 3. Ensure to keep existing JSON serialization from 2.0.x
