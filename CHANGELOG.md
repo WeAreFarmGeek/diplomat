@@ -4,6 +4,10 @@
 
 ## 2.2.3
 
+Now diplomatic_bag installs cleanly from rubygems.org
+
+## 2.2.3
+
 Cleaner packaging of `diplomatic_bag`
 
 ## 2.2.2
