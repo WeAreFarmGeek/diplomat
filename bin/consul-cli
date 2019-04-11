@@ -3,6 +3,7 @@
 
 require 'diplomatic_bag'
 require 'optparse'
+require 'diplomat/version'
 
 def syntax
   printf "USAGE: #{$PROGRAM_NAME} [[action]] [[options]]\n\n" \
