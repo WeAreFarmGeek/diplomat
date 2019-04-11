@@ -9,5 +9,5 @@ Gem::Specification.new 'diplomatic_bag', Diplomat::VERSION do |spec|
 
   spec.files         = `git ls-files lib README.md LICENSE features`.split("\n")
 
-  spec.add_development_dependency 'diplomat'
+  spec.add_development_dependency 'diplomat', "=#{Diplomat::VERSION}"
 end
