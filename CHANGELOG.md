@@ -2,6 +2,10 @@
 
 ## Next
 
+## 2.2.1
+
+First release of `diplomat_bag` published on rubygems.org (fixed travis)
+
 ## 2.2.0
 
 This release includes a new gem called `diplomatic_bag` that provides some small
