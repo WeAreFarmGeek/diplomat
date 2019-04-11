@@ -7,7 +7,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.homepage      = 'https://github.com/WeAreFarmGeek/diplomat'
   spec.license       = 'BSD-3-Clause'
 
-  spec.files         = `git ls-files lib README.md LICENSE features`.split("\n")
+  spec.files         = `git ls-files lib/diplomat.rb lib/diplomat README.md LICENSE features`
 
   spec.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.1'
   spec.add_development_dependency 'codeclimate-test-reporter', '~> 0.4.0'
