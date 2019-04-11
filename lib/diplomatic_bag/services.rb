@@ -2,6 +2,7 @@
 module DiplomaticBag
   def self.compute_service_name(s)
     return '/node::health/' if s.nil? || s == ''
+
     s
   end
 
