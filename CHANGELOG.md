@@ -4,7 +4,7 @@
 
 ## 2.2.1
 
-First release of `diplomat_bag` published on rubygems.org (fixed travis)
+First release of `diplomatic_bag` published on rubygems.org (fixed travis)
 
 ## 2.2.0
 

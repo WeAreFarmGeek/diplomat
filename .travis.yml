@@ -17,16 +17,20 @@ jobs:
       deploy:
         provider: rubygems
         gem: diplomat
+        gemspec: diplomat.gemspec
+        skip_cleanup: true
         api_key:
           secure: RbB9Va0vmEY3hyCDuvDxj6G/cmgD8ZQ3Wwg2Xx+oi64AWOckmTa4e4nVR6231kkgF63fG2swpkRhyHU+pfRSy+m/Ng8qAK4IIDgce6FTMPbzY45TlzPDq9OKsLyChYtkCnRTjXI16cS9+t1OBAXtwEDgQnXG7VDU4cRi3NMyFCk=
         on:
           tags: true
-    - stage: Gem release diplomat_bag
+    - stage: Gem release diplomatic_bag
       rvm: 2.5.5
-      script: echo "Deploying displomat_bag to rubygems.org ..."
+      script: echo "Deploying displomatic_bag to rubygems.org ..."
       deploy:
         provider: rubygems
-        gem: diplomat_bag
+        gem: diplomatic_bag
+        gemspec: diplomatic_bag.gemspec
+        skip_cleanup: true
         api_key:
           secure: RbB9Va0vmEY3hyCDuvDxj6G/cmgD8ZQ3Wwg2Xx+oi64AWOckmTa4e4nVR6231kkgF63fG2swpkRhyHU+pfRSy+m/Ng8qAK4IIDgce6FTMPbzY45TlzPDq9OKsLyChYtkCnRTjXI16cS9+t1OBAXtwEDgQnXG7VDU4cRi3NMyFCk=
         on:
