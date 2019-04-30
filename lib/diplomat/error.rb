@@ -12,4 +12,7 @@ module Diplomat
   class IdParameterRequired < StandardError; end
   class InvalidTransaction < StandardError; end
   class DeprecatedArgument < StandardError; end
+  class PolicyNotFound < StandardError; end
+  class NameParameterRequired < StandardError; end
+  class PolicyMalformed < StandardError; end
 end
