@@ -80,15 +80,25 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [Hash] new ACL policy
     def create(value, options = {})
+      blacklist = ['ID', 'iD', 'Id', :ID, :iD, :Id] & value.keys
+      raise Diplomat::PolicyMalformed, 'ID should not be specified' unless blacklist.empty?
+
       id = value[:Name] || value['Name']
       raise Diplomat::NameParameterRequired if id.nil?
 
       custom_params = use_cas(@options)
       @raw = send_put_request(@conn, ['/v1/acl/policy'], options, value, custom_params)
-      return parse_body if @raw.status == 200
 
-      raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
+      # rubocop:disable GuardClause
+      if @raw.status == 200
+        return parse_body
+      elsif @raw.status == 500 && @raw.body.chomp.include?('already exists')
+        raise Diplomat::PolicyAlreadyExists, @raw.body
+      else
+        raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
+      end
     end
+    # rubocop:enable GuardClause
 
     # Delete an ACL policy by its UUID
     # @param id [String] UUID of the ACL policy to delete

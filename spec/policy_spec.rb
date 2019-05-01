@@ -104,7 +104,7 @@ describe Diplomat::Policy do
 
     describe 'create' do
       it 'returns the ACL Policy' do
-        json = JSON.generate(read_body.first)
+        json = JSON.generate(read_body.first.tap { |h| h.delete('ID') })
 
         url = key_url + '/policy'
         stub_request(:put, url)
