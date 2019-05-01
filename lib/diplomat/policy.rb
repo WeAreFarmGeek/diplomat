@@ -7,7 +7,7 @@ module Diplomat
     # Read ACL policy with the given UUID
     # @param id [String] UUID of the ACL policy to read
     # @param options [Hash] options parameter hash
-    # @return [Hash]
+    # @return [Hash] existing ACL policy
     # rubocop:disable PerceivedComplexity
     def read(id, options = {}, not_found = :reject, found = :return)
       @options = options
@@ -49,18 +49,21 @@ module Diplomat
     def list(options = {})
       @raw = send_get_request(@conn_no_err, ['/v1/acl/policies'], options)
       raise Diplomat::AclNotFound if @raw.status == 403
+
       parse_body
     end
 
     # Update an existing ACL policy
     # @param value [Hash] ACL policy definition, ID and Name fields are mandatory
     # @param options [Hash] options parameter hash
-    # @return [Hash] The result Acl
+    # @return [Hash] result ACL policy
     def update(value, options = {})
       id = value[:ID] || value['ID']
       raise Diplomat::IdParameterRequired if id.nil?
+
       policy_name = value[:Name] || value['Name']
       raise Diplomat::NameParameterRequired if policy_name.nil?
+
       custom_params = use_cas(@options)
       @raw = send_put_request(@conn, ["/v1/acl/policy/#{id}"], options, value, custom_params)
       if @raw.status == 200
@@ -75,13 +78,15 @@ module Diplomat
     # Create a new ACL policy
     # @param value [Hash] ACL policy definition, Name field is mandatory
     # @param options [Hash] options parameter hash
-    # @return [Hash] The result ACL policy
+    # @return [Hash] new ACL policy
     def create(value, options = {})
-      id = value[:ID] || value['ID']
-      raise Diplomat::IdParameterRequired if id.nil?
+      id = value[:Name] || value['Name']
+      raise Diplomat::NameParameterRequired if id.nil?
+
       custom_params = use_cas(@options)
       @raw = send_put_request(@conn, ['/v1/acl/policy'], options, value, custom_params)
       return parse_body if @raw.status == 200
+
       raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
     end
 

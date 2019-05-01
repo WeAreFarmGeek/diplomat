@@ -39,7 +39,7 @@ describe Diplomat::Policy do
     end
 
     describe 'read' do
-      it 'returns an existing ACL policy if existing' do
+      it 'returns an existing ACL policy' do
         json = JSON.generate(read_body)
 
         url = key_url + '/policy/' + id
@@ -118,7 +118,7 @@ describe Diplomat::Policy do
     end
 
     describe 'delete' do
-      it 'returns the ID' do
+      it 'returns true with 200 OK' do
         url = key_url + '/policy/' + id
         stub_request(:delete, url).to_return(OpenStruct.new(body: "true\n", status: 200))
 
