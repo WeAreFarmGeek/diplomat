@@ -71,11 +71,15 @@ module Diplomat
     end
 
     # Create a new ACL token
+    # @param value [Hash] ACL token definition
     # @param options [Hash] options parameter hash
     # @return [Hash] new ACL token
-    def create(options = {})
+    def create(value, options = {})
+      id = value[:AccessorID] || value['AccessorID']
+      raise Diplomat::TokenMalformed if id
+
       custom_params = use_cas(@options)
-      @raw = send_put_request(@conn, ['/v1/acl/token'], options, custom_params)
+      @raw = send_put_request(@conn, ['/v1/acl/token'], options, value, custom_params)
       return parse_body if @raw.status == 200
 
       raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"

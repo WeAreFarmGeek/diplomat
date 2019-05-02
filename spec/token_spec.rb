@@ -106,7 +106,7 @@ describe Diplomat::Token do
 
     describe 'create' do
       it 'returns the ACL token details' do
-        json = JSON.generate(read_body.first)
+        json = JSON.generate(read_body.first.tap { |h| h.delete('AccessorID') })
 
         url = key_url + '/token'
         stub_request(:put, url)
@@ -116,6 +116,18 @@ describe Diplomat::Token do
         response = token.create(read_body.first)
 
         expect(response['AccessorID']).to eq(read_body.first['AccessorID'])
+      end
+
+      it 'should raise a TokenMalformed error if AccessorID present' do
+        json = JSON.generate(read_body.first)
+
+        url = key_url + '/token'
+        stub_request(:put, url)
+          .to_return(OpenStruct.new(body: json, status: 200))
+
+        token = Diplomat::Token.new
+
+        expect { token.create(read_body.first) }.to raise_error(Diplomat::TokenMalformed)
       end
     end
 
