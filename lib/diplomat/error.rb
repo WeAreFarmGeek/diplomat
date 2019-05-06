@@ -10,6 +10,13 @@ module Diplomat
   class QueryAlreadyExists < StandardError; end
   class UnknownStatus < StandardError; end
   class IdParameterRequired < StandardError; end
+  class NameParameterRequired < StandardError; end
   class InvalidTransaction < StandardError; end
   class DeprecatedArgument < StandardError; end
+  class PolicyNotFound < StandardError; end
+  class NameParameterRequired < StandardError; end
+  class PolicyMalformed < StandardError; end
+  class AccessorIdParameterRequired < StandardError; end
+  class TokenMalformed < StandardError; end
+  class PolicyAlreadyExists < StandardError; end
 end

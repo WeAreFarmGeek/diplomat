@@ -180,7 +180,7 @@ module Diplomat
       headers = { 'X-Consul-Token' => configuration.acl_token } if configuration.acl_token
       headers = { 'X-Consul-Token' => options[:token] } if options[:token]
 
-      # Parse options used as query params
+      # Parse consistency options used as query params
       consistency = 'stale' if options[:stale]
       consistency = 'leader' if options[:leader]
       consistency = 'consistent' if options[:consistent]
