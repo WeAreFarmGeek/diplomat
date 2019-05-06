@@ -2,6 +2,16 @@
 
 ## Next
 
+Support Consul 1.4.x ACLs
+
+* add Diplomat::Policy
+
+* add Diplomat::Token
+
+* add PolicyAlreadyExists error class as ID cannot be specified when creating an ACL policy
+
+* add test for token creation with a specific AccessorID
+
 ## 2.2.4
 
 Now diplomatic_bag installs cleanly from rubygems.org
