@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Diplomat::Policy do
-  context 'Consul 1.4.x' do
+  context 'Consul 1.4+' do
     let(:key_url) { 'http://localhost:8500/v1/acl' }
     let(:id) { '2c9e66bd-9b67-ef5b-34ac-38901e792646' }
     let(:read_body) do
