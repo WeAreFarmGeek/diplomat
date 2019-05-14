@@ -1,25 +1,20 @@
 module Diplomat
   # Methods for interacting with the Consul ACL Role API endpoint
   class Role < Diplomat::RestClient
-    @access_methods = %i[list read create delete update]
+    @access_methods = %i[list read read_name create delete update]
     attr_reader :id, :type, :acl
 
-    # Read ACL role with the given UUID or name
+    # Read ACL role with the given UUID
     # @param id [String] UUID or name of the ACL role to read
     # @param options [Hash] options parameter hash
     # @return [Hash] existing ACL role
     # rubocop:disable PerceivedComplexity
     def read(id, options = {}, not_found = :reject, found = :return)
-      endpoint = if id =~ /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-                   "/v1/acl/role/#{id}"
-                 else
-                   "/v1/acl/role/name/#{id}"
-                 end
       @options = options
       custom_params = []
       custom_params << use_consistency(options)
 
-      @raw = send_get_request(@conn_no_err, [endpoint], options, custom_params)
+      @raw = send_get_request(@conn_no_err, ["/v1/acl/role/#{id}"], options, custom_params)
 
       if @raw.status == 200 && @raw.body.chomp != 'null'
         case found
@@ -39,6 +34,45 @@ module Diplomat
         case not_found
         when :reject
           raise Diplomat::AclNotFound, id
+        when :return
+          return nil
+        end
+      else
+        raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
+      end
+    end
+    # rubocop:enable PerceivedComplexity
+
+    # Read ACL role with the given name
+    # @param name [String] name of the ACL role to read
+    # @param options [Hash] options parameter hash
+    # @return [Hash] existing ACL role
+    # rubocop:disable PerceivedComplexity
+    def read_name(name, options = {}, not_found = :reject, found = :return)
+      @options = options
+      custom_params = []
+      custom_params << use_consistency(options)
+
+      @raw = send_get_request(@conn_no_err, ["/v1/acl/role/name/#{name}"], options, custom_params)
+
+      if @raw.status == 200 && @raw.body.chomp != 'null'
+        case found
+        when :reject
+          raise Diplomat::RoleNotFound, name
+        when :return
+          return parse_body
+        end
+      elsif @raw.status == 404
+        case not_found
+        when :reject
+          raise Diplomat::RoleNotFound, name
+        when :return
+          return nil
+        end
+      elsif @raw.status == 403
+        case not_found
+        when :reject
+          raise Diplomat::AclNotFound, name
         when :return
           return nil
         end

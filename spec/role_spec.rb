@@ -64,6 +64,19 @@ describe Diplomat::Role do
         expect(role_info.first['Name']).to eq('test')
       end
 
+      it 'raises an error if ACL role UUID does not exist' do
+        json = 'null'
+
+        url = key_url + '/role/' + '86f16056-1289-4ae2-bea0-8e1bf9128866'
+        stub_request(:get, url).to_return(OpenStruct.new(body: json, status: 404))
+
+        role = Diplomat::Role.new
+
+        expect { role.read('86f16056-1289-4ae2-bea0-8e1bf9128866') }.to raise_error(Diplomat::RoleNotFound)
+      end
+    end
+
+    describe 'read_name' do
       it 'returns an existing ACL role if passing a name' do
         json = JSON.generate(read_body)
 
@@ -71,7 +84,7 @@ describe Diplomat::Role do
         stub_request(:get, url).to_return(OpenStruct.new(body: json, status: 200))
 
         role = Diplomat::Role.new
-        role_info = role.read(name)
+        role_info = role.read_name(name)
 
         expect(role_info.size).to eq(1)
         expect(role_info.first['Name']).to eq('test')
@@ -85,18 +98,7 @@ describe Diplomat::Role do
 
         role = Diplomat::Role.new
 
-        expect { role.read('none') }.to raise_error(Diplomat::RoleNotFound)
-      end
-
-      it 'raises an error if ACL role UUID does not exist' do
-        json = 'null'
-
-        url = key_url + '/role/' + '86f16056-1289-4ae2-bea0-8e1bf9128866'
-        stub_request(:get, url).to_return(OpenStruct.new(body: json, status: 404))
-
-        role = Diplomat::Role.new
-
-        expect { role.read('86f16056-1289-4ae2-bea0-8e1bf9128866') }.to raise_error(Diplomat::RoleNotFound)
+        expect { role.read_name('none') }.to raise_error(Diplomat::RoleNotFound)
       end
     end
 
