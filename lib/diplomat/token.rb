@@ -38,11 +38,15 @@ module Diplomat
 
     # List all the ACL tokens
     # @param policy [String] filters the token list matching the specific policy ID
+    # @param role [String] filters the token list matching the specific role ID
+    # @param authmethod [String] the token list matching the specific named auth method
     # @param options [Hash] options parameter hash
     # @return [List] list of [Hash] of ACL tokens
-    def list(policy = nil, options = {})
+    def list(policy = nil, role = nil, authmethod = nil, options = {})
       custom_params = []
       custom_params << use_named_parameter('policy', policy) if policy
+      custom_params << use_named_parameter('role', policy) if role
+      custom_params << use_named_parameter('authmethod', policy) if authmethod
       @raw = send_get_request(@conn_no_err, ['/v1/acl/tokens'], options, custom_params)
       raise Diplomat::AclNotFound if @raw.status == 403
 
@@ -75,9 +79,6 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [Hash] new ACL token
     def create(value, options = {})
-      id = value[:AccessorID] || value['AccessorID']
-      raise Diplomat::TokenMalformed if id
-
       custom_params = use_cas(@options)
       @raw = send_put_request(@conn, ['/v1/acl/token'], options, value, custom_params)
       return parse_body if @raw.status == 200
@@ -90,6 +91,9 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [Bool]
     def delete(id, options = {})
+      anonymous_token = '00000000-0000-0000-0000-000000000002'
+      raise Diplomat::NotPermitted, "status #{@raw.status}: #{@raw.body}" if id == anonymous_token
+
       @raw = send_delete_request(@conn, ["/v1/acl/token/#{id}"], options, nil)
       @raw.body.chomp == 'true'
     end

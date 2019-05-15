@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Diplomat::Token do
-  context 'Consul 1.4.x' do
+  context 'Consul 1.5+' do
     let(:key_url) { 'http://localhost:8500/v1/acl' }
     let(:id) { 'a76289be-986c-98d7-3176-5f946da90d09' }
     let(:read_body) do
@@ -15,6 +15,9 @@ describe Diplomat::Token do
           'ModifyIndex' => 5,
           'Policies' => [
             { 'ID' => '00000000-0000-0000-0000-000000000001', 'Name' => 'global-management' }
+          ],
+          'Roles' => [
+            { 'ID' => 'e9804138-3b6f-494c-b566-2de8944e049f', 'Name' => 'read-only' }
           ],
           'SecretID' => 'changeme' }
       ]
@@ -87,7 +90,7 @@ describe Diplomat::Token do
 
     describe 'update' do
       it 'returns the updated ACL token details' do
-        json = JSON.generate(read_body.first)
+        json = JSON.generate(read_body.first.merge('SecretID' => 'updated'))
 
         url = key_url + '/token/' + id
         stub_request(:put, url).to_return(OpenStruct.new(body: json, status: 200))
@@ -96,6 +99,7 @@ describe Diplomat::Token do
         response = token.update(read_body.first)
 
         expect(response['AccessorID']).to eq(read_body.first['AccessorID'])
+        expect(response['SecretID']).to eq('updated')
       end
 
       it 'fails if no AccessorID is provided' do
@@ -106,7 +110,7 @@ describe Diplomat::Token do
 
     describe 'create' do
       it 'returns the ACL token details' do
-        json = JSON.generate(read_body.first.tap { |h| h.delete('AccessorID') })
+        json = JSON.generate(read_body.first)
 
         url = key_url + '/token'
         stub_request(:put, url)
@@ -116,18 +120,7 @@ describe Diplomat::Token do
         response = token.create(read_body.first)
 
         expect(response['AccessorID']).to eq(read_body.first['AccessorID'])
-      end
-
-      it 'should raise a TokenMalformed error if AccessorID present' do
-        json = JSON.generate(read_body.first)
-
-        url = key_url + '/token'
-        stub_request(:put, url)
-          .to_return(OpenStruct.new(body: json, status: 200))
-
-        token = Diplomat::Token.new
-
-        expect { token.create(read_body.first) }.to raise_error(Diplomat::TokenMalformed)
+        expect(response['SecretID']).to eq(read_body.first['SecretID'])
       end
     end
 

@@ -19,4 +19,6 @@ module Diplomat
   class AccessorIdParameterRequired < StandardError; end
   class TokenMalformed < StandardError; end
   class PolicyAlreadyExists < StandardError; end
+  class RoleMalformed < StandardError; end
+  class RoleNotFound < StandardError; end
 end
