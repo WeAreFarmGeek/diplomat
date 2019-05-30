@@ -82,6 +82,44 @@ module Diplomat
       end
     end
 
+    protected
+
+    # Turn the given key into something that the Consul API
+    # will consider its canonical form. If we don't do this,
+    # then the Consul API will return a HTTP 301 response directing
+    # us to the same action with a canonicalized key, and we'd
+    # have to waste time following that redirect.
+    def normalize_key_for_uri(key)
+      # The Consul docs suggest using slashes to organise keys
+      # (https://www.consul.io/docs/agent/kv.html#using-consul-kv).
+      #
+      # However, Consul (like many servers) does strange things with slashes,
+      # presumably to "paper over" users' errors in typing URLs.
+      # E.g. the key "/my/path" will end up in the URI path component
+      # "/v1/kv//my/path", which Consul will redirect (HTTP 301) to
+      # "/v1/kv/my/path" -- a very different URI!
+      #
+      # One solution might be to simply always URI-encode slashes
+      # (and all other non-URI-safe characters), but that appears to
+      # result in some other weirdness, e.g., keys being returned with
+      # URI-encoding in them in contexts totally unrelated to URIs.
+      # For examples, see these issues and follow the links:
+      #
+      # - https://github.com/hashicorp/consul/issues/889
+      # - https://github.com/hashicorp/consul/issues/1277
+      #
+      # For now it seems safest to simply assume that leading literal
+      # slashes on keys are benign mistakes, and strip them off.
+      # Hopefully the expected behaviour will be formalised/clarified
+      # in future versions of Consul, and we can introduce some stricter
+      # and more predictable handling of keys on this side.
+      if key.start_with? '/'
+        key[1..-1]
+      else
+        key.freeze
+      end
+    end
+
     private
 
     # Build the API Client
