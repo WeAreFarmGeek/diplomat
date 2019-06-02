@@ -12,6 +12,8 @@ Support Consul 1.4.x ACLs
 
 * add test for token creation with a specific AccessorID
 
+* Strip leading slashes from keys in API requests
+
 ## 2.2.4
 
 Now diplomatic_bag installs cleanly from rubygems.org
