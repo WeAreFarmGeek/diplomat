@@ -14,6 +14,8 @@ Support Consul 1.4.x ACLs
 
 * Strip leading slashes from keys in API requests
 
+* When using an invalid token, properly return AclNotFound (Will work with Consul 1.4+)
+
 ## 2.2.4
 
 Now diplomatic_bag installs cleanly from rubygems.org

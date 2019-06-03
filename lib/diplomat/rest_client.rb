@@ -242,6 +242,10 @@ module Diplomat
           req.options.timeout = options[:timeout] if options[:timeout]
         end
       rescue Faraday::ClientError => e
+        resp = e.response
+        if resp
+          raise Diplomat::AclNotFound, e if resp[:status] == 403 && resp[:body] == 'ACL not found'
+        end
         raise Diplomat::PathNotFound, e
       end
     end
