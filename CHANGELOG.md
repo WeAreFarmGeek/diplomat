@@ -2,6 +2,8 @@
 
 ## Next
 
+## 2.2.5
+
 Support Consul 1.4.x ACLs
 
 * add Diplomat::Policy
@@ -12,9 +14,9 @@ Support Consul 1.4.x ACLs
 
 * add test for token creation with a specific AccessorID
 
-* Strip leading slashes from keys in API requests
+Strip leading slashes from keys in API requests
 
-* When using an invalid token, properly return AclNotFound (Will work with Consul 1.4+)
+When using an invalid token, properly return AclNotFound (Will work with Consul 1.4+)
 
 ## 2.2.4
 
