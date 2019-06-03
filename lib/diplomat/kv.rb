@@ -42,12 +42,8 @@ module Diplomat
     #   - W W - get the first or next value; wait until there is an update
     # rubocop:disable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
     def get(key, options = {}, not_found = :reject, found = :return)
-      key_subst = if key.start_with? '/'
-                    key[1..-1]
-                  else
-                    key.freeze
-                  end
-      @key = key_subst
+      key = normalize_key_for_uri(key)
+      @key = key
       @options = options
       custom_params = []
       custom_params << recurse_get(@options)
@@ -111,6 +107,7 @@ module Diplomat
     # @option options [String] :acquire Session to attach to key
     # @return [Bool] Success or failure of the write (can fail in c-a-s mode)
     def put(key, value, options = {})
+      key = normalize_key_for_uri(key)
       @options = options
       custom_params = []
       custom_params << use_cas(@options)
@@ -132,6 +129,7 @@ module Diplomat
     # @option options [Boolean] :recurse If to make recursive get or not
     # @return [OpenStruct]
     def delete(key, options = {})
+      key = normalize_key_for_uri(key)
       @key = key
       @options = options
       custom_params = []
