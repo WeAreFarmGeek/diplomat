@@ -366,12 +366,24 @@ describe Diplomat::Kv do
         end
       end
 
-      context 'Datacenter filter' do
+      context 'datacenter filter' do
         it 'GET_ALL for a specific datacenter' do
           kv = Diplomat::Kv.new
           stub_request(:get, 'http://localhost:8500/v1/kv/foo?dc=bar&recurse')
             .to_return(OpenStruct.new(status: 200, body: JSON.generate([])))
           kv.get_all('foo', dc: 'bar')
+        end
+      end
+
+      context 'get_all returns no results' do
+        let(:json) do
+          JSON.generate([])
+        end
+
+        it 'GET_ALL and returns an empty Array' do
+          faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get_all(key)).to eql([])
         end
       end
 
@@ -397,9 +409,17 @@ describe Diplomat::Kv do
             ]
           )
         end
+
+        it 'GET_ALL and returns a hash' do
+          faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get_all(key, convert_to_hash: true)).to eql(
+            key + 'foo' => 'toast'
+          )
+        end
       end
 
-      context 'supports convert_to_hash option' do
+      context 'recursive get returns multiple nested results' do
         let(:json) do
           JSON.generate(
             [
@@ -412,18 +432,42 @@ describe Diplomat::Kv do
                 'Key' => key + 'i/am/nested',
                 'Value' => Base64.encode64(key_params),
                 'Flags' => 0
+              },
+              {
+                'Key' => key + 'i/am/also/nested',
+                'Value' => Base64.encode64(key_params),
+                'Flags' => 0
               }
             ]
           )
         end
 
-        it 'GET_ALL and returns a Hash' do
+        it 'GET_ALL and returns a list' do
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           kv = Diplomat::Kv.new(faraday)
-          expect(kv.get_all(key, convert_to_hash: true)).to eql({
-            key + 'foo' => 'toast',
-            key + 'i' => {"am"=>{"nested"=>"toast"}}
-          })
+          expect(kv.get_all(key)).to eql(
+            [
+              { key: key + 'foo', value: 'toast' },
+              { key: key + 'i/am/nested', value: 'toast' },
+              { key: key + 'i/am/also/nested', value: 'toast' }
+            ]
+          )
+        end
+
+        it 'GET_ALL and returns a hash' do
+          faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get_all(key, convert_to_hash: true)).to eql(
+            'keyfoo' => 'toast',
+            'keyi' => {
+              'am' => {
+                'also' => {
+                  'nested' => 'toast'
+                },
+                'nested' => 'toast'
+              }
+            }
+          )
         end
       end
     end

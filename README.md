@@ -89,6 +89,26 @@ Diplomat::Kv.get('foo/', recurse: true)
 # => [{:key=>"foo/a", :value=>"lorem"}, {:key=>"foo/b", :value=>"ipsum"}, {:key=>"foo/c", :value=>"dolor"}]
 ```
 
+You can also use `get_all` to retrieve values recursively with a consistent return type:
+
+```ruby
+Diplomat::Kv.put('foo/a', 'lorem')
+Diplomat::Kv.put('foo/b', 'ipsum')
+Diplomat::Kv.put('foo/c', 'dolor')
+
+Diplomat::Kv.get('foo/', recurse: true)
+# => [{:key=>"foo/a", :value=>"lorem"}, {:key=>"foo/b", :value=>"ipsum"}, {:key=>"foo/c", :value=>"dolor"}]
+Diplomat::Kv.get_all('foo/')
+# => [{:key=>"foo/a", :value=>"lorem"}, {:key=>"foo/b", :value=>"ipsum"}, {:key=>"foo/c", :value=>"dolor"}]
+
+Diplomat::Kv.put('bar/a', 'lorem')
+
+Diplomat::Kv.get('bar/', recurse: true)
+# => "lorem"
+Diplomat::Kv.get_all('bar/')
+# => [{:key=>"bar/a", :value=>"lorem"}]
+```
+
 
 Or list all available keys:
 

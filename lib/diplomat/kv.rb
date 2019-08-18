@@ -113,7 +113,7 @@ module Diplomat
         when :reject
           raise Diplomat::KeyNotFound, key
         when :return
-          return @value = ''
+          return @value = []
         when :wait
           index = raw.headers['x-consul-index']
         end
@@ -216,11 +216,10 @@ module Diplomat
 
     private
 
-    def get_raw(key, options = {}, custom_params = nil)
+    def get_raw(key, options = {}, custom_params = [])
       key = normalize_key_for_uri(key)
       @key = key
       @options = options
-      custom_params = []
       custom_params << recurse_get(@options)
       custom_params << use_consistency(@options)
       custom_params << dc(@options)
