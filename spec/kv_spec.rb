@@ -356,6 +356,78 @@ describe Diplomat::Kv do
       end
     end
 
+    describe '#get_all' do
+      context 'normal context' do
+        it 'GET_ALL' do
+          kv = Diplomat::Kv.new
+          stub_request(:get, 'http://localhost:8500/v1/kv/foo?recurse')
+            .to_return(OpenStruct.new(status: 200, body: JSON.generate([])))
+          kv.get_all('foo')
+        end
+      end
+
+      context 'Datacenter filter' do
+        it 'GET_ALL for a specific datacenter' do
+          kv = Diplomat::Kv.new
+          stub_request(:get, 'http://localhost:8500/v1/kv/foo?dc=bar&recurse')
+            .to_return(OpenStruct.new(status: 200, body: JSON.generate([])))
+          kv.get_all('foo', dc: 'bar')
+        end
+      end
+
+      context 'recursive get returns only a single result' do
+        let(:json) do
+          JSON.generate(
+            [
+              {
+                'Key' => key + 'foo',
+                'Value' => Base64.encode64(key_params),
+                'Flags' => 0
+              }
+            ]
+          )
+        end
+
+        it 'GET_ALL and returns a single item list' do
+          faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get_all(key)).to eql(
+            [
+              { key: key + 'foo', value: 'toast' }
+            ]
+          )
+        end
+      end
+
+      context 'supports convert_to_hash option' do
+        let(:json) do
+          JSON.generate(
+            [
+              {
+                'Key' => key + 'foo',
+                'Value' => Base64.encode64(key_params),
+                'Flags' => 0
+              },
+              {
+                'Key' => key + 'i/am/nested',
+                'Value' => Base64.encode64(key_params),
+                'Flags' => 0
+              }
+            ]
+          )
+        end
+
+        it 'GET_ALL and returns a Hash' do
+          faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
+          kv = Diplomat::Kv.new(faraday)
+          expect(kv.get_all(key, convert_to_hash: true)).to eql({
+            key + 'foo' => 'toast',
+            key + 'i' => {"am"=>{"nested"=>"toast"}}
+          })
+        end
+      end
+    end
+
     describe '#put' do
       context 'ACLs NOT enabled' do
         it 'PUT' do
