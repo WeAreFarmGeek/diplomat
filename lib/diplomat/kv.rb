@@ -1,7 +1,7 @@
 module Diplomat
   # Methods for interacting with the Consul KV API endpoint
   class Kv < Diplomat::RestClient
-    @access_methods = %i[get put delete txn]
+    @access_methods = %i[get get_all put delete txn]
     attr_reader :key, :value, :raw
 
     # Get a value by its key, potentially blocking for the first or next value
@@ -18,7 +18,7 @@ module Diplomat
     #   Only applies when combined with :keys option.
     # @option options [Boolean] :nil_values If to return keys/dirs with nil values
     # @option options [Boolean] :convert_to_hash Take the data returned from consul and build a hash
-    # @option options [Callable] :transformation funnction to invoke on keys values
+    # @option options [Callable] :transformation function to invoke on keys values
     # @param not_found [Symbol] behaviour if the key doesn't exist;
     #   :reject with exception, :return degenerate value, or :wait for it to appear
     # @param found [Symbol] behaviour if the key does exist;
@@ -42,20 +42,11 @@ module Diplomat
     #   - W W - get the first or next value; wait until there is an update
     # rubocop:disable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
     def get(key, options = {}, not_found = :reject, found = :return)
-      key = normalize_key_for_uri(key)
-      @key = key
       @options = options
-      custom_params = []
-      custom_params << recurse_get(@options)
-      custom_params << use_consistency(options)
-      custom_params << dc(@options)
-      custom_params << keys(@options)
-      custom_params << separator(@options)
-
       return_nil_values = @options && @options[:nil_values]
       transformation = @options && @options[:transformation] && @options[:transformation].methods.find_index(:call) ? @options[:transformation] : nil
+      raw = get_raw(key, options)
 
-      raw = send_get_request(@conn_no_err, ["/v1/kv/#{@key}"], options, custom_params)
       if raw.status == 404
         case not_found
         when :reject
@@ -86,17 +77,70 @@ module Diplomat
       end
 
       # Wait for first/next value
-      custom_params << use_named_parameter('index', index)
-      if options.nil?
-        options = { timeout: 86_400 }
-      else
-        options[:timeout] = 86_400
-      end
-      @raw = send_get_request(@conn, ["/v1/kv/#{@key}"], options, custom_params)
+      @raw = wait_for_value(index, options)
       @raw = parse_body
       return_value(return_nil_values, transformation)
     end
     # rubocop:enable PerceivedComplexity, LineLength, MethodLength, CyclomaticComplexity
+
+    # Get all keys recursively, potentially blocking for the first or next value
+    # @param key [String] the key
+    # @param options [Hash] the query params
+    # @option options [String] :consistency The read consistency type
+    # @option options [String] :dc Target datacenter
+    # @option options [Boolean] :keys Only return key names.
+    # @option options [Boolean] :decode_values Return consul response with decoded values.
+    # @option options [String] :separator List only up to a given separator.
+    #   Only applies when combined with :keys option.
+    # @option options [Boolean] :nil_values If to return keys/dirs with nil values
+    # @option options [Boolean] :convert_to_hash Take the data returned from consul and build a hash
+    # @option options [Callable] :transformation function to invoke on keys values
+    # @param not_found [Symbol] behaviour if the key doesn't exist;
+    #   :reject with exception, :return degenerate value, or :wait for it to appear
+    # @param found [Symbol] behaviour if the key does exist;
+    #   :reject with exception, :return its current value, or :wait for its next value
+    # @return [List] List of hashes, one hash for each key-value returned
+    # rubocop:disable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
+    def get_all(key, options = {}, not_found = :reject, found = :return)
+      @options = options
+      @options[:recurse] = true
+      return_nil_values = @options && @options[:nil_values]
+      transformation = @options && @options[:transformation] && @options[:transformation].methods.find_index(:call) ? @options[:transformation] : nil
+
+      raw = get_raw(key, options)
+      if raw.status == 404
+        case not_found
+        when :reject
+          raise Diplomat::KeyNotFound, key
+        when :return
+          return @value = []
+        when :wait
+          index = raw.headers['x-consul-index']
+        end
+      elsif raw.status == 200
+        case found
+        when :reject
+          raise Diplomat::KeyAlreadyExists, key
+        when :return
+          @raw = raw
+          @raw = parse_body
+          return decode_values if @options && @options[:decode_values]
+          return convert_to_hash(return_value(return_nil_values, transformation, true)) if @options && @options[:convert_to_hash]
+
+          return return_value(return_nil_values, transformation, true)
+        when :wait
+          index = raw.headers['x-consul-index']
+        end
+      else
+        raise Diplomat::UnknownStatus, "status #{raw.status}: #{raw.body}"
+      end
+
+      # Wait for first/next value
+      @raw = wait_for_value(index, options)
+      @raw = parse_body
+      return_value(return_nil_values, transformation, true)
+    end
+    # rubocop:enable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
 
     # Associate a value with a key
     # @param key [String] the key
@@ -171,6 +215,30 @@ module Diplomat
     end
 
     private
+
+    def get_raw(key, options = {}, custom_params = [])
+      key = normalize_key_for_uri(key)
+      @key = key
+      @options = options
+      custom_params << recurse_get(@options)
+      custom_params << use_consistency(@options)
+      custom_params << dc(@options)
+      custom_params << keys(@options)
+      custom_params << separator(@options)
+
+      send_get_request(@conn_no_err, ["/v1/kv/#{@key}"], options, custom_params)
+    end
+
+    def wait_for_value(index, options)
+      custom_params = []
+      custom_params << use_named_parameter('index', index)
+      if options.nil?
+        options = { timeout: 86_400 }
+      else
+        options[:timeout] = 86_400
+      end
+      get_raw(key, options, custom_params)
+    end
 
     def recurse_get(options)
       options[:recurse] ? ['recurse'] : []
