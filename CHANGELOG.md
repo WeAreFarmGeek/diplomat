@@ -2,6 +2,8 @@
 
 ## Next
 
+* add `Diplomat::Kv.get_all` #201 to have better semantics with unique/multiple key/values
+
 ## 2.2.5
 
 Support Consul 1.4.x ACLs
