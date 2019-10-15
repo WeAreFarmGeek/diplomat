@@ -1,0 +1,52 @@
+[
+  {
+    "Node": {
+      "ID": "7335867c-ca76-81d9-ef8b-f0e3e30b8003",
+      "Node": "node03",
+      "Address": "10.10.10.3",
+      "Datacenter": "dc1",
+      "TaggedAddresses": {
+        "lan": "10.10.10.3",
+        "wan": "10.10.10.3"
+      },
+      "CreateIndex": 76227559,
+      "ModifyIndex": 76227559
+    },
+    "Service": {
+      "ID": "service04",
+      "Service": "service04",
+      "Tags": [
+        "http"
+      ],
+      "Address": "",
+      "Meta": null,
+      "Port": 8080,
+      "Weights": {
+        "Passing": 1,
+        "Warning": 1
+      },
+      "EnableTagOverride": false,
+      "ProxyDestination": "",
+      "Proxy": {},
+      "Connect": {},
+      "CreateIndex": 76227559,
+      "ModifyIndex": 76227559
+    },
+    "Checks": [
+      {
+        "Node": "node03",
+        "CheckID": "service:service04",
+        "Name": "Service 'service04' check",
+        "Status": "critical",
+        "Notes": "",
+        "Output": "HTTP GET http://localhost:8080: 404 Not Found Output: ",
+        "ServiceID": "",
+        "ServiceName": "",
+        "ServiceTags": [],
+        "Definition": {},
+        "CreateIndex": 76227559,
+        "ModifyIndex": 76227559
+      }
+    ]
+  }
+]

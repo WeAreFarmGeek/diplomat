@@ -1,0 +1,134 @@
+[
+    {
+        "Name": "consul01",
+        "Addr": "10.10.10.1",
+        "Port": 8301,
+        "Tags": {
+            "build": "1.5.1:",
+            "dc": "par",
+            "id": "7335867c-ca76-81d9-ef8b-f0e3e30b8001",
+            "role": "consul",
+            "segment": "",
+            "vsn": "2",
+            "vsn_max": "3",
+            "vsn_min": "2"
+        },
+        "Status": 1,
+        "ProtocolMin": 1,
+        "ProtocolMax": 5,
+        "ProtocolCur": 2,
+        "DelegateMin": 2,
+        "DelegateMax": 5,
+        "DelegateCur": 4
+    },
+    {
+        "Name": "node01",
+        "Addr": "10.10.10.101",
+        "Port": 8301,
+        "Tags": {
+            "build": "1.4.5:",
+            "dc": "par",
+            "id": "7335867c-ca76-81d9-ef8b-f0e3e30b8101",
+            "role": "node",
+            "segment": "",
+            "vsn": "2",
+            "vsn_max": "3",
+            "vsn_min": "2"
+        },
+        "Status": 1,
+        "ProtocolMin": 1,
+        "ProtocolMax": 5,
+        "ProtocolCur": 2,
+        "DelegateMin": 2,
+        "DelegateMax": 5,
+        "DelegateCur": 4
+    },
+    {
+        "Name": "consul02",
+        "Addr": "10.10.10.2",
+        "Port": 8301,
+        "Tags": {
+            "build": "1.5.1:",
+            "dc": "par",
+            "id": "7335867c-ca76-81d9-ef8b-f0e3e30b8002",
+            "role": "consul",
+            "segment": "",
+            "vsn": "2",
+            "vsn_max": "3",
+            "vsn_min": "2"
+        },
+        "Status": 1,
+        "ProtocolMin": 1,
+        "ProtocolMax": 5,
+        "ProtocolCur": 2,
+        "DelegateMin": 2,
+        "DelegateMax": 5,
+        "DelegateCur": 4
+    },
+    {
+        "Name": "node02",
+        "Addr": "10.10.10.102",
+        "Port": 8301,
+        "Tags": {
+            "build": "1.4.5:",
+            "dc": "par",
+            "id": "7335867c-ca76-81d9-ef8b-f0e3e30b8102",
+            "role": "node",
+            "segment": "",
+            "vsn": "2",
+            "vsn_max": "3",
+            "vsn_min": "2"
+        },
+        "Status": 1,
+        "ProtocolMin": 1,
+        "ProtocolMax": 5,
+        "ProtocolCur": 2,
+        "DelegateMin": 2,
+        "DelegateMax": 5,
+        "DelegateCur": 4
+    },
+    {
+        "Name": "consul03",
+        "Addr": "10.10.10.3",
+        "Port": 8301,
+        "Tags": {
+            "build": "1.5.1:",
+            "dc": "par",
+            "id": "7335867c-ca76-81d9-ef8b-f0e3e30b8003",
+            "role": "consul",
+            "segment": "",
+            "vsn": "2",
+            "vsn_max": "3",
+            "vsn_min": "2"
+        },
+        "Status": 1,
+        "ProtocolMin": 1,
+        "ProtocolMax": 5,
+        "ProtocolCur": 2,
+        "DelegateMin": 2,
+        "DelegateMax": 5,
+        "DelegateCur": 4
+    },
+    {
+        "Name": "node03",
+        "Addr": "10.10.10.103",
+        "Port": 8301,
+        "Tags": {
+            "build": "1.4.5:",
+            "dc": "par",
+            "id": "7335867c-ca76-81d9-ef8b-f0e3e30b8102",
+            "role": "node",
+            "segment": "",
+            "vsn": "2",
+            "vsn_max": "3",
+            "vsn_min": "2"
+        },
+        "Status": 1,
+        "ProtocolMin": 1,
+        "ProtocolMax": 5,
+        "ProtocolCur": 2,
+        "DelegateMin": 2,
+        "DelegateMax": 5,
+        "DelegateCur": 4
+    }
+]

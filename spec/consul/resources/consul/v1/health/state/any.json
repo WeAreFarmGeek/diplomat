@@ -1,0 +1,67 @@
+[
+  {
+    "Node": "node01",
+    "CheckID": "service:service01",
+    "Name": "Service 'service01' check",
+    "Status": "passing",
+    "Notes": "",
+    "Output": "TCP connect 127.0.0.1:9182: Success",
+    "ServiceID": "service01",
+    "ServiceName": "service01",
+    "Definition": {},
+    "CreateIndex": 76227559,
+    "ModifyIndex": 76227559
+  },
+  {
+    "Node": "node02",
+    "CheckID": "service:service02",
+    "Name": "Service 'service02' check",
+    "Status": "passing",
+    "Notes": "",
+    "Output": "TCP connect 127.0.0.1:9182: Success",
+    "ServiceID": "service02",
+    "ServiceName": "service02",
+    "Definition": {},
+    "CreateIndex": 76227559,
+    "ModifyIndex": 76227559
+  },
+  {
+    "Node": "node03",
+    "CheckID": "service:service03",
+    "Name": "Service 'service03' check",
+    "Status": "passing",
+    "Notes": "",
+    "Output": "HTTP GET http://localhost:8080: 200 OK Output: Cool",
+    "ServiceID": "service03",
+    "ServiceName": "service03",
+    "Definition": {},
+    "CreateIndex": 76227559,
+    "ModifyIndex": 76227559
+  },
+  {
+    "Node": "node01",
+    "CheckID": "service:service03",
+    "Name": "Service 'service03' check",
+    "Status": "critical",
+    "Notes": "",
+    "Output": "HTTP GET http://localhost:8080: 404 Not Found Output: ",
+    "ServiceID": "service03",
+    "ServiceName": "service03",
+    "Definition": {},
+    "CreateIndex": 76227559,
+    "ModifyIndex": 76227559
+  },
+  {
+    "Node": "node03",
+    "CheckID": "service:service04",
+    "Name": "Service 'service04' check",
+    "Status": "critical",
+    "Notes": "",
+    "Output": "HTTP GET http://localhost:8080: 404 Not Found Output: ",
+    "ServiceID": "service04",
+    "ServiceName": "service04",
+    "Definition": {},
+    "CreateIndex": 76227559,
+    "ModifyIndex": 76227559
+  }
+]
