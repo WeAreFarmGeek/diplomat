@@ -1,0 +1,52 @@
+[
+  {
+    "Node": {
+      "ID": "7335867c-ca76-81d9-ef8b-f0e3e30b8002",
+      "Node": "node02",
+      "Address": "10.10.10.2",
+      "Datacenter": "dc1",
+      "TaggedAddresses": {
+        "lan": "10.10.10.2",
+        "wan": "10.10.10.2"
+      },
+      "CreateIndex": 76227559,
+      "ModifyIndex": 76227559
+    },
+    "Service": {
+      "ID": "service02",
+      "Service": "service02",
+      "Tags": [
+        "tcp"
+      ],
+      "Address": "",
+      "Meta": null,
+      "Port": 8080,
+      "Weights": {
+        "Passing": 1,
+        "Warning": 1
+      },
+      "EnableTagOverride": false,
+      "ProxyDestination": "",
+      "Proxy": {},
+      "Connect": {},
+      "CreateIndex": 76227559,
+      "ModifyIndex": 76227559
+    },
+    "Checks": [
+      {
+        "Node": "node02",
+        "CheckID": "service:service02",
+        "Name": "Service 'service02' check",
+        "Status": "passing",
+        "Notes": "",
+        "Output": "TCP connect 127.0.0.1:9182: Success",
+        "ServiceID": "",
+        "ServiceName": "",
+        "ServiceTags": [],
+        "Definition": {},
+        "CreateIndex": 76227559,
+        "ModifyIndex": 76227559
+      }
+    ]
+  }
+]

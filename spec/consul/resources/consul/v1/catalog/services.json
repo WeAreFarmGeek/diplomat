@@ -1,0 +1,6 @@
+{
+  "service01": ["tcp"],
+  "service02": ["tcp"],
+  "service03": ["http"],
+  "service04": ["http"]
+}
