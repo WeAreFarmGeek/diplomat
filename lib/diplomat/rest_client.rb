@@ -241,7 +241,7 @@ module Diplomat
           rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
           req.options.timeout = options[:timeout] if options[:timeout]
         end
-      rescue Faraday::ClientError => e
+      rescue Faraday::ClientError, Faraday::ServerError => e
         resp = e.response
         if resp
           raise Diplomat::AclNotFound, e if resp[:status] == 403 && resp[:body] == 'ACL not found'
