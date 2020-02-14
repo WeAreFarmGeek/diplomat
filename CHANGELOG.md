@@ -2,6 +2,10 @@
 
 ## Next
 
+## 2.2.6
+
+* Updated versions of Ruby in use on Travis
+* Support for Faraday library 1.0.0+ (thanks to @bkonick in #203)
 * add `Diplomat::Kv.get_all` #201 to have better semantics with unique/multiple key/values
 
 ## 2.2.5
