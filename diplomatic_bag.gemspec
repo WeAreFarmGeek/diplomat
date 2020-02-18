@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './lib/diplomat/version'
 
 Gem::Specification.new 'diplomatic_bag', Diplomat::VERSION do |spec|

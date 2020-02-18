@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul node API endpoint
   class Node < Diplomat::RestClient

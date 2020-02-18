@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul ACL API endpoint
   class Acl < Diplomat::RestClient
@@ -8,7 +10,7 @@ module Diplomat
     # @param id [String] ID of the Acl to get
     # @param options [Hash] options parameter hash
     # @return [Hash]
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def info(id, options = {}, not_found = :reject, found = :return)
       @id = id
       @options = options
@@ -36,7 +38,7 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{raw.status}: #{raw.body}"
       end
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # List all Acls
     # @param options [Hash] options parameter hash

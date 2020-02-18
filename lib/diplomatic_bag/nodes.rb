@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Usefull usage of Diplomat lib: Nodes functions
 module DiplomaticBag
   def self.get_duplicate_node_id(options = {})

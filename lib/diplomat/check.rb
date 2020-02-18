@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul check API endpoint
   class Check < Diplomat::RestClient
@@ -19,7 +21,7 @@ module Diplomat
     # @param interval [String] frequency (with units) of the check execution
     # @param options [Hash] options parameter hash
     # @return [Integer] Status code
-    # rubocop:disable ParameterLists
+    # rubocop:disable Metrics/ParameterLists
     def register_script(check_id, name, notes, args, interval, options = {})
       unless args.is_a?(Array)
         raise(Diplomat::DeprecatedArgument, 'Script usage is deprecated, replace by an array of args')
@@ -35,7 +37,7 @@ module Diplomat
       ret = send_put_request(@conn, ['/v1/agent/check/register'], options, definition)
       ret.status == 200
     end
-    # rubocop:enable ParameterLists
+    # rubocop:enable Metrics/ParameterLists
 
     # Register a TTL check
     # @param check_id [String] the unique id of the check

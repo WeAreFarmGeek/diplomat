@@ -2,17 +2,17 @@ language: ruby
 before_install:
 - gem install bundler
 rvm:
-- 2.3.8
 - 2.4.9
 - 2.5.7
 - 2.6.5
+- 2.7.0
 addons:
   code_climate:
     repo_token: 0c910d8f8af55cc2d2f38170d5362be4e16be8ce232df9c565057985af264b7b
 jobs:
   include:
     - stage: Gem release diplomat
-      rvm: 2.5.5
+      rvm: 2.5.7
       script: echo "Deploying diplomat to rubygems.org ..."
       deploy:
         provider: rubygems
@@ -24,7 +24,7 @@ jobs:
         on:
           tags: true
     - stage: Gem release diplomatic_bag
-      rvm: 2.5.5
+      rvm: 2.5.7
       script: echo "Deploying displomatic_bag to rubygems.org ..."
       deploy:
         provider: rubygems

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul lock API endpoint
   class Lock < Diplomat::RestClient
@@ -41,7 +43,7 @@ module Diplomat
     # @param session [String] the session, generated from Diplomat::Session.create
     # @param options [Hash] :dc string for dc specific query
     # @return [nil]
-    # rubocop:disable AbcSize
+    # rubocop:disable Metrics/AbcSize
     def release(key, session, options = {})
       key = normalize_key_for_uri(key)
       custom_params = []
@@ -51,6 +53,6 @@ module Diplomat
       raw = send_put_request(@conn, ["/v1/kv/#{key}"], options, nil, custom_params)
       raw.body
     end
-    # rubocop:enable AbcSize
+    # rubocop:enable Metrics/AbcSize
   end
 end

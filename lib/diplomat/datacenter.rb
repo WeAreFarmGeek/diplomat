@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul dataceneter API endpoint
   class Datacenter < Diplomat::RestClient

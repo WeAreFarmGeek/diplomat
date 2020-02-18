@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods to interact with the Consul maintenance API endpoint
   class Maintenance < Diplomat::RestClient

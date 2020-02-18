@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Then 'I should be able to get and put keys' do
   # High-fructose Corn Syrup
   Diplomat.put('drink', 'Irn Bru')

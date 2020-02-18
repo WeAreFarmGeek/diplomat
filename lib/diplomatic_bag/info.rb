@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 # Usefull usage of Diplomat lib: Info functions
 module DiplomaticBag
-  # rubocop:disable AbcSize
+  # rubocop:disable Metrics/AbcSize
   def self.consul_info(options = {})
     consul_self = Diplomat::Agent.self(options)
     puts 'Server: ' + consul_self['Config']['NodeName']
@@ -28,5 +30,5 @@ module DiplomaticBag
       end
     end
   end
-  # rubocop:enable AbcSize
+  # rubocop:enable Metrics/AbcSize
 end

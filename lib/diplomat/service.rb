@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul service API endpoint.
   class Service < Diplomat::RestClient
@@ -9,7 +11,7 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @param meta [Hash] output structure containing header information about the request (index)
     # @return [OpenStruct] all data associated with the service
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def get(key, scope = :first, options = {}, meta = nil)
       custom_params = []
       custom_params << use_named_parameter('wait', options[:wait]) if options[:wait]
@@ -44,7 +46,7 @@ module Diplomat
         OpenStruct.new JSON.parse(ret.body).first
       end
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # Get all the services
     # @param options [Hash] :dc Consul datacenter to query

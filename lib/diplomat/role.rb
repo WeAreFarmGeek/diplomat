@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul ACL Role API endpoint
   class Role < Diplomat::RestClient
@@ -8,7 +10,7 @@ module Diplomat
     # @param id [String] UUID or name of the ACL role to read
     # @param options [Hash] options parameter hash
     # @return [Hash] existing ACL role
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def read(id, options = {}, not_found = :reject, found = :return)
       @options = options
       custom_params = []
@@ -41,13 +43,13 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
       end
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # Read ACL role with the given name
     # @param name [String] name of the ACL role to read
     # @param options [Hash] options parameter hash
     # @return [Hash] existing ACL role
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def read_name(name, options = {}, not_found = :reject, found = :return)
       @options = options
       custom_params = []
@@ -80,7 +82,7 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
       end
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # List all the ACL roles
     # @param options [Hash] options parameter hash
@@ -128,7 +130,7 @@ module Diplomat
       custom_params = use_cas(@options)
       @raw = send_put_request(@conn, ['/v1/acl/role'], options, value, custom_params)
 
-      # rubocop:disable GuardClause
+      # rubocop:disable Style/GuardClause
       if @raw.status == 200
         return parse_body
       elsif @raw.status == 500 && @raw.body.chomp.include?('already exists')
@@ -137,7 +139,7 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
       end
     end
-    # rubocop:enable GuardClause
+    # rubocop:enable Style/GuardClause
 
     # Delete an ACL role by its UUID
     # @param id [String] UUID of the ACL role to delete

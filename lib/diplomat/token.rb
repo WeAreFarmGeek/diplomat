@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul ACL Policy API endpoint
   class Token < Diplomat::RestClient
@@ -8,7 +10,7 @@ module Diplomat
     # @param id [String] accessor ID of the ACL token to read
     # @param options [Hash] options parameter hash
     # @return [Hash] existing ACL token
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def read(id, options = {}, not_found = :reject, found = :return)
       @options = options
       custom_params = []
@@ -34,7 +36,7 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
       end
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # List all the ACL tokens
     # @param policy [String] filters the token list matching the specific policy ID

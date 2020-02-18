@@ -2,6 +2,12 @@
 
 ## Next
 
+* Stop builds with Ruby 2.3.x (Ruby 2.3.x has no security fixes anymore)
+* Build with Ruby 2.7.0
+* Fix warnings with Ruby 2.7.0
+* Bump rubocop to 0.80.0
+* Fix all rubocop warnings
+
 ## 2.2.6
 
 * Updated versions of Ruby in use on Travis

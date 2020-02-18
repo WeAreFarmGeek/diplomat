@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Usefull usage of Diplomat lib: Datacenter functions
 module DiplomaticBag
   def self.get_datacenters_list(dc, options = {})

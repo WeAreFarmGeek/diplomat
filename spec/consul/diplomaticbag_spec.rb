@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'diplomatic_bag'
 require_relative 'consul_mock'
 

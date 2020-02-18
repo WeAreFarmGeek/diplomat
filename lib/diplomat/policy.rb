@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul ACL Policy API endpoint
   class Policy < Diplomat::RestClient
@@ -8,7 +10,7 @@ module Diplomat
     # @param id [String] UUID of the ACL policy to read
     # @param options [Hash] options parameter hash
     # @return [Hash] existing ACL policy
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def read(id, options = {}, not_found = :reject, found = :return)
       @options = options
       custom_params = []
@@ -41,7 +43,7 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
       end
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # List all the ACL policies
     # @param options [Hash] options parameter hash
@@ -89,7 +91,7 @@ module Diplomat
       custom_params = use_cas(@options)
       @raw = send_put_request(@conn, ['/v1/acl/policy'], options, value, custom_params)
 
-      # rubocop:disable GuardClause
+      # rubocop:disable Style/GuardClause
       if @raw.status == 200
         return parse_body
       elsif @raw.status == 500 && @raw.body.chomp.include?('already exists')
@@ -98,7 +100,7 @@ module Diplomat
         raise Diplomat::UnknownStatus, "status #{@raw.status}: #{@raw.body}"
       end
     end
-    # rubocop:enable GuardClause
+    # rubocop:enable Style/GuardClause
 
     # Delete an ACL policy by its UUID
     # @param id [String] UUID of the ACL policy to delete

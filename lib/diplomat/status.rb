@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul status API endpoints, leader and peers
   class Status < Diplomat::RestClient

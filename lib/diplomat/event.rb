@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul event API endpoint
   class Event < Diplomat::RestClient
@@ -102,7 +104,7 @@ module Diplomat
     #   middle, though these can only be identified relative to the preceding
     #   event. However, this is ideal for iterating through the sequence of
     #   events (while being sure that none are missed).
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def get(name = nil, token = :last, not_found = :wait, found = :return, options = {})
       @raw = send_get_request(@conn, ['/v1/event/list'], options, use_named_parameter('name', name))
       body = JSON.parse(@raw.body)
@@ -148,7 +150,7 @@ module Diplomat
         token: event_token
       }
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     private
 

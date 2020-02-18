@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul health API endpoint
   class Health < Diplomat::RestClient
@@ -32,7 +34,7 @@ module Diplomat
     # @param s [String] the service
     # @param options [Hash] options parameter hash
     # @return [OpenStruct] all data associated with the node
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def service(s, options = {})
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
@@ -43,7 +45,7 @@ module Diplomat
       ret = send_get_request(@conn, ["/v1/health/service/#{s}"], options, custom_params)
       JSON.parse(ret.body).map { |service| OpenStruct.new service }
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # Get service health
     # @param s [String] the state ("any", "passing", "warning", or "critical")

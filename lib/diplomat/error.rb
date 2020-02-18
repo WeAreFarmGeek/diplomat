@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   class KeyNotFound < StandardError; end
   class PathNotFound < StandardError; end

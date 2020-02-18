@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'deep_merge'
 
 module Diplomat
@@ -172,7 +174,7 @@ module Diplomat
     end
 
     # Get the key/value(s) from the raw output
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def return_value(nil_values = false, transformation = nil, return_hash = false)
       @value = decode_values
       return @value if @value.first.is_a? String
@@ -188,7 +190,7 @@ module Diplomat
         end.compact
       end
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # Get the name and payload(s) from the raw output
     def return_payload
@@ -206,7 +208,7 @@ module Diplomat
       options[:consistency] ? [options[:consistency].to_s] : []
     end
 
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     # TODO: Migrate all custom params in options
     def parse_options(options)
       headers = nil
@@ -228,7 +230,7 @@ module Diplomat
       url_prefix = options[:http_addr] if options[:http_addr]
       { query_params: query_params, headers: headers, url_prefix: url_prefix }
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def send_get_request(connection, url, options, custom_params = nil)
       rest_options = parse_options(options)
@@ -238,7 +240,7 @@ module Diplomat
         connection.get do |req|
           req.options[:params_encoder] = options[:params_encoder] if options[:params_encoder]
           req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-          rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+          rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
           req.options.timeout = options[:timeout] if options[:timeout]
         end
       rescue Faraday::ClientError, Faraday::ServerError => e
@@ -256,7 +258,7 @@ module Diplomat
       url += custom_params unless custom_params.nil?
       connection.put do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+        rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
         unless data.nil?
           (req.headers || {})['Content-Type'] = mime
           req.body = if mime == 'application/json' && !data.is_a?(String)
@@ -274,7 +276,7 @@ module Diplomat
       url += custom_params unless custom_params.nil?
       connection.post do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+        rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
         req.body = JSON.dump(data) unless data.nil?
       end
     end
@@ -285,7 +287,7 @@ module Diplomat
       url += custom_params unless custom_params.nil?
       connection.delete do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
+        rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
       end
     end
 

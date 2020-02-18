@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './lib/diplomat/version'
 
 Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
@@ -18,7 +20,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.add_development_dependency 'pry', '~> 0.9'
   spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.2'
-  spec.add_development_dependency 'rubocop', '~> 0.67.0'
+  spec.add_development_dependency 'rubocop', '~> 0.80.0'
   spec.add_development_dependency 'webmock'
 
   spec.add_runtime_dependency 'deep_merge', '~> 1.0', '>= 1.0.1'

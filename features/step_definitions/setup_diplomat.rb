@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'diplomat'
 
 Given 'I am setting up a default diplomat' do

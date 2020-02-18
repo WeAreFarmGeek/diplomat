@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # @depreciated
   # Methods for interacting with the Consul nodes API endpoint

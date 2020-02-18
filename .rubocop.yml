@@ -8,7 +8,7 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Max: 15
 
-Metrics/LineLength:
+Layout/LineLength:
   # This will disable the rule completely, regardless what other options you put
   Enabled: true
   # Change the default 80 chars limit value
@@ -21,13 +21,13 @@ Metrics/MethodLength:
   Max: 50
 
 # Allow classes longer than 100 lines of code
-ClassLength:
+Metrics/ClassLength:
   Max: 250
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 
-Lint/UnneededCopDisableDirective:
+Lint/RedundantCopDisableDirective:
   Enabled: false
 
 Metrics/PerceivedComplexity:
@@ -35,3 +35,15 @@ Metrics/PerceivedComplexity:
 
 Metrics/ParameterLists:
   Max: 6
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true

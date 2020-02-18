@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Usefull usage of Diplomat lib: Service functions
 module DiplomaticBag
   def self.get_service_info(service, options = {})

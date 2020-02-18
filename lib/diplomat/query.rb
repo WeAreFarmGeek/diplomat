@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul query API endpoint
   class Query < Diplomat::RestClient
@@ -63,7 +65,7 @@ module Diplomat
     #   estimated round trip time from that node
     # @option limit [Integer] to limit the size of the return list to the given number of results
     # @return [OpenStruct] the list of results from the prepared query or prepared query template
-    # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def execute(key, options = {})
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
@@ -72,7 +74,7 @@ module Diplomat
       ret = send_get_request(@conn, ["/v1/query/#{key}/execute"], options, custom_params)
       OpenStruct.new JSON.parse(ret.body)
     end
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # Get the fully rendered query template
     # @param key [String] the prepared query ID or name

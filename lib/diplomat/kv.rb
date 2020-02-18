@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Diplomat
   # Methods for interacting with the Consul KV API endpoint
   class Kv < Diplomat::RestClient
@@ -40,7 +42,7 @@ module Diplomat
     #   - W R - get the first or current value; always return something, but
     #           block only when necessary
     #   - W W - get the first or next value; wait until there is an update
-    # rubocop:disable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity, Metrics/MethodLength, Layout/LineLength, Metrics/CyclomaticComplexity
     def get(key, options = {}, not_found = :reject, found = :return)
       @options = options
       return_nil_values = @options && @options[:nil_values]
@@ -81,7 +83,7 @@ module Diplomat
       @raw = parse_body
       return_value(return_nil_values, transformation)
     end
-    # rubocop:enable PerceivedComplexity, LineLength, MethodLength, CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity, Layout/LineLength, Metrics/MethodLength, Metrics/CyclomaticComplexity
 
     # Get all keys recursively, potentially blocking for the first or next value
     # @param key [String] the key
@@ -100,7 +102,7 @@ module Diplomat
     # @param found [Symbol] behaviour if the key does exist;
     #   :reject with exception, :return its current value, or :wait for its next value
     # @return [List] List of hashes, one hash for each key-value returned
-    # rubocop:disable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity, Metrics/MethodLength, Layout/LineLength, Metrics/CyclomaticComplexity
     def get_all(key, options = {}, not_found = :reject, found = :return)
       @options = options
       @options[:recurse] = true
@@ -140,7 +142,7 @@ module Diplomat
       @raw = parse_body
       return_value(return_nil_values, transformation, true)
     end
-    # rubocop:enable PerceivedComplexity, MethodLength, LineLength, CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity, Metrics/MethodLength, Layout/LineLength, Metrics/CyclomaticComplexity
 
     # Associate a value with a key
     # @param key [String] the key
