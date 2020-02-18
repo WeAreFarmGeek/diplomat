@@ -45,6 +45,12 @@ Check out [Travis](https://travis-ci.org/WeAreFarmGeek/diplomat) to see which ve
 
 We've dropped ruby 1.9 support. You can still depend on Diplomat by directly using the `ruby-1.9-compatible` branch on github, although be advised it's not actively maintained anymore.
 
+### ERB templating
+
+It is possible to inject diplomat data into `.erb` files (such as in chef), but you could also have a look at
+[consul-templaterb](https://github.com/criteo/consul-templaterb/) that is highly optimized for ERB templating
+with very hi parallelism and good optimized performance for large clusters.
+
 ## Usage
 
 [The most up to date place to read about the API is here.](http://rubydoc.info/github/WeAreFarmGeek/diplomat)
