@@ -240,7 +240,7 @@ module Diplomat
         connection.get do |req|
           req.options[:params_encoder] = options[:params_encoder] if options[:params_encoder]
           req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-          rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
+          rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
           req.options.timeout = options[:timeout] if options[:timeout]
         end
       rescue Faraday::ClientError, Faraday::ServerError => e
@@ -258,7 +258,7 @@ module Diplomat
       url += custom_params unless custom_params.nil?
       connection.put do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-        rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
+        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
         unless data.nil?
           (req.headers || {})['Content-Type'] = mime
           req.body = if mime == 'application/json' && !data.is_a?(String)
@@ -276,7 +276,7 @@ module Diplomat
       url += custom_params unless custom_params.nil?
       connection.post do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-        rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
+        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
         req.body = JSON.dump(data) unless data.nil?
       end
     end
@@ -287,7 +287,7 @@ module Diplomat
       url += custom_params unless custom_params.nil?
       connection.delete do |req|
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
-        rest_options[:headers]&.map { |k, v| req.headers[k.to_sym] = v }
+        rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
       end
     end
 

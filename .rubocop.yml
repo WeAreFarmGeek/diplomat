@@ -36,9 +36,6 @@ Metrics/PerceivedComplexity:
 Metrics/ParameterLists:
   Max: 6
 
-Style/RedundantReturn:
-  Enabled: false
-
 Style/HashEachMethods:
   Enabled: true
 
@@ -47,3 +44,9 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false

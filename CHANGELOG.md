@@ -2,6 +2,13 @@
 
 ## Next
 
+## 2.3.1
+
+Fix #204: Avoid breaking Ruby versions lower than 2.3
+
+While we do not build against pre 2.4, let's allow people still using it
+by avoiding the `&.` safe operator.
+
 ## 2.3.0
 
 Support for Ruby 2.7.x
