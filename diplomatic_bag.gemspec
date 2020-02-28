@@ -3,8 +3,8 @@
 require './lib/diplomat/version'
 
 Gem::Specification.new 'diplomatic_bag', Diplomat::VERSION do |spec|
-  spec.authors       = ['Nicolas Benoit']
-  spec.email         = ['n.benoit@criteo.com']
+  spec.authors       = ['Nicolas Benoit', 'Pierre Souchay']
+  spec.email         = ['n.benoit@criteo.com', 'p.souchay@criteo.com']
   spec.description   = spec.summary = 'Toolbox for Consul'
   spec.homepage      = 'https://github.com/WeAreFarmGeek/diplomat'
   spec.license       = 'BSD-3-Clause'

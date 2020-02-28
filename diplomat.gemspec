@@ -3,8 +3,8 @@
 require './lib/diplomat/version'
 
 Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
-  spec.authors       = ['John Hamelink', 'Trevor Wood']
-  spec.email         = ['john@johnhamelink.com', 'trevor.g.wood@gmail.com']
+  spec.authors       = ['John Hamelink', 'Trevor Wood', 'Pierre Souchay']
+  spec.email         = ['john@johnhamelink.com', 'trevor.g.wood@gmail.com', 'p.souchay@criteo.com']
   spec.description   = spec.summary = 'Diplomat is a simple wrapper for Consul'
   spec.homepage      = 'https://github.com/WeAreFarmGeek/diplomat'
   spec.license       = 'BSD-3-Clause'
