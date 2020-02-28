@@ -2,6 +2,10 @@
 AllCops:
   DisplayCopNames: true
 
+# While we support 2.4+, it still works with 2.0+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 60
 

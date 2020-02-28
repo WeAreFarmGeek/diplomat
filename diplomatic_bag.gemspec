@@ -12,6 +12,7 @@ Gem::Specification.new 'diplomatic_bag', Diplomat::VERSION do |spec|
   spec.files         = `git ls-files bin lib/diplomatic_bag.rb lib/diplomatic_bag LICENSE`.split("\n")
   spec.bindir        = 'bin'
   spec.executables =   spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.required_ruby_version = '>= 2.0' # Does not work with 1.9 and below
 
   spec.add_runtime_dependency 'diplomat', "=#{Diplomat::VERSION}"
 end

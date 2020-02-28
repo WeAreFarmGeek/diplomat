@@ -10,6 +10,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.license       = 'BSD-3-Clause'
 
   spec.files         = `git ls-files lib/diplomat.rb lib/diplomat README.md LICENSE features`.split("\n")
+  spec.required_ruby_version = '>= 2.0' # Does not work with 1.9 and below
 
   spec.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.1'
   spec.add_development_dependency 'codeclimate-test-reporter', '~> 0.4.0'
