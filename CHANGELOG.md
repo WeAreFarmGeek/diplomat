@@ -2,6 +2,10 @@
 
 ## Next
 
+## 2.3.2
+
+Properly declare Ruby 2.0 as minimum version in GEM spec
+
 ## 2.3.1
 
 Fix #204: Avoid breaking Ruby versions lower than 2.3
