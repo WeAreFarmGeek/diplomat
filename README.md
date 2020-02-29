@@ -1,5 +1,5 @@
 # Diplomat
-[![Gem Version](https://badge.fury.io/rb/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Gem](https://img.shields.io/gem/dt/diplomat.svg)](https://rubygems.org/gems/diplomat/versions/2.0.0) [![Build Status](https://travis-ci.org/WeAreFarmGeek/diplomat.svg?branch=master)](https://travis-ci.org/WeAreFarmGeek/diplomat) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.svg)](https://codeclimate.com/github/WeAreFarmGeek/diplomat) [![Inline docs](http://inch-ci.org/github/wearefarmgeek/diplomat.svg?branch=master)](http://inch-ci.org/github/wearefarmgeek/diplomat)
+[![Gem Version](https://badge.fury.io/rb/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Gem](https://img.shields.io/gem/dt/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Build Status](https://travis-ci.org/WeAreFarmGeek/diplomat.svg?branch=master)](https://travis-ci.org/WeAreFarmGeek/diplomat) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.svg)](https://codeclimate.com/github/WeAreFarmGeek/diplomat) [![Inline docs](http://inch-ci.org/github/wearefarmgeek/diplomat.svg?branch=master)](http://inch-ci.org/github/wearefarmgeek/diplomat)
 ### A HTTP Ruby API for [Consul](http://www.consul.io/)
 
 ![Diplomacy Board Game](http://i.imgur.com/Nkuy4b7.jpg)
