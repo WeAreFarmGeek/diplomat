@@ -2,6 +2,8 @@
 
 ## Next
 
+## 2.3.3
+
 Update rake dependency to 12.3.3 to fix CVE-2020-8130
 
 ## 2.3.2
