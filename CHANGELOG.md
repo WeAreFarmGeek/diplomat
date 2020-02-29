@@ -2,6 +2,8 @@
 
 ## Next
 
+Update rake dependency to 12.3.3 to fix CVE-2020-8130
+
 ## 2.3.2
 
 Properly declare Ruby 2.0 as minimum version in GEM spec

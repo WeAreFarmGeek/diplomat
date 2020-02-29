@@ -19,7 +19,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.add_development_dependency 'fivemat', '~> 1.3'
   spec.add_development_dependency 'gem-release', '~> 0.7'
   spec.add_development_dependency 'pry', '~> 0.9'
-  spec.add_development_dependency 'rake', '~> 12.0'
+  spec.add_development_dependency 'rake', '~> 12.3.3'
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'rubocop', '~> 0.80.0'
   spec.add_development_dependency 'webmock'
