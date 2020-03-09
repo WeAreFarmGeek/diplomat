@@ -3,11 +3,17 @@
 require 'spec_helper'
 
 describe Diplomat do
+  old_consul_http_addr = ENV['CONSUL_HTTP_ADDR']
   describe 'configuration' do
     before(:each) do
       expect(Diplomat.configuration).to_not be_nil
       expect(Diplomat.configuration).to be_a Diplomat::Configuration
       Diplomat.configuration = Diplomat::Configuration.new
+    end
+
+    after(:each) do
+      # Revert value of CONSUL_HTTP_ADDR
+      ENV['CONSUL_HTTP_ADDR'] = old_consul_http_addr
     end
 
     it 'has configuration block' do
@@ -34,6 +40,17 @@ describe Diplomat do
       it 'Returns an empty options hash' do
         expect(config.options).to be_a(Hash)
         expect(config.options).to be_empty
+      end
+    end
+
+    context 'With CONSUL_HTTP_ADDR env variable set' do
+      let(:config) do
+        ENV['CONSUL_HTTP_ADDR'] = 'consul.local:8500'
+        Diplomat::Configuration.new
+      end
+
+      it 'Properly configure diplomat from CONSUL_HTTP_ADDR' do
+        expect(config.url).to eq('http://consul.local:8500')
       end
     end
 

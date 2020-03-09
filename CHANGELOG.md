@@ -2,6 +2,8 @@
 
 ## Next
 
+Use `CONSUL_HTTP_ADDR` if set in environment by default to fix #57
+
 ## 2.3.3
 
 Update rake dependency to 12.3.3 to fix CVE-2020-8130
