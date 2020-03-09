@@ -2,7 +2,8 @@
 
 ## Next
 
-Use `CONSUL_HTTP_ADDR` if set in environment by default to fix #57
+* Use `CONSUL_HTTP_ADDR` if set in environment by default to fix #57
+* Minor improvements in documentation
 
 ## 2.3.3
 
