@@ -73,11 +73,12 @@ module Diplomat
     # Destroy an ACl token by its id
     # @param ID [String] the Acl ID
     # @param options [Hash] options parameter hash
-    # @return [Bool]
+    # @return [Bool] true if operation succeeded
     def destroy(id, options = {})
       @id = id
       @raw = send_put_request(@conn, ["/v1/acl/destroy/#{@id}"], options, nil)
       @raw.body.chomp == 'true'
+      true
     end
   end
 end
