@@ -2,6 +2,9 @@
 
 # Usefull usage of Diplomat lib: Nodes functions
 module DiplomaticBag
+  # Get the list of nodes having duplicate node ids
+  # @param options options to query with
+  # @return [Array[Object]] an array of objects with {name: node_name, status: status}
   def self.get_duplicate_node_id(options = {})
     status = {
       1 => 'Alive',

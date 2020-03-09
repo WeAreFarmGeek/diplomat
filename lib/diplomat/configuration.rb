@@ -28,6 +28,7 @@ module Diplomat
 
     # Define a middleware for Faraday
     # @param middleware [Class] Faraday Middleware class
+    # @return [Array] Array of Faraday Middlewares
     def middleware=(middleware)
       if middleware.is_a? Array
         @middleware = middleware

@@ -78,7 +78,6 @@ module Diplomat
       @id = id
       @raw = send_put_request(@conn, ["/v1/acl/destroy/#{@id}"], options, nil)
       @raw.body.chomp == 'true'
-      true
     end
   end
 end

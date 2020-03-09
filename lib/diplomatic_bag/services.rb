@@ -2,12 +2,18 @@
 
 # Usefull usage of Diplomat lib: Services functions
 module DiplomaticBag
+  # Get sevice name or empty string
+  # @param s service information
+  # @return [string] the name of service
   def self.compute_service_name(s)
     return '/node::health/' if s.nil? || s == ''
 
     s
   end
 
+  # Get the full list of services with their status
+  # @param options to query list
+  # @return #[Hash[string]] A hash of statuses (passing|warning|critical) per service
   def self.get_all_services_status(options = {})
     result = {}
     services = Diplomat::Health.state('any', options)
