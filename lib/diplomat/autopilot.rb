@@ -11,7 +11,6 @@ module Diplomat
     def get_configuration(options = {})
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
-      custom_params << use_named_parameter('stale', options[:dc]) if options[:stale]
 
       ret = send_get_request(@conn, ['/v1/operator/autopilot/configuration'], options, custom_params)
       JSON.parse(ret.body)
