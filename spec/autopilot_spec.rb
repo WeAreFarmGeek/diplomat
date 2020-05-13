@@ -31,23 +31,22 @@ describe Diplomat::Autopilot do
     it 'gets the health' do
       json = JSON.generate(
         {
-        'Healthy' => true,
-        'FailureTolerance' => 0,
-        'Servers' => [{
-          'ID' => 'e349749b-3303-3ddf-959c-b5885a0e1f6e',
-          'Name' => 'node1',
-          'Address' => '127.0.0.1:8300',
-          'SerfStatus' => 'alive',
-          'Version' => '0.7.4',
-          'Leader' => true,
-          'LastContact' => '0s',
-          'LastTerm' => 2,
-          'LastIndex' => 46,
           'Healthy' => true,
-          'Voter' => true,
-          'StableSince' => '2017-03-06T22:07:51Z',
-          
-        }]
+          'FailureTolerance' => 0,
+          'Servers' => [{
+            'ID' => 'e349749b-3303-3ddf-959c-b5885a0e1f6e',
+            'Name' => 'node1',
+            'Address' => '127.0.0.1:8300',
+            'SerfStatus' => 'alive',
+            'Version' => '0.7.4',
+            'Leader' => true,
+            'LastContact' => '0s',
+            'LastTerm' => 2,
+            'LastIndex' => 46,
+            'Healthy' => true,
+            'Voter' => true,
+            'StableSince' => '2017-03-06T22:07:51Z'
+          }]
         }
       )
 
