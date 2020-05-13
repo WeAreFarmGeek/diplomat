@@ -314,6 +314,22 @@ Get an array of Raft peers for the datacenter in which the agent is running
 Diplomat::Status.peers()
 ```
 
+### Autopilot
+
+Returns information about the autopilot configuration of the Consul cluster
+
+Get the current autopilot configuration
+
+```ruby
+Diplomat::Autopilot.get_configuration()
+```
+
+Get the health status from autopilot
+
+```ruby
+Diplomat::Autopilot.get_health()
+```
+
 ### Maintenance mode
 
 Enable maintenance mode on a host, with optional reason and DC (requires access to local agent)

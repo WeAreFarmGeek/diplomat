@@ -4,6 +4,7 @@
 
 * Use `CONSUL_HTTP_ADDR` if set in environment by default to fix #57
 * Minor improvements in documentation
+* Support for the Autopilot endpoint
 
 ## 2.3.3
 
