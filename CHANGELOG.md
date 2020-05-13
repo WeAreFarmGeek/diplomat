@@ -10,8 +10,12 @@ is ignored if target is explicitely set programatically.
 
 * Use `CONSUL_HTTP_ADDR` if set in environment by default to fix #57
 * Minor improvements in documentation
-* Support for `Diplomat::Autopilot.get_configuration()` #207, thanks to @rhughes1
-* Support for `Diplomat::Autopilot.get_health()` #207, thanks to @rhughes1
+* Support for `Diplomat::Autopilot.get_configuration()`
+  [#207](https://github.com/WeAreFarmGeek/diplomat/pull/207),
+  thanks to [@rhughes1](https://github.com/rhughes1)
+* Support for `Diplomat::Autopilot.get_health()`
+  [#207](https://github.com/WeAreFarmGeek/diplomat/pull/207),
+  thanks to [@rhughes1](https://github.com/rhughes1)
 
 ## 2.3.3
 
