@@ -2,9 +2,16 @@
 
 ## Next
 
+## 2.4.0
+
+New version with potentially breaking change as `CONSUL_HTTP_ADDR` is now read
+from environment to replace `http://localhost:8500` when set. The variable
+is ignored if target is explicitely set programatically.
+
 * Use `CONSUL_HTTP_ADDR` if set in environment by default to fix #57
 * Minor improvements in documentation
-* Support for the Autopilot endpoint
+* Support for `Diplomat::Autopilot.get_configuration()` #207, thanks to @rhughes1
+* Support for `Diplomat::Autopilot.get_health()` #207, thanks to @rhughes1
 
 ## 2.3.3
 
