@@ -12,7 +12,6 @@ module Diplomat
       ret = send_get_request(@conn, ['/v1/operator/autopilot/configuration'], options, custom_params)
       JSON.parse(ret.body)
     end
-    
     # Get health status from the autopilot
     # @param options [Hash] options parameter hash
     # @return [OpenStruct] all data associated with the health of the autopilot
@@ -22,4 +21,3 @@ module Diplomat
     end
   end
 end
-  
