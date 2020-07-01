@@ -189,6 +189,14 @@ describe Diplomat::Health do
       expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
     end
 
+    it 'should check service with node-meta option' do
+        faraday.stub(:get).and_return(OpenStruct.new(body: json))
+        health = Diplomat::Health.new(faraday)
+        options = { node_meta: 'rack-2' }
+  
+        expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
+    end
+
     it 'should return an array of checks' do
       expect(ch).to be_a_kind_of(Array)
     end
