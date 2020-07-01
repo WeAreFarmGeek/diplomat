@@ -1,6 +1,8 @@
 # Changelog
 
 ## Next
+* Added support for node-meta param to specify node level tags when queying for service health. 
+  eg Diplomat::Health.service('apache', passing: true, node_meta: "rack-2")
 
 ## 2.4.0
 
