@@ -41,6 +41,7 @@ module Diplomat
       custom_params << ['passing'] if options[:passing]
       custom_params << use_named_parameter('tag', options[:tag]) if options[:tag]
       custom_params << use_named_parameter('near', options[:near]) if options[:near]
+      custom_params << use_valueless_parameter('cached') if options[:cached]
 
       ret = send_get_request(@conn, ["/v1/health/service/#{s}"], options, custom_params)
       JSON.parse(ret.body).map { |service| OpenStruct.new service }
