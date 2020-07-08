@@ -1,6 +1,7 @@
 # Changelog
 
 ## Next
+added ability to specify 'cached' on service health endpoint
 
 ## 2.4.0
 
