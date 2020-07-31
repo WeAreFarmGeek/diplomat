@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'deep_merge'
+require 'deep_merge/core'
 
 module Diplomat
   # Base class for interacting with the Consul RESTful API
@@ -146,9 +146,12 @@ module Diplomat
 
     # Converts k/v data into ruby hash
     def convert_to_hash(data)
-      data.map do |item|
+      data_h = data.map do |item|
         item[:key].split('/').reverse.reduce(item[:value]) { |h, v| { v => h } }
-      end.reduce(:deep_merge)
+      end
+      data_h.reduce({}) do |dest, source|
+        DeepMerge.deep_merge!(source, dest, { preserve_unmergeables: true })
+      end
     end
 
     # Parse the body, apply it to the raw attribute
