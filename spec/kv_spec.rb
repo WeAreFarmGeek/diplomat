@@ -157,6 +157,7 @@ describe Diplomat::Kv do
           answer['foo'] = 'bar'
           expect(kv.get(key, recurse: true, convert_to_hash: true)).to eql(answer)
         end
+
         it 'GET with nil values' do
           faraday.stub(:get).and_return(OpenStruct.new(status: 200, body: json))
           kv = Diplomat::Kv.new(faraday)
