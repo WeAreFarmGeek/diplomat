@@ -2,6 +2,11 @@
 
 ## Next
 
+
+## 2.4.1
+
+Avoid Hash#deep_merge monkeypatch (#209 thanks to @benbuckman)
+
 ## 2.4.0
 
 New version with potentially breaking change as `CONSUL_HTTP_ADDR` is now read
