@@ -192,7 +192,7 @@ describe Diplomat::Health do
     it 'should check service with node-meta option' do
       faraday.stub(:get).and_return(OpenStruct.new(body: json))
       health = Diplomat::Health.new(faraday)
-      options = { node_meta: 'rack-2' }
+      options = { node_meta: 'rack:rack-2' }
 
       expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
     end
