@@ -1,7 +1,16 @@
 # Changelog
 
 ## Next
-added ability to specify 'cached' on service health endpoint
+* Added ability to specify 'cached' on service health endpoint
+* Added support for node-meta param to specify node level tags when queying for service health. 
+  eg Diplomat::Health.service('apache', passing: true, node_meta: "rack:rack-2")
+  see https://www.consul.io/docs/agent/options#node_meta for more info on setting tags
+
+
+
+## 2.4.1
+
+Avoid Hash#deep_merge monkeypatch (#209 thanks to @benbuckman)
 
 ## 2.4.0
 
