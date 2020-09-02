@@ -41,10 +41,12 @@ module Diplomat
       custom_params << ['passing'] if options[:passing]
       custom_params << use_named_parameter('tag', options[:tag]) if options[:tag]
       custom_params << use_named_parameter('near', options[:near]) if options[:near]
+      custom_params << use_named_parameter('node-meta', options[:node_meta]) if options[:node_meta]
 
       ret = send_get_request(@conn, ["/v1/health/service/#{s}"], options, custom_params)
       JSON.parse(ret.body).map { |service| OpenStruct.new service }
     end
+
     # rubocop:enable Metrics/PerceivedComplexity
 
     # Get service health
