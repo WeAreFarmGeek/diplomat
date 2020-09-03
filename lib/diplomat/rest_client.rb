@@ -30,13 +30,6 @@ module Diplomat
       value ? ["#{name}=#{value}"] : []
     end
 
-    # Format valueless url parameters into strings correctly
-    # @param param [String] the name of the parameter
-    # @return [Array] the resultant parameter string inside an array.
-    def use_valueless_parameter(param)
-      [param.to_s]
-    end
-
     # Assemble a url from an array of parts.
     # @param parts [Array] the url chunks to be assembled
     # @return [String] the resultant url string
