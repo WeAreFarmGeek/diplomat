@@ -236,6 +236,8 @@ module Diplomat
       consistency = 'consistent' if options[:consistent]
       query_params << consistency
 
+      query_params << 'cached' if options[:cached]
+
       # Parse url host
       url_prefix = options[:http_addr] if options[:http_addr]
       { query_params: query_params, headers: headers, url_prefix: url_prefix }
