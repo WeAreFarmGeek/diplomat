@@ -181,6 +181,14 @@ describe Diplomat::Health do
       expect(health.service('foobar', options: options).first['Checks'].first['CheckID']).to eq('service:redis')
     end
 
+    it 'should check service with cached option' do
+      faraday.stub(:get).and_return(OpenStruct.new(body: json))
+      health = Diplomat::Health.new(faraday)
+      options = { cached: true }
+
+      expect(health.service('foobar', options: options).first['Checks'].first['CheckID']).to eq('service:redis')
+    end
+
     it 'check service with tag options' do
       faraday.stub(:get).and_return(OpenStruct.new(body: json))
       health = Diplomat::Health.new(faraday)
