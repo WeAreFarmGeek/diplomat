@@ -106,6 +106,10 @@ Bugfix release 3. Ensure to keep existing JSON serialization from 2.0.x
 
 Will fix https://github.com/WeAreFarmGeek/diplomat/issues/189
 
+## 2.1.3
+
+- 2019-03-20 Lars Remes [lars.remes@ramboll.fi][1] Support HTTP service checks
+
 ## 2.1.2
 
 Bugfix relase: fix #188

@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul check API endpoint
   class Check < Diplomat::RestClient
-    @access_methods = %i[checks register_script register_ttl
+    @access_methods = %i[checks register_http register_script register_ttl
                          deregister pass warn fail]
 
     # Get registered checks
@@ -13,7 +13,35 @@ module Diplomat
       JSON.parse(ret.body)
     end
 
-    # Register a check
+    # Register a HTTP check
+    # @param name [String] the name of the check
+    # @param url [string] URL to check
+    # @param interval [String] frequency (with units) of the check execution, for example, "10s"
+    # @param id [String] the unique id of the check
+    # @param notes [String] notes about the check
+    # @param method [String] HTTP method to use when checking the url. Default is GET.
+    # @param headers [Hash] HTTP headers to add to the check call
+    # @param timeout [String] Timeout for check as string, for example, "1s"
+    # @return [Integer] Status code
+    #
+    def register_http(name, url, interval, id: nil, notes: nil, method: 'GET', headers: nil, timeout: nil)
+      ret = @conn.put do |req|
+        req.url '/v1/agent/check/register'
+        req.body = JSON.generate(
+          'ID' => check_id,
+          'Name' => name,
+          'Notes' => notes,
+          'HTTP' => url,
+          'Method' => method,
+          'Header' => headers,
+          'Interval' => interval,
+          'Timeout' => timeout
+        )
+      end
+      ret.status == 200
+    end
+
+    # Register a script check
     # @param check_id [String] the unique id of the check
     # @param name [String] the name
     # @param notes [String] notes about the check
