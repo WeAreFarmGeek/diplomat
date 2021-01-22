@@ -140,6 +140,14 @@ module Diplomat
         faraday.request  :url_encoded
         faraday.response :raise_error unless raise_error
 
+        # We have to provide a custom params encoder here because Faraday - by default - assumes that
+        # list keys have [] as part of their name. This is however does not match the expectation of
+        # the Consul API, which assumes the same query param to simply be repeated
+        #
+        # So faraday reduces this: http://localhost:8500?a=1&a=2 to http://localhost:8500?a=2 unless you
+        # explicitly tell it not to.
+        faraday.options[:params_encoder] = Faraday::FlatParamsEncoder
+
         faraday.adapter  Faraday.default_adapter
       end
     end
