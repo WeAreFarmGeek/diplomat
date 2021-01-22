@@ -39,7 +39,7 @@ module Diplomat
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       custom_params << ['passing'] if options[:passing]
-      custom_params << use_named_parameter('tag', options[:tag]) if options[:tag]
+      custom_params += [*options[:tag]].map { |value| use_named_parameter('tag', value) } if options[:tag]
       custom_params << use_named_parameter('near', options[:near]) if options[:near]
       custom_params << use_named_parameter('node-meta', options[:node_meta]) if options[:node_meta]
 
