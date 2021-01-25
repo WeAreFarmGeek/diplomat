@@ -2,6 +2,8 @@
 
 ## Next
 
+## 2.4.3
+
 * Added ability to specify multiple tags when requesting checks for a service
 * Generalized the Faraday params encoder to always use `FlatParamsEncoder` to match
   the expectations of the Consul API
