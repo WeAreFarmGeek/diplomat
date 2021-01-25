@@ -2,11 +2,15 @@
 
 ## Next
 
+* Added ability to specify multiple tags when requesting checks for a service
+* Generalized the Faraday params encoder to always use `FlatParamsEncoder` to match
+  the expectations of the Consul API
+
 ## 2.4.2
 
 * Fix faraday to version lower than 1.1.0 to keep ruby support for old versions of Consul #211
 * Added ability to specify 'cached' as a query option
-* Added support for node-meta param to specify node level tags when queying for service health. 
+* Added support for node-meta param to specify node level tags when queying for service health.
   eg Diplomat::Health.service('apache', passing: true, node_meta: "rack:rack-2")
   see https://www.consul.io/docs/agent/options#node_meta for more info on setting tags
 

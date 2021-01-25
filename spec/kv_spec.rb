@@ -363,7 +363,7 @@ describe Diplomat::Kv do
       context 'normal context' do
         it 'GET_ALL' do
           kv = Diplomat::Kv.new
-          stub_request(:get, 'http://localhost:8500/v1/kv/foo?recurse')
+          stub_request(:get, 'http://localhost:8500/v1/kv/foo?recurse=true')
             .to_return(OpenStruct.new(status: 200, body: JSON.generate([])))
           kv.get_all('foo')
         end
@@ -372,7 +372,7 @@ describe Diplomat::Kv do
       context 'datacenter filter' do
         it 'GET_ALL for a specific datacenter' do
           kv = Diplomat::Kv.new
-          stub_request(:get, 'http://localhost:8500/v1/kv/foo?dc=bar&recurse')
+          stub_request(:get, 'http://localhost:8500/v1/kv/foo?dc=bar&recurse=true')
             .to_return(OpenStruct.new(status: 200, body: JSON.generate([])))
           kv.get_all('foo', dc: 'bar')
         end
@@ -535,7 +535,7 @@ describe Diplomat::Kv do
 
       context 'ACLs NOT enabled, recurse option ON' do
         it 'DELETE' do
-          stub_request(:delete, 'http://localhost:8500/v1/kv/key?recurse')
+          stub_request(:delete, 'http://localhost:8500/v1/kv/key?recurse=true')
             .to_return(OpenStruct.new(status: 200))
           kv = Diplomat::Kv.new
           expect(kv.delete(key, recurse: true).status).to eq(200)

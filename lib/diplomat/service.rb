@@ -17,21 +17,7 @@ module Diplomat
       custom_params << use_named_parameter('wait', options[:wait]) if options[:wait]
       custom_params << use_named_parameter('index', options[:index]) if options[:index]
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
-      if options[:tag]
-        # tag can be either a String, or an array of strings
-        # by splatting it is guaranteed to be an array of strings
-        [*options[:tag]].each do |value|
-          custom_params << use_named_parameter('tag', value)
-        end
-      end
-
-      # We have to provide a custom params encoder here because Faraday - by default - assumes that
-      # list keys have [] as part of their name. This is however not the case for consul tags, which
-      # just use repeated occurences of the same key.
-      #
-      # So faraday reduces this: http://localhost:8500?a=1&a=2 to http://localhost:8500?a=2 unless you
-      # explicitly tell it not to.
-      options[:params_encoder] = Faraday::FlatParamsEncoder
+      custom_params += [*options[:tag]].map { |value| use_named_parameter('tag', value) } if options[:tag]
 
       ret = send_get_request(@conn, ["/v1/catalog/service/#{key}"], options, custom_params)
       if meta && ret.headers
