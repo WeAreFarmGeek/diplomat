@@ -148,7 +148,7 @@ module Diplomat
         # explicitly tell it not to.
         faraday.options[:params_encoder] = Faraday::FlatParamsEncoder
 
-        faraday.adapter  Faraday.default_adapter
+        faraday.adapter Faraday.default_adapter
       end
     end
 

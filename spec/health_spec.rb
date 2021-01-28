@@ -198,11 +198,11 @@ describe Diplomat::Health do
     end
 
     it 'check service with multiple tag options' do
-      stub_request(:get, "http://localhost:8500/v1/health/service/foobar?tag=v1&tag=v2")
+      stub_request(:get, 'http://localhost:8500/v1/health/service/foobar?tag=v1&tag=v2')
         .and_return(body: json)
       health = Diplomat::Health
 
-      expect(health.service('foobar', tag: ['v1', 'v2']).first['Node']['Node']).to eq('foobar')
+      expect(health.service('foobar', tag: %w[v1 v2]).first['Node']['Node']).to eq('foobar')
     end
 
     it 'should check service with node-meta option' do
