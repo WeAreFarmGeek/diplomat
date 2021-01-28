@@ -2,7 +2,10 @@
 
 ## Next
 
+## 2.4.4
+
 * Switched to GitHub actions
+* No functional changes
 
 ## 2.4.3
 
