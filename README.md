@@ -1,5 +1,6 @@
 # Diplomat
-[![Gem Version](https://badge.fury.io/rb/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Gem](https://img.shields.io/gem/dt/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Build Status](https://travis-ci.org/WeAreFarmGeek/diplomat.svg?branch=master)](https://travis-ci.org/WeAreFarmGeek/diplomat) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.svg)](https://codeclimate.com/github/WeAreFarmGeek/diplomat) [![Inline docs](http://inch-ci.org/github/wearefarmgeek/diplomat.svg?branch=master)](http://inch-ci.org/github/wearefarmgeek/diplomat)
+[![Build Status](https://github.com/WeAreFarmGeek/diplomat/workflows/Ruby/badge.svg?branch=master)](https://github.com/WeAreFarmGeek/diplomat/actions?query=branch%3Amaster)
+[![Gem Version](https://badge.fury.io/rb/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Gem](https://img.shields.io/gem/dt/diplomat.svg)](https://rubygems.org/gems/diplomat) [![Code Climate](https://codeclimate.com/github/johnhamelink/diplomat.svg)](https://codeclimate.com/github/WeAreFarmGeek/diplomat) [![Inline docs](http://inch-ci.org/github/wearefarmgeek/diplomat.svg?branch=master)](http://inch-ci.org/github/wearefarmgeek/diplomat)
 ### A HTTP Ruby API for [Consul](http://www.consul.io/)
 
 ![Diplomacy Board Game](http://i.imgur.com/Nkuy4b7.jpg)
@@ -41,7 +42,7 @@ production:
 
 ### Which versions of Ruby does Diplomat support? Where did my ruby 1.9 compatibility go?
 
-Check out [Travis](https://travis-ci.org/WeAreFarmGeek/diplomat) to see which versions of ruby we currently test when we're making builds.
+Check out [GitHub Actions](https://github.com/WeAreFarmGeek/diplomat/blob/master/.github/workflows/ruby.yml) to see which versions of ruby we currently test when we're making builds.
 
 We've dropped ruby 1.9 support. You can still depend on Diplomat by directly using the `ruby-1.9-compatible` branch on github, although be advised it's not actively maintained anymore.
 
