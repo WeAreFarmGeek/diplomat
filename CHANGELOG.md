@@ -2,6 +2,8 @@
 
 ## Next
 
+* Switched to GitHub actions
+
 ## 2.4.3
 
 * Added ability to specify multiple tags when requesting checks for a service
