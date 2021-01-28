@@ -1,0 +1,68 @@
+---
+name: Ruby
+
+on:
+  push:
+    branches: ['*']
+    tags: ['*']
+  pull_request:
+    branches: [master]
+
+jobs:
+  rubocop:
+    name: Rubocop
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundler install
+      - name: Check code
+        run: bundle exec rubocop
+
+  test:
+    needs: rubocop
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ['2.4', '2.5', '2.6', '2.7', '3.0']
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundler install
+      - name: Run tests
+        run: bundle exec rspec
+
+  publish:
+    name: Build and Publish to Rubygems
+    needs: test
+    if: contains(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundler install
+      - name: Build
+        run: gem build *.gemspec
+      - name: Push on Rubygems
+        run: gem push *.gem
+    env:
+      GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
