@@ -10,10 +10,9 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.license       = 'BSD-3-Clause'
 
   spec.files         = `git ls-files lib/diplomat.rb lib/diplomat README.md LICENSE features`.split("\n")
-  spec.required_ruby_version = '>= 2.4' # Matches faraday 1.3
+  spec.required_ruby_version = '>= 2.5' # Matches simplecov 0.21
 
   spec.add_development_dependency 'bundler', '~> 2.2'
-  spec.add_development_dependency 'codeclimate-test-reporter', '~> 0.4.0'
   spec.add_development_dependency 'cucumber', '~> 2.4'
   spec.add_development_dependency 'fakes-rspec', '~> 2.1'
   spec.add_development_dependency 'fivemat', '~> 1.3'
@@ -22,6 +21,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.add_development_dependency 'rake', '~> 13.0.3'
   spec.add_development_dependency 'rspec', '~> 3.10'
   spec.add_development_dependency 'rubocop', '~> 0.93.1'
+  spec.add_development_dependency 'simplecov', '~> 0.21.2'
   spec.add_development_dependency 'webmock'
 
   spec.add_runtime_dependency 'deep_merge', '~> 1.2'

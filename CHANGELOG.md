@@ -2,6 +2,12 @@
 
 ## Next
 
+## 3.0.0
+
+* Bump required `ruby_version` from 2.0 to 2.5+
+* Bump all gem dependencies
+* Replace `codeclimate-test-reporter` gem with `simplecov` gem
+
 ## 2.4.4
 
 * Switched to GitHub actions
