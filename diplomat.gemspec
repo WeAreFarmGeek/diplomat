@@ -13,7 +13,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.required_ruby_version = '>= 2.5' # Matches simplecov 0.21
 
   spec.add_development_dependency 'bundler', '~> 2.2'
-  spec.add_development_dependency 'cucumber', '~> 2.4'
+  spec.add_development_dependency 'cucumber', '~> 5.3'
   spec.add_development_dependency 'fakes-rspec', '~> 2.1'
   spec.add_development_dependency 'fivemat', '~> 1.3'
   spec.add_development_dependency 'gem-release', '~> 2.2'
