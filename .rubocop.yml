@@ -1,6 +1,7 @@
 # Global options
 AllCops:
   DisplayCopNames: true
+  NewCops: disable
 
 # While we support 2.4+, it still works with 2.0+
 Gemspec/RequiredRubyVersion:
@@ -35,7 +36,7 @@ Lint/RedundantCopDisableDirective:
   Enabled: false
 
 Metrics/PerceivedComplexity:
-  Max: 10
+  Max: 11
 
 Metrics/ParameterLists:
   Max: 6

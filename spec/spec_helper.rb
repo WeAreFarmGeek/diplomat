@@ -7,8 +7,8 @@ require 'json'
 require 'base64'
 
 if ENV['CI'] == true
-  require 'codeclimate-test-reporter'
-  CodeClimate::TestReporter.start
+  require 'simplecov'
+  SimpleCov.start
 end
 
 require 'diplomat'
