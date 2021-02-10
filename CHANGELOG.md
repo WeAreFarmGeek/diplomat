@@ -4,9 +4,12 @@
 
 ## 2.5.0
 
+* [Breaking] Removed support for Ruby < 2.5: since 2.4 is EOL since
+  almost 1y, remove it from supported version.
 * Bump `required_ruby_version` from 2.0 to 2.5+
 * Bump all gem dependencies
 * Replace `codeclimate-test-reporter` gem with `simplecov` gem
+* Thanks to [Sapr0](https://github.com/Sapr0) for the fix
 
 ## 2.4.4
 
