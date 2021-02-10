@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Diplomat
-  VERSION = '3.0.0'
+  VERSION = '2.5.0'
 end
