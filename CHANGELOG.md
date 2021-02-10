@@ -2,6 +2,10 @@
 
 ## Next
 
+## 2.5.1
+
+* Do not force users to use faraday 1.3+ to fix https://github.com/sous-chefs/consul/issues/582
+
 ## 2.5.0
 
 * [Breaking] Removed support for Ruby < 2.5: since 2.4 is EOL since
