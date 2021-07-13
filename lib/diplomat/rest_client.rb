@@ -216,7 +216,6 @@ module Diplomat
     end
 
     def use_consistency(options)
-      puts "OPTIONS: #{options}"
       options[:consistency] ? [options[:consistency].to_s] : []
     end
 
