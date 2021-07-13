@@ -28,6 +28,7 @@ module Diplomat
     # @param options [Hash] :dc string for dc specific query
     # @return true if call is successful
     def enable(enable = true, reason = nil, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('enable', enable.to_s)
       custom_params << use_named_parameter('reason', reason) if reason

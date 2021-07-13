@@ -219,6 +219,7 @@ module Diplomat
       options[:consistency] ? [options[:consistency].to_s] : []
     end
 
+
     # rubocop:disable Metrics/PerceivedComplexity
     # TODO: Migrate all custom params in options
     def parse_options(options)
@@ -331,5 +332,6 @@ module Diplomat
         verb if requires.include? 'Value'
       end
     end
+
   end
 end

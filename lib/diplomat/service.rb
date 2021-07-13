@@ -13,6 +13,7 @@ module Diplomat
     # @return [OpenStruct] all data associated with the service
     # rubocop:disable Metrics/PerceivedComplexity
     def get(key, scope = :first, options = {}, meta = nil)
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('wait', options[:wait]) if options[:wait]
       custom_params << use_named_parameter('index', options[:index]) if options[:index]
@@ -38,6 +39,7 @@ module Diplomat
     # @param options [Hash] :dc Consul datacenter to query
     # @return [OpenStruct] the list of all services
     def get_all(options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_get_request(@conn, ['/v1/catalog/services'], options, custom_params)
       OpenStruct.new JSON.parse(ret.body)

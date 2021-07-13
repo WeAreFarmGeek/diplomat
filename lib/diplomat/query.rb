@@ -10,6 +10,7 @@ module Diplomat
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the prepared query
     def get(key, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_get_request(@conn, ["/v1/query/#{key}"], options, custom_params)
       JSON.parse(ret.body).map { |query| OpenStruct.new query }
@@ -19,6 +20,7 @@ module Diplomat
     # @param options [Hash] :dc Consul datacenter to query
     # @return [OpenStruct] the list of all prepared queries
     def get_all(options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_get_request(@conn, ['/v1/query'], options, custom_params)
       JSON.parse(ret.body).map { |query| OpenStruct.new query }
@@ -29,6 +31,7 @@ module Diplomat
     # @param options [Hash] :dc Consul datacenter to query
     # @return [String] the ID of the prepared query created
     def create(definition, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       @raw = send_post_request(@conn, ['/v1/query'], options, definition, custom_params)
       parse_body
@@ -41,6 +44,7 @@ module Diplomat
     # @param options [Hash] :dc Consul datacenter to query
     # @return [Boolean]
     def delete(key, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_delete_request(@conn, ["/v1/query/#{key}"], options, custom_params)
       ret.status == 200
@@ -52,6 +56,7 @@ module Diplomat
     # @param options [Hash] :dc Consul datacenter to query
     # @return [Boolean]
     def update(key, definition, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_put_request(@conn, ["/v1/query/#{key}"], options, definition, custom_params)
       ret.status == 200
@@ -67,6 +72,7 @@ module Diplomat
     # @return [OpenStruct] the list of results from the prepared query or prepared query template
     # rubocop:disable Metrics/PerceivedComplexity
     def execute(key, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       custom_params << use_named_parameter('near', options[:near]) if options[:near]

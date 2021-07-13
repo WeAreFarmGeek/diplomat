@@ -16,6 +16,7 @@ module Diplomat
     end
 
     def get_all(options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_get_request(@conn, ['/v1/catalog/nodes'], options, custom_params)
       JSON.parse(ret.body).map { |service| OpenStruct.new service }

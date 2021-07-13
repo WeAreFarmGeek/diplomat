@@ -10,6 +10,7 @@ module Diplomat
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the node
     def get(key, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_get_request(@conn, ["/v1/catalog/node/#{key}"], options, custom_params)
       OpenStruct.new JSON.parse(ret.body)
@@ -19,6 +20,7 @@ module Diplomat
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] the list of all nodes
     def get_all(options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       ret = send_get_request(@conn, ['/v1/catalog/nodes'], options, custom_params)
       JSON.parse(ret.body).map { |service| OpenStruct.new service }
