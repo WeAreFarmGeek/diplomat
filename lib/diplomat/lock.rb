@@ -12,6 +12,7 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [Boolean] If the lock was acquired
     def acquire(key, session, value = nil, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       key = normalize_key_for_uri(key)
       custom_params = []
       custom_params << use_named_parameter('acquire', session)
@@ -45,6 +46,7 @@ module Diplomat
     # @return [nil]
     # rubocop:disable Metrics/AbcSize
     def release(key, session, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       key = normalize_key_for_uri(key)
       custom_params = []
       custom_params << use_named_parameter('release', session)

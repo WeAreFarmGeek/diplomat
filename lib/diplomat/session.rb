@@ -12,6 +12,7 @@ module Diplomat
     def create(value = nil, options = {})
       # TODO: only certain keys are recognised in a session create request,
       # should raise an error on others.
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       data = value.is_a?(String) ? value : JSON.generate(value) unless value.nil?
@@ -25,6 +26,7 @@ module Diplomat
     # @param options [Hash] session options
     # @return [String] Success or failure of the session destruction
     def destroy(id, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       raw = send_put_request(@conn, ["/v1/session/destroy/#{id}"], options, nil, custom_params)
@@ -35,6 +37,7 @@ module Diplomat
     # @param options [Hash] session options
     # @return [OpenStruct]
     def list(options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       raw = send_get_request(@conn, ['/v1/session/list'], options, custom_params)
@@ -46,6 +49,7 @@ module Diplomat
     # @param options [Hash] session options
     # @return [OpenStruct]
     def renew(id, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       raw = send_put_request(@conn, ["/v1/session/renew/#{id}"], options, nil, custom_params)
@@ -57,6 +61,7 @@ module Diplomat
     # @param options [Hash] session options
     # @return [OpenStruct]
     def info(id, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       raw = send_get_request(@conn, ["/v1/session/info/#{id}"], options, custom_params)
@@ -68,6 +73,7 @@ module Diplomat
     # @param options [Hash] session options
     # @return [OpenStruct]
     def node(name, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       raw = send_get_request(@conn, ["/v1/session/node/#{name}"], options, custom_params)

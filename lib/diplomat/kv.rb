@@ -247,6 +247,7 @@ module Diplomat
     end
 
     def dc(options)
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       options[:dc] ? use_named_parameter('dc', options[:dc]) : []
     end
 

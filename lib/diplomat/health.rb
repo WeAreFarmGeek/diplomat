@@ -11,6 +11,7 @@ module Diplomat
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the node
     def node(n, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
 
@@ -23,6 +24,7 @@ module Diplomat
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the node
     def checks(s, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
 
@@ -36,6 +38,7 @@ module Diplomat
     # @return [OpenStruct] all data associated with the node
     # rubocop:disable Metrics/PerceivedComplexity
     def service(s, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       custom_params << ['passing'] if options[:passing]
@@ -54,6 +57,7 @@ module Diplomat
     # @param options [Hash] :dc string for dc specific query
     # @return [OpenStruct] all data associated with the node
     def state(s, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       custom_params << use_named_parameter('near', options[:near]) if options[:near]
