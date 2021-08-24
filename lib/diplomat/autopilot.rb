@@ -9,6 +9,7 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [OpenStruct] all data associated with the autopilot configuration
     def get_configuration(options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
 
@@ -20,6 +21,7 @@ module Diplomat
     # @param options [Hash] options parameter hash
     # @return [OpenStruct] all data associated with the health of the autopilot
     def get_health(options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
 

@@ -24,6 +24,8 @@ module Diplomat
       @middleware = []
       @url = url
       @acl_token = acl_token
+      # When set to nil, consul agent's default datacenter will be used.
+      # This setting can also be overridden by any endpoint's specific 'dc' parameter.
       @dc = dc
       @options = options
     end

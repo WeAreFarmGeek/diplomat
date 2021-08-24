@@ -61,6 +61,7 @@ module Diplomat
     # @param options [Hash] session options
     # @return [OpenStruct]
     def info(id, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       raw = send_get_request(@conn, ["/v1/session/info/#{id}"], options, custom_params)
@@ -72,6 +73,7 @@ module Diplomat
     # @param options [Hash] session options
     # @return [OpenStruct]
     def node(name, options = {})
+      options[:dc] ||= configuration.dc unless configuration.dc.nil?
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       raw = send_get_request(@conn, ["/v1/session/node/#{name}"], options, custom_params)
