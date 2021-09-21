@@ -213,6 +213,31 @@ describe Diplomat::Health do
       expect(health.service('foobar', options: options).first['Node']['Node']).to eq('foobar')
     end
 
+    it 'checks services with index option' do
+      stub_request(:get, 'http://localhost:8500/v1/health/service/foobar?index=1')
+        .and_return(body: json)
+      health = Diplomat::Health
+
+      expect(health.service('foobar', index: 1).first['Node']['Node']).to eq('foobar')
+    end
+
+    context 'when a metadata hash is provided' do
+      let(:x_consul_index)        { '1424543438' }
+      let(:x_consul_known_leader) { 'true' }
+      let(:x_consul_last_contact) { '0s' }
+
+      it 'populates it with the response header data' do
+        stub_request(:get, 'http://localhost:8500/v1/health/service/foobar')
+          .and_return(body: json, headers: { 'X-Consul-Index' => x_consul_index, 'X-Consul-KnownLeader' => x_consul_known_leader, 'X-Consul-LastContact' => x_consul_last_contact })
+
+        health = Diplomat::Health
+        meta   = {}
+
+        expect(health.service('foobar', {}, meta).first['Node']['Node']).to eq('foobar')
+        expect(meta).to eq({ index: x_consul_index, knownleader: x_consul_known_leader, lastcontact: x_consul_last_contact })
+      end
+    end
+
     it 'should return an array of checks' do
       expect(ch).to be_a_kind_of(Array)
     end
