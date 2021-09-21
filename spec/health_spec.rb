@@ -225,16 +225,30 @@ describe Diplomat::Health do
       let(:x_consul_index)        { '1424543438' }
       let(:x_consul_known_leader) { 'true' }
       let(:x_consul_last_contact) { '0s' }
+      let(:response_headers) do
+        {
+          'X-Consul-Index' => x_consul_index,
+          'X-Consul-KnownLeader' => x_consul_known_leader,
+          'X-Consul-LastContact' => x_consul_last_contact
+        }
+      end
+      let(:expected_meta_data) do
+        {
+          index: x_consul_index,
+          knownleader: x_consul_known_leader,
+          lastcontact: x_consul_last_contact
+        }
+      end
 
       it 'populates it with the response header data' do
         stub_request(:get, 'http://localhost:8500/v1/health/service/foobar')
-          .and_return(body: json, headers: { 'X-Consul-Index' => x_consul_index, 'X-Consul-KnownLeader' => x_consul_known_leader, 'X-Consul-LastContact' => x_consul_last_contact })
+          .and_return(body: json, headers: response_headers)
 
         health = Diplomat::Health
         meta   = {}
 
         expect(health.service('foobar', {}, meta).first['Node']['Node']).to eq('foobar')
-        expect(meta).to eq({ index: x_consul_index, knownleader: x_consul_known_leader, lastcontact: x_consul_last_contact })
+        expect(meta).to eq(expected_meta_data)
       end
     end
 
