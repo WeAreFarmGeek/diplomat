@@ -2,7 +2,10 @@
 
 ## Next
 
-* Added ability to specify `index` as a query option for service health
+## 2.6.0
+
+* Added ability to specify `index` as a query option for service health (#222)
+  thanks to [jebentier](https://github.com/jebentier)
 * Added ability to receive meta data back from service health queries
 
 ## 2.5.1
