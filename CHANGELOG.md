@@ -2,6 +2,9 @@
 
 ## Next
 
+* Added ability to specify `index` as a query option for service health
+* Added ability to receive meta data back from service health queries
+
 ## 2.5.1
 
 * Do not force users to use faraday 1.3+ to fix https://github.com/sous-chefs/consul/issues/582

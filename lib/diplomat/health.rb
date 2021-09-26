@@ -33,17 +33,25 @@ module Diplomat
     # Get service health
     # @param s [String] the service
     # @param options [Hash] options parameter hash
+    # @param meta [Hash] output structure containing header information about the request (index)
     # @return [OpenStruct] all data associated with the node
     # rubocop:disable Metrics/PerceivedComplexity
-    def service(s, options = {})
+    def service(s, options = {}, meta = nil)
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       custom_params << ['passing'] if options[:passing]
       custom_params += [*options[:tag]].map { |value| use_named_parameter('tag', value) } if options[:tag]
       custom_params << use_named_parameter('near', options[:near]) if options[:near]
       custom_params << use_named_parameter('node-meta', options[:node_meta]) if options[:node_meta]
+      custom_params << use_named_parameter('index', options[:index]) if options[:index]
 
       ret = send_get_request(@conn, ["/v1/health/service/#{s}"], options, custom_params)
+      if meta && ret.headers
+        meta[:index] = ret.headers['x-consul-index'] if ret.headers['x-consul-index']
+        meta[:knownleader] = ret.headers['x-consul-knownleader'] if ret.headers['x-consul-knownleader']
+        meta[:lastcontact] = ret.headers['x-consul-lastcontact'] if ret.headers['x-consul-lastcontact']
+      end
+
       JSON.parse(ret.body).map { |service| OpenStruct.new service }
     end
 
