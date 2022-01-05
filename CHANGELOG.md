@@ -2,6 +2,11 @@
 
 ## Next
 
+## 2.6.1
+
+* Stick to Faraday < 2.x (#223)
+  issue reported by [fquesnel](https://github.com/fquesnel)
+
 ## 2.6.0
 
 * Added ability to specify `index` as a query option for service health (#222)
