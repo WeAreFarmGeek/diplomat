@@ -65,6 +65,7 @@ module Diplomat
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
       custom_params << use_named_parameter('near', options[:near]) if options[:near]
+      custom_params << use_named_parameter('filter', options[:filter]) if options[:filter]
 
       ret = send_get_request(@conn, ["/v1/health/state/#{s}"], options, custom_params)
       JSON.parse(ret.body).map { |status| OpenStruct.new status }
