@@ -59,7 +59,7 @@ module Diplomat
 
     # Get service health
     # @param s [String] the state ("any", "passing", "warning", or "critical")
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash] :dc, :near, :filter string for specific query
     # @return [OpenStruct] all data associated with the node
     def state(s, options = {})
       custom_params = []
@@ -72,23 +72,31 @@ module Diplomat
     end
 
     # Convenience method to get services in any state
-    def any
-      state('any')
+    # @param options [Hash] :dc, :near, :filter string for specific query
+    # @return [OpenStruct] all data associated with the node
+    def any(options = {})
+      state('any', options)
     end
 
     # Convenience method to get services in passing state
-    def passing
-      state('passing')
+    # @param options [Hash] :dc, :near, :filter string for specific query
+    # @return [OpenStruct] all data associated with the node
+    def passing(options = {})
+      state('passing', options)
     end
 
     # Convenience method to get services in warning state
-    def warning
-      state('warning')
+    # @param options [Hash] :dc, :near, :filter string for specific query
+    # @return [OpenStruct] all data associated with the node
+    def warning(options = {})
+      state('warning', options)
     end
 
     # Convenience method to get services in critical state
-    def critical
-      state('critical')
+    # @param options [Hash] :dc, :near, :filter string for specific query
+    # @return [OpenStruct] all data associated with the node
+    def critical(options = {})
+      state('critical', options)
     end
   end
 end
