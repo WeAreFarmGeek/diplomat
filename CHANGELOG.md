@@ -2,6 +2,11 @@
 
 ## Next
 
+## 2.6.2
+
+* Allow use of filters on Health.state (#224)
+  Thanks to [@damfle](https://github.com/damfle)
+
 ## 2.6.1
 
 * Stick to Faraday < 2.x (#223)
