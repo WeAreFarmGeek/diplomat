@@ -331,6 +331,40 @@ Get the health status from autopilot
 Diplomat::Autopilot.get_health()
 ```
 
+### Health
+
+Retrieve health of a node
+
+```ruby
+Diplomat::Health.node('fooNode', :dc => 'abc')
+```
+
+Retrieve health of a given check
+
+```ruby
+Diplomat::Health.checks('fooCheck', :dc => 'abc')
+```
+
+Retrieve health of a given service
+
+```ruby
+Diplomat::Health.service('fooService', :dc => 'abc')
+```
+
+Retrieve a list of anything that correspond to the state ("any", "passing", "warning", or "critical")
+You can use filters too !
+
+```ruby
+Diplomat::Health.state("critical", {:dc => 'abc', :filter => 'Node==foo'})
+```
+
+You also have some convenience method (`any`, `passing`, `warning`, `critical`)
+That can be filtered
+
+```ruby
+Diplomat::Health.critical({:dc => 'abc', :filter => 'Service==foo'})
+```
+
 ### Maintenance mode
 
 Enable maintenance mode on a host, with optional reason and DC (requires access to local agent)
