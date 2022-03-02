@@ -8,11 +8,12 @@ module Diplomat
 
     # Get node health
     # @param n [String] the node
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash] :dc, :filter string for specific query
     # @return [OpenStruct] all data associated with the node
     def node(n, options = {})
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      custom_params << use_named_parameter('filter', options[:filter]) if options[:filter]
 
       ret = send_get_request(@conn, ["/v1/health/node/#{n}"], options, custom_params)
       JSON.parse(ret.body).map { |node| OpenStruct.new node }
@@ -20,11 +21,12 @@ module Diplomat
 
     # Get service checks
     # @param s [String] the service
-    # @param options [Hash] :dc string for dc specific query
+    # @param options [Hash] :dc, :filter string for specific query
     # @return [OpenStruct] all data associated with the node
     def checks(s, options = {})
       custom_params = []
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      custom_params << use_named_parameter('filter', options[:filter]) if options[:filter]
 
       ret = send_get_request(@conn, ["/v1/health/checks/#{s}"], options, custom_params)
       JSON.parse(ret.body).map { |check| OpenStruct.new check }
@@ -44,6 +46,7 @@ module Diplomat
       custom_params << use_named_parameter('near', options[:near]) if options[:near]
       custom_params << use_named_parameter('node-meta', options[:node_meta]) if options[:node_meta]
       custom_params << use_named_parameter('index', options[:index]) if options[:index]
+      custom_params << use_named_parameter('filter', options[:filter]) if options[:filter]
 
       ret = send_get_request(@conn, ["/v1/health/service/#{s}"], options, custom_params)
       if meta && ret.headers
