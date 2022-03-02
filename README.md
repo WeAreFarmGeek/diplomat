@@ -362,7 +362,7 @@ You also have some convenience method (`any`, `passing`, `warning`, `critical`)
 That can be filtered
 
 ```ruby
-Diplomat::Health.critical({:dc => 'abc', :filter => 'Service==foo'})
+Diplomat::Health.critical({:dc => 'abc', :filter => 'ServiceName==foo'})
 ```
 
 ### Maintenance mode
