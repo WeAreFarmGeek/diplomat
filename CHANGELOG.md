@@ -2,6 +2,11 @@
 
 ## Next
 
+## 2.6.3
+
+* Can now use filters on every heath method (#225)
+  Thanks to [@damfle](https://github.com/damfle)
+
 ## 2.6.2
 
 * Allow use of filters on Health.state (#224)
