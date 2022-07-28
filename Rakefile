@@ -35,7 +35,7 @@ end
 
 desc 'Run a bootstrapped consul server for testing'
 task :consul do
-  system('consul agent -server -bootstrap -data-dir=/tmp')
+  system('consul agent -dev -bootstrap -data-dir=/tmp')
 end
 
 task default: %w[style spec]

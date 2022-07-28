@@ -17,6 +17,7 @@ module Diplomat
       custom_params << use_named_parameter('wait', options[:wait]) if options[:wait]
       custom_params << use_named_parameter('index', options[:index]) if options[:index]
       custom_params << use_named_parameter('dc', options[:dc]) if options[:dc]
+      custom_params << use_named_parameter('filter', options[:filter]) if options[:filter]
       custom_params += [*options[:tag]].map { |value| use_named_parameter('tag', value) } if options[:tag]
 
       ret = send_get_request(@conn, ["/v1/catalog/service/#{key}"], options, custom_params)
