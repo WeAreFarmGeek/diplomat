@@ -12,6 +12,7 @@ describe Diplomat::Service do
     let(:key_url_with_datacenteroption) { "http://localhost:8500/v1/catalog/service/#{key}?dc=somedc" }
     let(:key_url_with_tagoption) { "http://localhost:8500/v1/catalog/service/#{key}?tag=sometag" }
     let(:key_url_with_mult_tagoption) { "http://localhost:8500/v1/catalog/service/#{key}?tag=sometag&tag=anothertag" }
+    let(:key_url_with_filteroption) { "http://localhost:8500/v1/catalog/service/#{key}?filter=Address == '10.1.10.13'" }
     let(:services_url_with_datacenteroption) { 'http://localhost:8500/v1/catalog/services?dc=somedc' }
     let(:body) do
       [
@@ -156,6 +157,16 @@ describe Diplomat::Service do
           .to_return(OpenStruct.new(body: json, headers: headers))
         service = Diplomat::Service.new
         options = { tag: %w[sometag anothertag] }
+        s = service.get('toast', :first, options)
+        expect(s.Node).to eq('bar')
+      end
+
+      it 'filter option' do
+        json = JSON.generate(body_one)
+        stub_request(:get, key_url_with_filteroption)
+          .to_return(OpenStruct.new(body: json, headers: headers))
+        service = Diplomat::Service.new
+        options = { filter: "Address == '10.1.10.13'" }
         s = service.get('toast', :first, options)
         expect(s.Node).to eq('bar')
       end

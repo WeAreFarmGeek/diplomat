@@ -2,6 +2,9 @@
 
 ## Next
 
+- 2022-07-28 Dashkevych Oleksii (@jesterovskiy) Add option to filter services
+  Pass a `:filter` hash as an option to `Diplomat::Service.get` to filter https://www.consul.io/api-docs/catalog#filtering-1.
+
 ## 2.6.3
 
 * Can now use filters on every heath method (#225)
