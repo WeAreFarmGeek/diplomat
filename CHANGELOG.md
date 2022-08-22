@@ -2,8 +2,9 @@
 
 ## Next
 
-- 2022-07-28 Dashkevych Oleksii (@jesterovskiy) Add option to filter services
+* 2022-07-28 Dashkevych Oleksii (@jesterovskiy) Add option to filter services
   Pass a `:filter` hash as an option to `Diplomat::Service.get` to filter https://www.consul.io/api-docs/catalog#filtering-1.
+* Relax dependency on Faraday, so 2.x versions can be used again (#223)
 
 ## 2.6.3
 
