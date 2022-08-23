@@ -256,7 +256,7 @@ module Diplomat
           rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
           req.options.timeout = options[:timeout] if options[:timeout]
         end
-      rescue Faraday::ClientError, Faraday::ServerError => e
+      rescue *faraday_error_classes => e
         resp = e.response
         if resp
           raise Diplomat::AclNotFound, e if resp[:status] == 403 && resp[:body] == 'ACL not found'
@@ -302,6 +302,14 @@ module Diplomat
         req.url rest_options[:url_prefix] ? rest_options[:url_prefix] + concat_url(url) : concat_url(url)
         rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
       end
+    end
+
+    # This method returns the correct Exception Classes depending on the Faraday version being installed
+    # see https://github.com/WeAreFarmGeek/diplomat/issues/227
+    #
+    # @return [Array<Class>] Faraday error classes that should be caught
+    def faraday_error_classes
+      Faraday.const_defined?(:ServerError) ? [Faraday::ClientError, Faraday::ServerError] : [Faraday::ClientError]
     end
 
     # Mapping for valid key/value store transaction verbs and required parameters
