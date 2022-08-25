@@ -32,6 +32,8 @@ module Diplomat
       custom_params = options[:dc] ? use_named_parameter('dc', options[:dc]) : nil
       @raw = send_post_request(@conn, ['/v1/query'], options, definition, custom_params)
       parse_body
+    rescue Faraday::TimeoutError => e
+      raise e
     rescue *faraday_error_classes
       raise Diplomat::QueryAlreadyExists
     end

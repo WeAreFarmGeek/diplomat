@@ -256,6 +256,8 @@ module Diplomat
           rest_options[:headers].map { |k, v| req.headers[k.to_sym] = v } unless rest_options[:headers].nil?
           req.options.timeout = options[:timeout] if options[:timeout]
         end
+      rescue Faraday::TimeoutError => e
+        raise e
       rescue *faraday_error_classes => e
         resp = e.response
         if resp
