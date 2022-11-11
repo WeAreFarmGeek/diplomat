@@ -250,7 +250,7 @@ have started enforcing [it](https://www.consul.io/docs/upgrade-specific.html#htt
 ## 0.19.0, 1.0.0
 
 - 2016-08-02 John Hamelink [john@johnhamelink.com][15] Improve ACL and Event endpoints by uniformly raising an error for statuscodes which aren't 200.
-- 2016-08-02 Sandstrom [alexander@skovik.com][16] Add documentation for listing all keys
+- 2016-08-02 Sandstrom [mail+github@a16m.se][16] Add documentation for listing all keys
 - 2016-08-02 Alexander Vagin [laplugin73@gmail.com][17] Add state option to Health service
 - 2016-08-02 John Hamelink [john@johnhamelink.com][18] Removed Ruby 1.x support. Added check to raise error for ruby versions \<
 - 2016-07-27 Kendrick Martin [kmartinix@gmail.com][19] Added the ability to return k/v data as ruby hash
