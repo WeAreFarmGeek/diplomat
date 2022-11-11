@@ -2,28 +2,28 @@
 
 ## Next
 
-## 2.6.4
+## 2.6.4 (2022-08-23)
 
 * 2022-07-28 Dashkevych Oleksii (@jesterovskiy) Add option to filter services
   Pass a `:filter` hash as an option to `Diplomat::Service.get` to filter https://www.consul.io/api-docs/catalog#filtering-1.
 * Relax dependency on Faraday, so 2.x versions can be used again (#223)
 
-## 2.6.3
+## 2.6.3 (2022-07-26)
 
 * Can now use filters on every heath method (#225)
   Thanks to [@damfle](https://github.com/damfle)
 
-## 2.6.2
+## 2.6.2 (2022-02-11)
 
 * Allow use of filters on Health.state (#224)
   Thanks to [@damfle](https://github.com/damfle)
 
-## 2.6.1
+## 2.6.1 (2022-01-05)
 
 * Stick to Faraday < 2.x (#223)
   issue reported by [fquesnel](https://github.com/fquesnel)
 
-## 2.6.0
+## 2.6.0 (2022-09-26)
 
 * Added ability to specify `index` as a query option for service health (#222)
   thanks to [jebentier](https://github.com/jebentier)
