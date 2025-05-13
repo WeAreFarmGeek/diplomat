@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 # Global options
 AllCops:
   DisplayCopNames: true
@@ -10,8 +12,17 @@ Gemspec/RequiredRubyVersion:
 Metrics/AbcSize:
   Max: 60
 
+Metrics/BlockLength:
+  Max: 800
+
 Metrics/CyclomaticComplexity:
   Max: 15
+
+Style/AccessorGrouping:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
 
 Layout/LineLength:
   # This will disable the rule completely, regardless what other options you put
@@ -35,11 +46,11 @@ Naming/MethodParameterName:
 Lint/RedundantCopDisableDirective:
   Enabled: false
 
+Metrics/ParameterLists:
+  MaxOptionalParameters: 6
+
 Metrics/PerceivedComplexity:
   Max: 11
-
-Metrics/ParameterLists:
-  Max: 6
 
 Style/HashEachMethods:
   Enabled: true

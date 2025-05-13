@@ -11,26 +11,26 @@ on:
 jobs:
   rubocop:
     name: Rubocop
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: '3.2'
       - name: Install dependencies
         run: |
           gem install bundler
           bundler install
       - name: Check code
-        run: bundle exec rubocop
+        run: bundle exec rubocop -c .rubocop.yml
 
   test:
     needs: rubocop
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: ['2.5', '2.6', '2.7', '3.0']
+        ruby-version: ['3.2', '3.3', '3.4']
 
     steps:
       - uses: actions/checkout@v2
@@ -50,12 +50,12 @@ jobs:
     name: Build and Publish to Rubygems
     needs: test
     if: contains(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: '3.2'
       - name: Install dependencies
         run: |
           gem install bundler

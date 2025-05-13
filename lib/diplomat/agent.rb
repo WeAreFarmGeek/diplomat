@@ -2,6 +2,7 @@
 
 require 'base64'
 require 'faraday'
+require 'ostruct'
 
 module Diplomat
   # Agent API endpoint methods
