@@ -2,6 +2,11 @@
 
 ## Next
 
+## 2.6.5 (2025-05-17)
+
+* @mougams added Diplomat::RaftOperator module with methods .get_configuration .transfer_leader
+* updated github actions in CI/CD to work with recent Ubuntu images and moder Ruby versions
+
 ## 2.6.4 (2022-08-23)
 
 * 2022-07-28 Dashkevych Oleksii (@jesterovskiy) Add option to filter services
