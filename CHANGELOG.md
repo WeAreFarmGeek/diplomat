@@ -2,6 +2,8 @@
 
 ## Next
 
+* 2026-03-05 Add `ostruct` gem dependency and Ruby 4.0 to CI; OpenStruct was removed from Ruby 4 standard library.
+
 ## 2.6.5 (2025-05-17)
 
 * @mougams added Diplomat::RaftOperator module with methods .get_configuration .transfer_leader
