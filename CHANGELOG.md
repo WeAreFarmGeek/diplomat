@@ -2,7 +2,8 @@
 
 ## Next
 
-* 2026-03-05 Add `ostruct` gem dependency and Ruby 4.0 to CI; OpenStruct was removed from Ruby 4 standard library.
+* 2026-03-05 Add `ostruct` gem dependency and Ruby 4.0 to CI; OpenStruct was removed from Ruby 4 standard library. ([@gavinest](https://github.com/gavinest))
+* 2026-03-07 Fix CI: pin Bundler to 2.7.2 in workflow so it satisfies gemspec `bundler ~> 2.2`. ([@gavinest](https://github.com/gavinest))
 
 ## 2.6.5 (2025-05-17)
 
