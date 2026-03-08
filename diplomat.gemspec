@@ -25,6 +25,7 @@ Gem::Specification.new 'diplomat', Diplomat::VERSION do |spec|
   spec.add_development_dependency 'webmock'
 
   spec.add_runtime_dependency 'deep_merge', '~> 1.2'
+  spec.add_runtime_dependency 'ostruct'
 
   # See https://github.com/WeAreFarmGeek/diplomat/issues/223
   # Diplomat does not work with 2.0 of Faraday, but does with 2.0.1+
