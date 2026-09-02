@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul session API endpoint
   class Session < Diplomat::RestClient
-    @access_methods = %i[create destroy list renew info node]
+    access_methods %i[create destroy list renew info node]
 
     # Create a new session
     # @param value [Object] hash or json representation of the session arguments

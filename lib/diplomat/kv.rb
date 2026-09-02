@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul KV API endpoint
   class Kv < Diplomat::RestClient
-    @access_methods = %i[get get_all put delete txn]
+    access_methods %i[get get_all put delete txn]
     attr_reader :key, :value, :raw
 
     # Get a value by its key, potentially blocking for the first or next value

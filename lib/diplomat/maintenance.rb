@@ -3,7 +3,7 @@
 module Diplomat
   # Methods to interact with the Consul maintenance API endpoint
   class Maintenance < Diplomat::RestClient
-    @access_methods = %i[enabled enable]
+    access_methods %i[enabled enable]
 
     # Get the maintenance state of a host
     # @param n [String] the node

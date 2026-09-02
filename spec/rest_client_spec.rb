@@ -13,6 +13,38 @@ describe Diplomat::RestClient do
     end
   end
 
+  context '.access_methods' do
+    let(:declared_klass) do
+      Class.new Diplomat::RestClient do
+        access_methods [:accessible]
+
+        def accessible(*args)
+          args
+        end
+      end
+    end
+
+    it 'defines the method on the class' do
+      expect(declared_klass.methods).to include(:accessible)
+      expect(Diplomat::Kv.methods).to include(:get, :put, :delete)
+    end
+
+    it 'forwards to a new instance' do
+      dummy = double 'Dummy RestClient'
+
+      expect(declared_klass).to receive(:new).and_return(dummy)
+      expect(dummy).to receive(:accessible).with(1, 2, 3).and_return(nil)
+
+      declared_klass.accessible(1, 2, 3)
+    end
+
+    it 'leaves methods Ruby already defines alone' do
+      klass = Class.new(Diplomat::RestClient) { access_methods [:clone] }
+
+      expect(klass.clone).to be_a(Class)
+    end
+  end
+
   context '.method_missing' do
     it 'calls the accessible method on a new instance' do
       dummy = double 'Dummy RestClient'

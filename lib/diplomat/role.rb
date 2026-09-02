@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul ACL Role API endpoint
   class Role < Diplomat::RestClient
-    @access_methods = %i[list read read_name create delete update]
+    access_methods %i[list read read_name create delete update]
     attr_reader :id, :type, :acl
 
     # Read ACL role with the given UUID
