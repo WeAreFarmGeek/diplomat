@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul operator autopilot API endpoint
   class Autopilot < Diplomat::RestClient
-    @access_methods = %i[get_configuration get_health update]
+    access_methods %i[get_configuration get_health update]
 
     # Get autopilot configuration
     # @param options [Hash] options parameter hash

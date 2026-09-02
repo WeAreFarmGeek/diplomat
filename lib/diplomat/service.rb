@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul service API endpoint.
   class Service < Diplomat::RestClient
-    @access_methods = %i[get get_all register deregister register_external deregister_external maintenance]
+    access_methods %i[get get_all register deregister register_external deregister_external maintenance]
 
     # Get a service by it's key
     # @param key [String] the key

@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul lock API endpoint
   class Lock < Diplomat::RestClient
-    @access_methods = %i[acquire wait_to_acquire release]
+    access_methods %i[acquire wait_to_acquire release]
 
     # Acquire a lock
     # @param key [String] the key

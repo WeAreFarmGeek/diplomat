@@ -8,7 +8,7 @@ module Diplomat
   # Agent API endpoint methods
   # @see https://www.consul.io/docs/agent/http/agent.html
   class Agent < Diplomat::RestClient
-    @access_methods = %i[self checks services members]
+    access_methods %i[self checks services members]
 
     # Get agent configuration
     # @param options [Hash] options parameter hash

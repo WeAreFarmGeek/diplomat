@@ -43,6 +43,25 @@ module Diplomat
     end
 
     class << self
+      # Declare the class level short-cuts of a client, e.g. `Diplomat::Kv.get`.
+      #
+      # Each name becomes a real singleton method forwarding to a new instance,
+      # so the short-cuts are listed by `methods`, picked up by documentation
+      # tools and offered by editor autocompletion, instead of only existing
+      # while {#method_missing} runs. Names Ruby already defines on the class
+      # (`clone`) are left alone, just like {#method_missing} leaves them today.
+      #
+      # @param meth_ids [Array<Symbol>] the methods to expose
+      # @return [Array<Symbol>] the exposed methods
+      def access_methods(meth_ids)
+        @access_methods = meth_ids
+        meth_ids.each do |meth_id|
+          next if singleton_class.public_method_defined?(meth_id)
+
+          define_singleton_method(meth_id) { |*args, &block| new.send(meth_id, *args, &block) }
+        end
+      end
+
       def access_method?(meth_id)
         @access_methods.include? meth_id
       end

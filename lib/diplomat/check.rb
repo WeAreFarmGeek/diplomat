@@ -3,8 +3,8 @@
 module Diplomat
   # Methods for interacting with the Consul check API endpoint
   class Check < Diplomat::RestClient
-    @access_methods = %i[checks register_script register_ttl
-                         deregister pass warn fail]
+    access_methods %i[checks register_script register_ttl
+                      deregister pass warn fail]
 
     # Get registered checks
     # @return [OpenStruct] all data associated with the service

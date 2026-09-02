@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul status API endpoints, leader and peers
   class Status < Diplomat::RestClient
-    @access_methods = %i[leader peers]
+    access_methods %i[leader peers]
 
     # Get the raft leader for the datacenter in which the local consul agent is running
     # @param options [Hash] options parameter hash

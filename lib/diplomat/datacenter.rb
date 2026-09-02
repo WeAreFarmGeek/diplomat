@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul dataceneter API endpoint
   class Datacenter < Diplomat::RestClient
-    @access_methods = [:get]
+    access_methods [:get]
 
     # Get an array of all avaliable datacenters accessible by the local consul agent
     # @param meta [Hash] output structure containing header information about the request (index)

@@ -4,7 +4,7 @@ module Diplomat
   # @depreciated
   # Methods for interacting with the Consul nodes API endpoint
   class Nodes < Diplomat::RestClient
-    @access_methods = %i[get get_all]
+    access_methods %i[get get_all]
 
     # Get all nodes
     # @deprecated Please use Diplomat::Node instead.

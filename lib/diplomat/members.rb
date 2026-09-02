@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul members API endpoint
   class Members < Diplomat::RestClient
-    @access_methods = [:get]
+    access_methods [:get]
 
     # Get all members
     # @param options [Hash] options parameter hash

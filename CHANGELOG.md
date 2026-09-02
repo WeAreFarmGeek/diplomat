@@ -2,6 +2,11 @@
 
 ## Next
 
+* 2026-09-02 Declare the class level short-cuts (`Diplomat::Kv.get`, `Diplomat::Health.service`, ...) with the
+  new `access_methods` macro, which defines them as real singleton methods instead of resolving them through
+  `method_missing` only. They now show up in `methods`, documentation tools and editor autocompletion.
+  `method_missing` is kept as a fallback, so behaviour is unchanged.
+
 ## 2.6.6 (2026-03-08)
 
 * 2026-03-05 Add `ostruct` gem dependency and Ruby 4.0 to CI; OpenStruct was removed from Ruby 4 standard library. ([@gavinest](https://github.com/gavinest))

@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul ACL Policy API endpoint
   class Token < Diplomat::RestClient
-    @access_methods = %i[list read create delete update clone self]
+    access_methods %i[list read create delete update clone self]
     attr_reader :id, :type, :acl
 
     # Read ACL token with the given Accessor ID

@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul operator raft API endpoint
   class RaftOperator < Diplomat::RestClient
-    @access_methods = %i[get_configuration transfer_leader]
+    access_methods %i[get_configuration transfer_leader]
 
     # Get raft configuration
     # @param options [Hash] options parameter hash

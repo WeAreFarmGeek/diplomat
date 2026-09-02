@@ -3,7 +3,7 @@
 module Diplomat
   # Methods for interacting with the Consul ACL Policy API endpoint
   class Policy < Diplomat::RestClient
-    @access_methods = %i[list read create delete update]
+    access_methods %i[list read create delete update]
     attr_reader :id, :type, :acl
 
     # Read ACL policy with the given UUID
